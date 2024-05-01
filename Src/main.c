@@ -24,41 +24,43 @@ void init(s_input *terminal, t_command *command, char **env)
     command->command = malloc(sizeof(char) * 10000);
     command->arguments = malloc(sizeof(char *) * 10000);
     command->next = NULL;
+    command->pipe = -1;
 }
+
 
 void checkingInput(s_input *terminal, t_command *command)
 {
-    int i = 0;
-    int j, k;
-    int input_length = strlen(terminal->input);
-    int token_index = 0;
+    int i;
+    int j;
+    int k;
+    int input_length;
+    int token_index;
 
+    i = -1;
+    input_length = strlen(terminal->input);
+    token_index = 0;
     if (!terminal->input)
         return;
 
-    while (i < input_length)
+    while (i++ < input_length)
     {
         j = 0; // Reset j for each command
-
-        // Find command
         while (i < input_length && terminal->input[i] == ' ')
             i++;
-        while (i < input_length && terminal->input[i] != ' ' && terminal->input[i] != '|' && terminal->input[i] != '<' && terminal->input[i] != '>')
+        while (i < input_length && white_space(terminal->input[i]) == 0 && find_pipe(terminal->input[i]) == 0)
         {
             command->command[j] = terminal->input[i];
             i++;
             j++;
         }
         command->command[j] = '\0';
-
-        // Find arguments
         k = 0;
         command->arguments[k] = malloc(100 * sizeof(char)); // Allocate space for argument
         while (i < input_length && terminal->input[i] == ' ')
             i++;
-        while (i < input_length && terminal->input[i] != '|' && terminal->input[i] != '<' && terminal->input[i] != '>')
+        while (i < input_length && find_pipe(terminal->input[i]) == 0)
         {
-            if (terminal->input[i] == ' ')
+            if (white_space(terminal->input[i]) == 1)
             {
                 command->arguments[k][token_index] = '\0';
                 k++;
@@ -74,9 +76,15 @@ void checkingInput(s_input *terminal, t_command *command)
         }
         command->arguments[k][token_index] = '\0';
         command->arguments[k + 1] = NULL; // Null-terminate the arguments array
-
+        if(terminal->input[i] == '|')
+            command->pipe = 0;
+        else if (terminal->input[i] == '<')
+            command->pipe = 1;
+        else if (terminal->input[i] == '>') 
+            command->pipe = 2;
+        else
+            command->pipe = -1;
         printCommand(command);
-        i++;
     }
 }
 
@@ -91,4 +99,20 @@ void printCommand(t_command *command)
         i++;
     }
     printf("\n");
+    printf("Redirection or Pipe %i", command->pipe);
+    printf("\n");
+}
+
+int find_pipe(char c)
+{
+    if (c == '|' || c == '<' || c == '>')
+        return 1;
+    return 0;
+} 
+
+int white_space(char c)
+{
+    if (c == ' ' || c == '\t' || c == '\n' || c == '\v' || c == '\f' || c == '\r')
+        return 1;
+    return 0;
 }
