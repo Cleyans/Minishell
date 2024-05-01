@@ -23,7 +23,7 @@ typedef struct t_command
 {
 	int					isCommand;  	 // 1 if the input is a command, 0 otherwise 
     char				*command;  		 // The command to execute
-    char				*arguments;     //The arguments to pass to the command
+    char				**arguments;     //The arguments to pass to the command
     struct	t_command	*next;
 }			  			t_command;
 
@@ -41,9 +41,9 @@ typedef	struct s_input
 */
 
 void    init(s_input *terminal,t_command *command, char **env);
-void	chekingInput(s_input *terminal, t_command *command);
+void    checkingInput(s_input *terminal, t_command *command);
 void    printCommand(t_command *command);
-
+char check_arg(s_input *terminal);
 /*
         Function List
 */
