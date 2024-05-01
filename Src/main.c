@@ -30,23 +30,23 @@ void checkingInput(s_input *terminal, t_command *command)
 {
     int i = 0;
     int j, k;
-    char *token;
+    int input_length = strlen(terminal->input);
+    int token_index = 0;
 
     if (!terminal->input)
         return;
 
-    // Split input by pipes
-    token = strtok(terminal->input, "|");
-    while (token != NULL)
+    while (i < input_length)
     {
         j = 0; // Reset j for each command
 
         // Find command
-        while (*token == ' ')
-            token++;
-        while (token[j] && token[j] != ' ' && token[j] != '|' && token[j] != '<' && token[j] != '>')
+        while (i < input_length && terminal->input[i] == ' ')
+            i++;
+        while (i < input_length && terminal->input[i] != ' ' && terminal->input[i] != '|' && terminal->input[i] != '<' && terminal->input[i] != '>')
         {
-            command->command[j] = token[j];
+            command->command[j] = terminal->input[i];
+            i++;
             j++;
         }
         command->command[j] = '\0';
@@ -54,29 +54,29 @@ void checkingInput(s_input *terminal, t_command *command)
         // Find arguments
         k = 0;
         command->arguments[k] = malloc(100 * sizeof(char)); // Allocate space for argument
-        while (token[j] == ' ')
-            j++;
-        while (token[j])
+        while (i < input_length && terminal->input[i] == ' ')
+            i++;
+        while (i < input_length && terminal->input[i] != '|' && terminal->input[i] != '<' && terminal->input[i] != '>')
         {
-            if (token[j] == ' ')
+            if (terminal->input[i] == ' ')
             {
-                command->arguments[k][i] = '\0';
+                command->arguments[k][token_index] = '\0';
                 k++;
+                token_index = 0;
                 command->arguments[k] = malloc(100 * sizeof(char));
-                i = 0;
             }
             else
             {
-                command->arguments[k][i] = token[j];
-                i++;
+                command->arguments[k][token_index] = terminal->input[i];
+                token_index++;
             }
-            j++;
+            i++;
         }
-        command->arguments[k][i] = '\0';
+        command->arguments[k][token_index] = '\0';
         command->arguments[k + 1] = NULL; // Null-terminate the arguments array
-        token = strtok(NULL, "|");
 
         printCommand(command);
+        i++;
     }
 }
 
