@@ -3,20 +3,21 @@
 int main(int ac, char **av, char **env)
 {
     s_input terminal;
-    s_command command;
+    t_command command;
 
     init(&terminal, &command, env);
-    // while (1)
-    // {
+    while (1)
+    {
         // terminal.input = readline("> ");
-        scanf("%s", (char *)terminal.input);
-        chekingInput(&terminal, &command);
+        terminal.input = readline("8==D >");
+        if (terminal.input)
+            chekingInput(&terminal, &command);
         free(terminal.input);
-    // } 
+    } 
     return 0;
 }
 
-void    init(s_input *terminal, s_command *command, char **env)
+void    init(s_input *terminal, t_command *command, char **env)
 {
     terminal->input = NULL;
     terminal->stockCommand = NULL;
@@ -24,45 +25,47 @@ void    init(s_input *terminal, s_command *command, char **env)
 
 }
 
-void chekingInput(s_input *terminal, s_command *command) // check all the command in input to malloc
+void chekingInput(s_input *terminal, t_command *command) // check all the command in input to malloc
 {
     int i;
+    int j;
+    int k;
 
+    j = 0;
+    k = 0;
     i = 0;
-    while (terminal->input[i])
+    if (terminal->input[i])
     {
         while (terminal->input[i] == ' ' && terminal->input[i] != '\0')
             i++;
         while (terminal->input[i] != ' ' && terminal->input[i] != '\0')
         {
-            command->command[i] = terminal->input[i];
+            command->command[j] = terminal->input[i];
+            j++;
             i++;
         }
         while (terminal->input[i] == ' ')
             i++;
-        if (terminal->input[i] != ' ' && terminal->input[i] != '\0' && terminal->input[i] == '-')
+        if (terminal->input[i] == '-' && terminal->input[i] != '\0')
         {
             while (terminal->input[i] != ' ' && terminal->input[i] != '\0')
             {
-                command->arguments[i] = terminal->input[i];
+                command->arguments[k] = terminal->input[i];
+                k++;
                 i++;
             }
         }
-        command->command[i] = '\0';
-        command->arguments[i] = '\0';
-        ft_lstadd_back(&command, ft_lstnew(command));
-        command = command->next;
+        command->command[j] = '\0';
+        command->arguments[k] = '\0';
+        j = 0;
+        k = 0;
     }
     printCommand(command);
 }
 
-void    printCommand(s_command *command)
+void    printCommand(t_command *command)
 {
-    while (command)
-    {
         printf("command: %s ", command->command);
         printf("arguments: %s", command->arguments);
         printf("\n");
-        command = command->next;
-    }
 }

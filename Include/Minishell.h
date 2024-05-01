@@ -11,6 +11,7 @@
 # include <stdlib.h>
 # include <readline/readline.h>
 # include <readline/history.h>
+# include "Libft/libft.h"
 
 /*
 *****************************************************
@@ -18,13 +19,13 @@
 *****************************************************
 */
 
-typedef struct s_command
+typedef struct t_command
 {
 	int					isCommand;  	 // 1 if the input is a command, 0 otherwise 
     char				*command;  		 // The command to execute
     char				*arguments;     //The arguments to pass to the command
-    struct	s_command	*next;
-}			  			s_command;
+    struct	t_command	*next;
+}			  			t_command;
 
 typedef	struct s_input
 {
@@ -39,8 +40,15 @@ typedef	struct s_input
 *****************************************************
 */
 
-void    init(s_input *terminal,s_command *command, char **env);
-void	chekingInput(s_input *terminal, s_command *command);
-void    printCommand(s_command *command);
+void    init(s_input *terminal,t_command *command, char **env);
+void	chekingInput(s_input *terminal, t_command *command);
+void    printCommand(t_command *command);
+
+/*
+        Function List
+*/
+void	ft_lstadd_back_m(t_command **lst, t_command *new);
+t_command	*ft_lstnew_m(void *content);
+
 
 #endif

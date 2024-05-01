@@ -6,7 +6,7 @@ CFLAGS = -g
 FT			= Include/Libft
 LIBFT		= $(FT)/libft.a
 
-SOURCE := Src/main.c
+SOURCE := Src/main.c Src/lst.c
 OBJ 	= $(SOURCE:.c=.o)
 
 all: $(NAME)
