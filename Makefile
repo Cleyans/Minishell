@@ -3,10 +3,10 @@ NAME := minishell
 CC := cc
 CFLAGS = -g
 
-FT			= Include/Libft
+FT			= include/libft
 LIBFT		= $(FT)/libft.a
 
-SOURCE := Src/main.c Src/lst.c Src/cheking_path.c
+SOURCE := src/main.c src/list/lst.c src/executing/main_exec.c
 OBJ 	= $(SOURCE:.c=.o)
 
 all: $(NAME)
