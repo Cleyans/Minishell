@@ -54,6 +54,16 @@ typedef struct t_command
 	struct t_command	*next;
 }				t_command;
 
+typedef struct t_echo
+{
+	int	i;
+	int	len_s2;
+	int	search_s2;
+	int	s_quotes;
+	int	d_quotes;
+	int	close;
+}				t_echo;
+
 typedef struct t_input
 {
 	char		*input;
@@ -62,6 +72,7 @@ typedef struct t_input
 	int			status;
 	int			p_fd[4096][2];
 	pid_t		pid[4096];
+	t_echo		echo;
 }				t_input;
 
 /*
@@ -74,39 +85,39 @@ typedef struct t_input
         Function main
 */
 
-void	init(t_input *terminal, t_command *command, char **env);
-void	checking_input(t_input *terminal, t_command *command);
-int		white_space(char c);
-int		find_pipe(char c);
+t_command	*ft_lstnew_m(void);
+void		init(t_input *terminal, t_command *command, char **env);
+void		checking_input(t_input *terminal, t_command *command);
+int			white_space(char c);
+int			find_pipe(char c);
 
 /*
         Function List
 */
 
-t_command	*ft_lstnew_m(void);
-void	ft_lstadd_back_m(t_command **lst, t_command *new);
+void		ft_lstadd_back_m(t_command **lst, t_command *new);
 // void		del_command(t_command *command);
-void	ft_lstclear_m(t_command *command, void (*del)(t_command *));
+void		ft_lstclear_m(t_command *command, void (*del)(t_command *));
 
 /*
         Function Executing
 */
 
-char	*search_path(char **env, char *cmd_split);
-void	executing(t_input *terminal, t_command *command);
-void	exec_cmd(t_command *command, t_input *terminal);
-char	**remove_empty_args(char **args);
+char		*search_path(char **env, char *cmd_split);
+void		executing(t_input *terminal, t_command *command);
+void		exec_cmd(t_command *command, t_input *terminal);
+char		**remove_empty_args(char **args);
 
 /*
 		Function Executing pipes
 */
 
-void	first_command(t_input *terminal, t_command *command, int i);
-void	middle_command(t_input *terminal, t_command *command, int i);
-void	last_command(t_input *terminal, t_command *command, int i);
-void	only_one_command(t_input *terminal, t_command *command, int i);
-void	parent_process(t_input *terminal, int i, pid_t pid);
-void	calling_function(t_input *terminal, t_command *command, int i);
+void		first_command(t_input *terminal, t_command *command, int i);
+void		middle_command(t_input *terminal, t_command *command, int i);
+void		last_command(t_input *terminal, t_command *command, int i);
+void		only_one_command(t_input *terminal, t_command *command, int i);
+void		parent_process(t_input *terminal, int i, pid_t pid);
+void		calling_function(t_input *terminal, t_command *command, int i);
 
 /*
 		Function Executing Redirection
@@ -119,31 +130,36 @@ void	calling_function(t_input *terminal, t_command *command, int i);
 		Function Executing builtins
 */
 
-int		builtins_parent(t_input *terminal, t_command *command);
-void	builtins_child(t_command *command);
-void	ft_echo(t_command *command);
-void	ft_cd(t_command *command);
-void	ft_pwd(t_command *command);
-void	ft_exit(t_input *terminal, t_command *command);
+int			check_echo_args(t_command *command, t_input *terminal, int i);
+int			ft_echo_check(char *s, char *s2, t_input *terminal,
+				t_command *command);
+void		ft_echo(t_input *terminal, t_command *command);
+int			builtins_parent(t_input *terminal, t_command *command);
+void		builtins_child(t_input *terminal, t_command *command);
+void		ft_putstr_echo(char *s, int fd);
+void		ft_cd(t_command *command);
+void		ft_pwd(t_command *command);
+void		ft_exit(t_input *terminal, t_command *command);
 
 /*
 		Function Error
 */
 
-void	error_message(char *message);
+void		error_message(char *message);
 
 /*
         Function parssing
 */
 
-int		verif_input(t_input *terminal);
+int			verif_input(t_input *terminal);
 
 /*
 		Function Utils
 */
 
-void	print_commands(t_command *command);
-void	free_exec_cmd(t_command *command);
-void	free_exec_error(t_command *command, char *cmd_path, char **cmd_split);
+// void		print_commands(t_command *command);
+void		free_exec_cmd(t_command *command);
+void		free_exec_error(t_command *command,
+				char *cmd_path, char **cmd_split);
 
 #endif

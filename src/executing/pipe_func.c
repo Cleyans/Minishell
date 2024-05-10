@@ -17,7 +17,7 @@ void	first_command(t_input *terminal, t_command *command, int i)
 	close(terminal->p_fd[i][0]);
 	dup2(terminal->p_fd[i][1], STDOUT_FILENO);
 	close(terminal->p_fd[i][1]);
-	builtins_child(command);
+	builtins_child(terminal, command);
 	exec_cmd(command, terminal);
 }
 
@@ -28,7 +28,7 @@ void	middle_command(t_input *terminal, t_command *command, int i)
 	close(terminal->p_fd[i - 1][0]);
 	dup2(terminal->p_fd[i][1], STDOUT_FILENO);
 	close(terminal->p_fd[i][1]);
-	builtins_child(command);
+	builtins_child(terminal, command);
 	exec_cmd(command, terminal);
 }
 
@@ -38,7 +38,7 @@ void	last_command(t_input *terminal, t_command *command, int i)
 	close(terminal->p_fd[i][1]);
 	dup2(terminal->p_fd[i - 1][0], STDIN_FILENO);
 	close(terminal->p_fd[i - 1][0]);
-	builtins_child(command);
+	builtins_child(terminal, command);
 	exec_cmd(command, terminal);
 }
 
@@ -46,7 +46,7 @@ void	only_one_command(t_input *terminal, t_command *command, int i)
 {
 	close(terminal->p_fd[i][0]);
 	close(terminal->p_fd[i][1]);
-	builtins_child(command);
+	builtins_child(terminal, command);
 	exec_cmd(command, terminal);
 }
 

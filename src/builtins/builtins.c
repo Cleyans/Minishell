@@ -12,12 +12,12 @@
 
 #include "../../include/Minishell.h"
 
-void	builtins_child(t_command *command)
+void	builtins_child(t_input *terminal, t_command *command)
 {
 	command->arguments = remove_empty_args(command->arguments);
 	if (ft_strcmp(command->command, "echo") == 0)
 	{
-		ft_echo(command);
+		ft_echo(terminal, command);
 		exit(1);
 	}
 }
@@ -53,29 +53,6 @@ int	builtins_parent(t_input *terminal, t_command *command)
 	else if (ft_strcmp(command->command, "exit") == 0)
 		ft_exit(terminal, command);
 	return (0);
-}
-
-void	ft_echo(t_command *command)
-{
-	int	i;
-	int	flag;
-
-	i = 0;
-	flag = 0;
-	if (ft_strcmp(command->arguments[i], "-n") == 0)
-	{
-		i++;
-		flag = 1;
-	}
-	while (command->arguments[i] != NULL)
-	{
-		ft_putstr_fd(command->arguments[i], 2);
-		if (command->arguments[i + 1] != NULL)
-			ft_putstr_fd(" ", 1);
-		i++;
-	}
-	if (flag == 0)
-		ft_putstr_fd("\n", 1);
 }
 
 void	ft_cd(t_command *command) // ne pas oublier le status

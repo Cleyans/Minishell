@@ -51,6 +51,11 @@ void	init(t_input *terminal, t_command *command, char **env)
 	terminal->env = env;
 	terminal->nb_cmd = 1;
 	terminal->status = 0;
+	terminal->echo.d_quotes = 0;
+	terminal->echo.s_quotes = 0;
+	terminal->echo.i = 0;
+	terminal->echo.search_s2 = 0;
+	terminal->echo.close = 0;
 	command->command = malloc(sizeof(char) * 10000);
 	command->command[0] = '\0';
 	command->arguments = malloc(sizeof(char *) * 10000);

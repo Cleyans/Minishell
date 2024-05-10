@@ -42,20 +42,6 @@ void	executing(t_input *terminal, t_command *command) // builtins if not = 0, if
 	free(pid);
 }
 
-void	free_exec_cmd(t_command *command)
-{
-	int	i;
-
-	i = 0;
-	free(command->command);
-	while (command->arguments[i])
-	{
-		free(command->arguments[i]);
-		i++;
-	}
-	free(command->arguments);
-}
-
 void	error_message(char *message)
 {
 	fprintf(stderr, "Minishell: %s\n", message);
@@ -112,74 +98,4 @@ void	exec_cmd(t_command *command, t_input *terminal)
 		free_exec_error(command, cmd_path, cmd_split);
 		exit(EXIT_FAILURE);
 	}
-}
-
-void	free_exec_error(t_command *command, char *cmd_path, char **cmd_split)
-{
-	int	i;
-
-	i = 0;
-	free(cmd_path);
-	while (cmd_split[i])
-	{
-		free(cmd_split[i]);
-		i++;
-	}
-	free(cmd_split);
-	free_exec_cmd(command);
-}
-
-char	**remove_empty_args(char **args)
-{
-	int		i;
-	int		j;
-	int		k;
-	char	**new_args;
-
-	i = 0;
-	j = 0;
-	k = 0;
-	while (args[k])
-		k++;
-	new_args = malloc(sizeof(char *) * (k + 1));
-	while (args[i])
-	{
-		if (args[i][0] != '\0')
-		{
-			new_args[j] = ft_strdup(args[i]);
-			j++;
-		}
-		i++;
-	}
-	new_args[j] = NULL;
-	return (new_args);
-}
-
-char	*search_path(char **env, char *cmd_split)
-{
-	int			i;
-	char		**paths;
-	char		*cmd_final;
-	char		*cmd_join;
-
-	i = 0;
-	while (env[i] && ft_strnstr(env[i], "PATH", 4) == NULL)
-		i++;
-	paths = ft_split(env[i] + 5, ':');
-	i = 0;
-	while (paths[i])
-	{
-		cmd_join = ft_strjoin_pipex(paths[i], "/");
-		cmd_final = ft_strjoin_pipex(cmd_join, cmd_split);
-		free(cmd_join);
-		if (access(cmd_final, F_OK) == 0)
-		{
-			ft_free(paths);
-			return (cmd_final);
-		}
-		free(cmd_final);
-		i++;
-	}
-	ft_free(paths);
-	return (NULL);
 }
