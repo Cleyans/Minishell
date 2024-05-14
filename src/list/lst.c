@@ -10,7 +10,7 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../../Include/Minishell.h"
+#include "../../include/Minishell.h"
 
 void	ft_lstadd_back_m(t_command **lst, t_command *new)
 {

@@ -26,14 +26,14 @@ int	main(int ac, char **av, char **env)
 	first = command;
 	while (1)
 	{
+		advanced_print(command);
 		init(&terminal, command, env);
 		terminal.input = readline("\033[0;35mMinihell\033[0;37m$\033[0m ");
 		if (verif_input(&terminal) == 0)
 		{
 			cheking_input(&terminal, command);
 			command = first;
-			// advanced_print(command);
-			// // print_commands(command);
+			advanced_print(command);
 			// command = first;
 			if (builtins_parent(&terminal, command) == 0)
 				executing(&terminal, command);
@@ -67,6 +67,7 @@ void	init(t_input *terminal, t_command *command, char **env)
 	command->pipe = -1;
 	command->redirection = -1;
 	command->builtins = 0;
+	command->here_doc = -1;
 }
 
 void	print_commands(t_command *command)

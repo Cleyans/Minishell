@@ -12,75 +12,6 @@
 
 #include "../../include/Minishell.h"
 
-// void	checking_input(t_input *terminal, t_command *command)
-// {
-// 	int	i;
-// 	int	j;
-// 	int	k;
-// 	int	input_length;
-// 	int	token_index;
-
-// 	i = -1;
-// 	input_length = ft_strlen(terminal->input);
-// 	token_index = 0;
-// 	if (!terminal->input)
-// 		return ;
-// 	while (i++ < input_length)
-// 	{
-// 		j = 0;
-// 		while (i < input_length && terminal->input[i] == ' ')
-// 			i++;
-// 		while (i < input_length && white_space(terminal->input[i]) == 0
-// 			&& find_p_r(terminal->input[i]) == 0)
-// 		{
-// 			if (command->redirection == 1)
-// 				command->infile[j] = terminal->input[i];
-// 			else if (command->redirection == 0)
-// 				command->outfile[j] = terminal->input[i];
-// 			else
-// 				command->command[j] = terminal->input[i];
-// 			i++;
-// 			j++;
-// 		}
-// 		command->command[j] = '\0';
-// 		k = 0;
-// 		command->arguments[k] = malloc(100 * sizeof(char));
-// 		while (i < input_length && terminal->input[i] == ' ')
-// 			i++;
-// 		while (i < input_length && find_p_r(terminal->input[i]) == 0)
-// 		{
-// 			if (white_space(terminal->input[i]) == 1)
-// 			{
-// 				command->arguments[k][token_index] = '\0';
-// 				token_index = 0;
-// 				k++;
-// 				command->arguments[k] = malloc(100 * sizeof(char));
-// 			}
-// 			else
-// 			{
-// 				command->arguments[k][token_index] = terminal->input[i];
-// 				token_index++;
-// 			}
-// 			i++;
-// 		}
-// 		command->arguments[k][token_index] = '\0';
-// 		command->arguments[k + 1] = NULL;
-// 		if (terminal->input[i] == '|')
-// 			command->pipe = 0;
-// 		else if (terminal->input[i] == '<')
-// 			command->redirection = 0;
-// 		else if (terminal->input[i] == '>')
-// 			command->redirection = 1;
-// 		else
-// 			command->pipe = -1;
-// 		ft_lstadd_back_m(&command, ft_lstnew_m());
-// 		command->arguments = remove_empty_args(command->arguments);
-// 		command = command->next;
-// 		i++;
-// 	}
-// }
-
-
 int	find_p_r(char c)
 {
 	if (c == '|' || c == '<' || c == '>')
@@ -110,15 +41,14 @@ void	cheking_input(t_input *terminal, t_command *command) // doit pouvoir prendr
 {
 	t_parss	parss;
 	init_parss(&parss);
+
 	while (terminal->input[parss.i])
 	{
-		while (terminal->input[parss.i] && terminal->input[parss.i] != '|')
+		while (terminal->input[parss.i] && terminal->input[parss.i] != '|' && terminal->input[parss.i] != '>'  && terminal->input[parss.i] != '<')
 		{
 			while (terminal->input[parss.i] == ' ')
 				parss.i++;
-			if (terminal->input[parss.i] == '<' || terminal->input[parss.i] == '>')
-				check_redir(terminal, command, &parss);
-			if (parss.cmd_c == 1)
+			if (parss.cmd_c == 1 && terminal->input[parss.i])
 				put_arg_cmd(terminal, command, &parss);
 			while ((terminal->input[parss.i] != ' ' && terminal->input[parss.i] != '\0' && parss.cmd_c == 0) || (terminal->input[parss.i] != ' ' && terminal->input[parss.i] != '\0' && parss.cmd_c == -1))
 			{
@@ -133,8 +63,18 @@ void	cheking_input(t_input *terminal, t_command *command) // doit pouvoir prendr
 				parss.cmd_c = 1;
 				parss.j = 0;
 			}
+			if(terminal->input[parss.i] == '\0')
+				break;
 			parss.i++;
+
 		}
+		if (terminal->input[parss.i] == '<' || terminal->input[parss.i] == '>')
+		{
+			check_redir(terminal, command, &parss);
+			parss.i++;
+			if (terminal->input[parss.i] == '<' || terminal->input[parss.i] == '>')
+				parss.i++;
+		}	
 		if (terminal->input[parss.i] == '|')
 			command->pipe = 0;
 		else
@@ -145,12 +85,24 @@ void	cheking_input(t_input *terminal, t_command *command) // doit pouvoir prendr
 		command->arguments = remove_empty_args(command->arguments);
 		command = command->next;
 		parss.i++;
+		if(terminal->input[parss.i])
+			break;
 	}
 }
 
 void	check_redir(t_input *terminal, t_command *command, t_parss *parss)
 {
-	if (terminal->input[parss->i] == '<')
+	if (terminal->input[parss->i] == '<' && terminal->input[parss->i + 1] == '<')
+	{
+		command->here_doc = 1;
+		call_heredoc(terminal, command, parss);
+	}
+	else if (terminal->input[parss->i] == '>' && terminal->input[parss->i + 1] == '>')
+	{
+		command->here_doc = 0;
+		call_heredoc(terminal, command, parss);
+	}
+	else if (terminal->input[parss->i] == '<')
 	{
 		command->redirection = 0;
 		call_redir_infile(terminal, command, parss);
@@ -162,37 +114,66 @@ void	check_redir(t_input *terminal, t_command *command, t_parss *parss)
 	}
 }
 
-void	call_redir_infile(t_input *terminal, t_command *command, t_parss *parss)
+void		call_heredoc(t_input *terminal, t_command *command, t_parss *parss)
 {
+	int i;
+
+	i = 0;
+	parss->i++;
 	parss->i++;
 	while (terminal->input[parss->i] == ' ')
 		parss->i++;
 	command->infile = malloc(sizeof(char) * 100);
-	command->infile[0] = '\0';
+	// command->infile[0] = terminal->input[parss->i];
+	// parss->i++;
 	while (terminal->input[parss->i] != ' ' && terminal->input[parss->i] != '\0')
 	{
-		command->infile[parss->j] = terminal->input[parss->i];
+		command->infile[i] = terminal->input[parss->i];
 		parss->i++;
-		parss->j++;
+		i++;
 	}
-	command->infile[parss->j] = '\0';
+	command->infile[i] = '\0';
+}
+
+void	call_redir_infile(t_input *terminal, t_command *command, t_parss *parss)
+{
+	int i;
+
+	i = 0;
+	parss->i++;
+	while (terminal->input[parss->i] == ' ')
+		parss->i++;
+	command->infile = malloc(sizeof(char) * 100);
+	// command->infile[0] = terminal->input[parss->i];
+	// parss->i++;
+	while (terminal->input[parss->i] != ' ' && terminal->input[parss->i] != '\0')
+	{
+		command->infile[i] = terminal->input[parss->i];
+		parss->i++;
+		i++;
+	}
+	command->infile[i] = '\0';
 }
 
 void	call_redir_outfile(t_input *terminal, t_command *command, t_parss *parss)
 {
+	int i;
+
+	i = 0;
 	parss->i++;
 	while (terminal->input[parss->i] == ' ')
 		parss->i++;
 	command->outfile = malloc(sizeof(char) * 100);
-	command->outfile[0] = '\0';
+	// command->outfile[i] = terminal->input[parss->i];
+	// parss->i++;
 	while (terminal->input[parss->i] != ' ' && terminal->input[parss->i] != '\0')
 	{
-		command->outfile[parss->j] = terminal->input[parss->i];
+		command->outfile[i] = terminal->input[parss->i];
 		parss->i++;
-		parss->j++;
+		i++;
 	}
-	command->outfile[parss->j] = '\0';
-	parss->j = 0;
+	command->outfile[i] = '\0';
+	// parss->j = 0;
 }
 
 void	put_arg_cmd(t_input *terminal, t_command *command, t_parss *parss)
@@ -217,6 +198,7 @@ void	init_parss(t_parss *parss)
 	parss->cmd_c = -1;
 }
 
+
 void	advanced_print(t_command *command)
 {
 	while (command->next != NULL)
@@ -233,6 +215,10 @@ void	advanced_print(t_command *command)
 		if (command->redirection == 1)
 			printf("outfile = %s\n", command->outfile);
 		else if (command->redirection == 0)
+			printf("infile = %s\n", command->infile);
+		if (command->here_doc == 0)
+			printf("outfile = %s\n", command->outfile);
+		else if (command->here_doc == 1)
 			printf("infile = %s\n", command->infile);
 		if (command->pipe == 0)
 			printf("pipe = 0\n");

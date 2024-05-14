@@ -19,7 +19,7 @@
 *****************************************************
 */
 
-# include "Libft/libft.h"
+# include "libft/libft.h"
 # include <stdio.h>
 # include <stdlib.h>
 # include <readline/readline.h>
@@ -52,7 +52,8 @@ typedef struct t_command
 	char					*infile;
 	char					*outfile;
 	int					pipe;
-	int					redirection;
+	int					redirection; // 0 = < // 1 = > //
+	int					here_doc; // 0 = >> // 1 = << //
 	int					builtins;
 	struct t_command	*next;
 }				t_command;
@@ -100,8 +101,8 @@ typedef struct t_input
 t_command	*ft_lstnew_m(void);
 void		init(t_input *terminal, t_command *command, char **env);
 // void		checking_input(t_input *terminal, t_command *command);	
-// int			white_space(char c);
-// int			find_p_r(char c);
+int			white_space(char c);
+int			find_p_r(char c);
 
 /*
         Function List
@@ -170,6 +171,7 @@ void		call_redir_outfile(t_input *terminal, t_command *command, t_parss *parss);
 void		put_arg_cmd(t_input *terminal, t_command *command, t_parss *parss);
 void		init_parss(t_parss *parss);
 void		cheking_input(t_input *terminal, t_command *command);
+void		call_heredoc(t_input *terminal, t_command *command, t_parss *parss);
 
 
 
