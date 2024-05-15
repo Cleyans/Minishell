@@ -42,6 +42,7 @@ t_command	*ft_lstnew_m(void)
 	new->redirection = -1;
 	new->builtins = 0;
 	new->next = NULL;
+	new->here_doc = -1;
 	return (new);
 }
 

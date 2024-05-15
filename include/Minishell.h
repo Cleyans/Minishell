@@ -171,8 +171,9 @@ void		call_redir_outfile(t_input *terminal, t_command *command, t_parss *parss);
 void		put_arg_cmd(t_input *terminal, t_command *command, t_parss *parss);
 void		init_parss(t_parss *parss);
 void		cheking_input(t_input *terminal, t_command *command);
+// void		call_heredoc_infile(t_input *terminal, t_command *command, t_parss *parss);
+// void		call_heredoc_outfile(t_input *terminal, t_command *command, t_parss *parss);
 void		call_heredoc(t_input *terminal, t_command *command, t_parss *parss);
-
 
 
 /*

@@ -42,9 +42,9 @@ void	cheking_input(t_input *terminal, t_command *command) // doit pouvoir prendr
 	t_parss	parss;
 	init_parss(&parss);
 
-	while (terminal->input[parss.i])
+	while (terminal->input[parss.i] && terminal->input[parss.i] != '\0')
 	{
-		while (terminal->input[parss.i] && terminal->input[parss.i] != '|' && terminal->input[parss.i] != '>'  && terminal->input[parss.i] != '<')
+		while (terminal->input[parss.i] != '\0' && terminal->input[parss.i] != '|' && terminal->input[parss.i] != '>'  && terminal->input[parss.i] != '<')
 		{
 			while (terminal->input[parss.i] == ' ')
 				parss.i++;
@@ -76,17 +76,18 @@ void	cheking_input(t_input *terminal, t_command *command) // doit pouvoir prendr
 				parss.i++;
 		}	
 		if (terminal->input[parss.i] == '|')
+		{
 			command->pipe = 0;
+			parss.i++;
+		}
 		else
 			command->pipe = -1;
 		parss.cmd_c = -1;
 		parss.j = 0;
+		// parss.i++;
 		ft_lstadd_back_m(&command, ft_lstnew_m());
 		command->arguments = remove_empty_args(command->arguments);
 		command = command->next;
-		parss.i++;
-		if(terminal->input[parss.i])
-			break;
 	}
 }
 
@@ -230,6 +231,12 @@ void	advanced_print(t_command *command)
 			printf("redirection = 1\n");
 		else
 			printf("redirection = -1\n");
+		if (command->here_doc == 0)
+			printf("here_doc = 0\n");
+		else if (command->here_doc == 1)
+			printf("here_doc = 1\n");
+		else
+			printf("Here_doc = -1\n");
 		printf("builtins = %d\n", command->builtins);
 		printf("\n");
 		command = command->next;
