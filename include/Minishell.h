@@ -51,6 +51,9 @@ typedef struct t_command
 	char				**arguments;
 	char					*infile;
 	char					*outfile;
+	char				*dollar;
+	char				*out_dollar;
+	int					int_dollar; // 0 = $ // 1 = ? //
 	int					pipe;
 	int					redirection; // 0 = < // 1 = > //
 	int					here_doc; // 0 = >> // 1 = << //
@@ -174,6 +177,12 @@ void		cheking_input(t_input *terminal, t_command *command);
 // void		call_heredoc_infile(t_input *terminal, t_command *command, t_parss *parss);
 // void		call_heredoc_outfile(t_input *terminal, t_command *command, t_parss *parss);
 void		call_heredoc(t_input *terminal, t_command *command, t_parss *parss);
+int 		check_char(char c);
+void 		call_dollar(t_input *terminal, t_command *command, t_parss *parss);
+void		call_dollar_interogation(t_input *terminal, t_command *command, t_parss *parss);
+void	*search_path_dollar(t_input *terminal, t_command *command);
+// void	*search_path_dollar_interogation(t_input *terminal);
+
 
 
 /*

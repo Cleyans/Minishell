@@ -44,7 +44,7 @@ void	cheking_input(t_input *terminal, t_command *command) // doit pouvoir prendr
 
 	while (terminal->input[parss.i] && terminal->input[parss.i] != '\0')
 	{
-		while (terminal->input[parss.i] != '\0' && terminal->input[parss.i] != '|' && terminal->input[parss.i] != '>'  && terminal->input[parss.i] != '<')
+		while (terminal->input[parss.i] != '\0' && terminal->input[parss.i] != '|' && terminal->input[parss.i] != '>'  && terminal->input[parss.i] != '<' && terminal->input[parss.i] != '$')
 		{
 			while (terminal->input[parss.i] == ' ')
 				parss.i++;
@@ -68,7 +68,7 @@ void	cheking_input(t_input *terminal, t_command *command) // doit pouvoir prendr
 			parss.i++;
 
 		}
-		if (terminal->input[parss.i] == '<' || terminal->input[parss.i] == '>')
+		if (terminal->input[parss.i] == '<' || terminal->input[parss.i] == '>' || terminal->input[parss.i] == '$')
 		{
 			check_redir(terminal, command, &parss);
 			parss.i++;
@@ -113,6 +113,8 @@ void	check_redir(t_input *terminal, t_command *command, t_parss *parss)
 		command->redirection = 1;
 		call_redir_outfile(terminal, command, parss);
 	}
+	else if (terminal->input[parss->i] == '$')
+		call_dollar(terminal, command, parss);
 }
 
 void		call_heredoc(t_input *terminal, t_command *command, t_parss *parss)
@@ -225,6 +227,10 @@ void	advanced_print(t_command *command)
 			printf("pipe = 0\n");
 		else
 			printf("pipe = -1\n");
+		if (command->int_dollar == 1 || command->int_dollar == 0)
+			printf("int_dollar = %d\n", command->int_dollar);
+		if(command->int_dollar == 0)
+			printf("int_dollar = %s\n", command->dollar);
 		if (command->redirection == 0)
 			printf("redirection = 0\n");
 		else if (command->redirection == 1)
@@ -237,8 +243,97 @@ void	advanced_print(t_command *command)
 			printf("here_doc = 1\n");
 		else
 			printf("Here_doc = -1\n");
+		printf("Command out dollar : %s\n", command->out_dollar);
 		printf("builtins = %d\n", command->builtins);
 		printf("\n");
 		command = command->next;
 	}
+}
+
+void call_dollar(t_input *terminal, t_command *command, t_parss *parss)
+{
+	while(terminal->input[parss->i] != '\0')
+	{
+		command->dollar = malloc(sizeof(char) * 100);
+		int i;
+
+		i = 0;
+		if ((terminal->input[parss->i] == '$') && terminal->input[parss->i + 1] == '?' && terminal->input[parss->i + 1] != '\0')
+		{
+			// call_dollar_interogation(input, command, parss);
+			command->int_dollar = 1;
+			return;
+		}
+		parss->i++;
+		while (terminal->input[parss->i] != ' ' && terminal->input[parss->i] != '\0')
+		{
+			command->dollar[i] = terminal->input[parss->i];
+			parss->i++;
+			i++;
+			command->int_dollar = 0;
+		}
+		if (command->int_dollar == 0)
+		{
+			search_path_dollar(terminal, command);
+			parss->i++;
+		}
+		command->dollar[i] = '\0';
+		parss->i++;
+		print_commands(command);
+	}
+}
+
+
+void	*search_path_dollar(t_input *terminal, t_command *command)
+{	
+    int			i;
+    int			j;
+    int			k;
+    int			l;
+
+    command->out_dollar = malloc(sizeof(char) * 10000);
+    if (command->out_dollar == NULL) {
+        return NULL;
+    }
+
+    l = 0;
+    i = 0;
+    while (terminal->env[i] != NULL)
+    {
+        j = 0;
+        k = 0;
+        while (terminal->env[i][j] != '\0')
+        {
+            while (terminal->env[i][j] == command->dollar[k] && terminal->env[i][j] != '\0')
+            {
+                j++;
+                k++;
+                if (terminal->env[i][j] == '=')
+                {
+                    j++;
+                    while (terminal->env[i][j] != '\0') {
+                        command->out_dollar[l++] = terminal->env[i][j++];
+                    }
+                    command->out_dollar[l] = '\0';
+                    return command->out_dollar;
+                }
+            }
+            if (command->dollar[k] != '\0') {
+                break;
+            }
+            j++;
+        }
+        i++;
+    }
+    free(command->out_dollar);
+    command->out_dollar = NULL;
+    return NULL;
+}
+
+int check_char(char c)
+{
+	if (c == ' ' || c == '\t' || c == '\n'
+		|| c == '\v' || c == '\f' || c == '\r')
+		return (1);
+	return (0);
 }

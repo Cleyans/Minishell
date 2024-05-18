@@ -68,6 +68,9 @@ void	init(t_input *terminal, t_command *command, char **env)
 	command->redirection = -1;
 	command->builtins = 0;
 	command->here_doc = -1;
+	command->dollar = NULL;
+	command->int_dollar = -1;
+	command->out_dollar = NULL;
 }
 
 void	print_commands(t_command *command)
@@ -93,3 +96,4 @@ void	print_commands(t_command *command)
 		command = command->next;
 	}
 }
+
