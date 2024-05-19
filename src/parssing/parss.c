@@ -44,10 +44,17 @@ void	cheking_input(t_input *terminal, t_command *command) // doit pouvoir prendr
 
 	while (terminal->input[parss.i] && terminal->input[parss.i] != '\0')
 	{
-		while (terminal->input[parss.i] != '\0' && terminal->input[parss.i] != '|' && terminal->input[parss.i] != '>'  && terminal->input[parss.i] != '<' && terminal->input[parss.i] != '$')
+		while (terminal->input[parss.i] != '\0' && terminal->input[parss.i] != '|' && terminal->input[parss.i] != '$')
 		{
 			while (terminal->input[parss.i] == ' ')
 				parss.i++;
+			if (terminal->input[parss.i] == '<' || terminal->input[parss.i] == '>' || terminal->input[parss.i] == '$')
+			{
+				check_redir(terminal, command, &parss);
+				parss.i++;
+				if (terminal->input[parss.i] == '<' || terminal->input[parss.i] == '>')
+					parss.i++;
+			}	
 			if (parss.cmd_c == 1 && terminal->input[parss.i])
 				put_arg_cmd(terminal, command, &parss);
 			while ((terminal->input[parss.i] != ' ' && terminal->input[parss.i] != '\0' && parss.cmd_c == 0) || (terminal->input[parss.i] != ' ' && terminal->input[parss.i] != '\0' && parss.cmd_c == -1))
@@ -68,15 +75,9 @@ void	cheking_input(t_input *terminal, t_command *command) // doit pouvoir prendr
 			parss.i++;
 
 		}
-		if (terminal->input[parss.i] == '<' || terminal->input[parss.i] == '>' || terminal->input[parss.i] == '$')
-		{
-			check_redir(terminal, command, &parss);
-			parss.i++;
-			if (terminal->input[parss.i] == '<' || terminal->input[parss.i] == '>')
-				parss.i++;
-		}	
 		if (terminal->input[parss.i] == '|')
 		{
+			terminal->nb_pipe++;
 			command->pipe = 0;
 			parss.i++;
 		}

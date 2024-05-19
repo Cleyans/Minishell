@@ -20,13 +20,13 @@ int	main(int ac, char **av, char **env)
 
 	(void)ac;
 	(void)av;
+	signal_check();
 	command = malloc(sizeof(t_command));
 	if (command == NULL)
 		error_message("Error: malloc failed\n");
 	first = command;
 	while (1)
 	{
-		advanced_print(command);
 		init(&terminal, command, env);
 		terminal.input = readline("\033[0;35mMinihell\033[0;37m$\033[0m ");
 		if (verif_input(&terminal) == 0)
@@ -54,6 +54,7 @@ void	init(t_input *terminal, t_command *command, char **env)
 	terminal->env = env;
 	terminal->nb_cmd = 1;
 	terminal->status = 0;
+	terminal->nb_pipe = 0;
 	terminal->echo.d_quotes = 0;
 	terminal->echo.s_quotes = 0;
 	terminal->echo.i = 0;

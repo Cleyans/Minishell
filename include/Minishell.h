@@ -51,6 +51,7 @@ typedef struct t_command
 	char				**arguments;
 	char					*infile;
 	char					*outfile;
+	int					fd;
 	char				*dollar;
 	char				*out_dollar;
 	int					int_dollar; // 0 = $ // 1 = ? //
@@ -83,6 +84,7 @@ typedef struct t_input
 {
 	char		*input;
 	int			nb_cmd;
+	int			nb_pipe;
 	char		**env;
 	int			status;
 	int			p_fd[4096][2];
@@ -136,13 +138,6 @@ void		parent_process(t_input *terminal, int i, pid_t pid);
 void		calling_function(t_input *terminal, t_command *command, int i);
 
 /*
-		Function Executing Redirection
-*/
-
-// void    redirection_input(t_input *terminal, t_command *command, int i);
-// void    redirection_output(t_input *terminal, t_command *command, int i);
-
-/*
 		Function Executing builtins
 */
 
@@ -156,6 +151,14 @@ void		ft_putstr_echo(char *s, int fd);
 void		ft_cd(t_command *command);
 void		ft_pwd(t_command *command);
 void		ft_exit(t_input *terminal, t_command *command);
+
+/*
+		Function signals
+*/
+
+void		signal_check(void);
+void		handler_c(int signal);
+
 
 /*
 		Function Error

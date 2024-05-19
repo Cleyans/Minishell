@@ -15,7 +15,7 @@
 // only for one command || if we want to do more then one and more
 //then one pipe, we have to know the amouth of pipe before the execution
 
-void	executing(t_input *terminal, t_command *command) // builtins if not = 0, if for child 1 and if for parent 2 | a voir je sais pas encore si je fais ca
+void	executing(t_input *terminal, t_command *command)
 {
 	int		i;
 	int		*pid;
@@ -24,7 +24,7 @@ void	executing(t_input *terminal, t_command *command) // builtins if not = 0, if
 	pid = malloc(sizeof(int) * 4096);
 	if (pid == NULL)
 		error_message("Error: malloc failed\n");
-	while (command->command[0] != '\0' && command->next != NULL)
+	while (terminal->nb_pipe >= 0 && i <= terminal->nb_pipe)
 	{
 		if (pipe(terminal->p_fd[i]) == -1)
 			error_message("Error: pipe failed\n");
@@ -42,17 +42,11 @@ void	executing(t_input *terminal, t_command *command) // builtins if not = 0, if
 	free(pid);
 }
 
-void	error_message(char *message)
-{
-	fprintf(stderr, "Minishell: %s\n", message);
-	exit(EXIT_FAILURE);
-}
-
 void	calling_function(t_input *terminal, t_command *command, int i)
 {
-	if (command->pipe == 0 && terminal->nb_cmd == 1)
+	if (command->pipe == 0 && i == 0)
 		first_command(terminal, command, i);
-	else if (command->pipe == 0 && terminal->nb_cmd > 1)
+	else if (command->pipe == 0 && i > 0)
 		middle_command(terminal, command, i);
 	else if (command->pipe == -1)
 	{
@@ -61,14 +55,6 @@ void	calling_function(t_input *terminal, t_command *command, int i)
 		else
 			only_one_command(terminal, command, i);
 	}
-	free(command->command);
-	for (int j = 0; command->arguments[j]; j++)
-		free(command->arguments[j]);
-	free(command->arguments);
-	// else if (command->pipe == 1)
-	// 	redirection_input(terminal, command, i);
-	// else if (command->pipe == 2)
-	// 	redirection_output(terminal, command, i);
 }
 
 void	exec_cmd(t_command *command, t_input *terminal)
@@ -101,4 +87,10 @@ void	exec_cmd(t_command *command, t_input *terminal)
 		free_exec_error(command, cmd_path, cmd_split);
 		exit(EXIT_FAILURE);
 	}
+}
+
+void	error_message(char *message)
+{
+	fprintf(stderr, "Minishell: %s\n", message);
+	exit(EXIT_FAILURE);
 }
