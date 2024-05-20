@@ -6,7 +6,7 @@
 /*   By: brclemen <brclemen@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/01 13:49:02 by brclemen          #+#    #+#             */
-/*   Updated: 2024/05/13 04:51:24 by brclemen         ###   ########.fr       */
+/*   Updated: 2024/05/20 13:15:31 by brclemen         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,10 +39,12 @@ t_command	*ft_lstnew_m(void)
 	new->arguments = malloc(sizeof(char *) * 100);
 	new->arguments[0] = NULL;
 	new->pipe = -1;
-	new->redirection = -1;
+	new->redir_in = -1;
+	new->redir_out = -1;
 	new->builtins = 0;
 	new->next = NULL;
-	new->here_doc = -1;
+	new->hd_in = -1;
+	new->hd_out = -1;
 	return (new);
 }
 

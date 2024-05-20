@@ -1,5 +1,7 @@
 #include "../../include/Minishell.h"
 
+int	g_signal;
+
 void	handler_c(int signal)
 {
     (void)signal;
@@ -12,5 +14,5 @@ void	handler_c(int signal)
 void signal_check(void)
 {
 	signal(SIGINT, handler_c);
-	// signal(SIGQUIT, SIG_IGN);
+	signal(SIGQUIT, SIG_IGN);
 }

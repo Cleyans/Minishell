@@ -96,22 +96,22 @@ void	check_redir(t_input *terminal, t_command *command, t_parss *parss)
 {
 	if (terminal->input[parss->i] == '<' && terminal->input[parss->i + 1] == '<')
 	{
-		command->here_doc = 1;
+		command->hd_in = 1;
 		call_heredoc(terminal, command, parss);
 	}
 	else if (terminal->input[parss->i] == '>' && terminal->input[parss->i + 1] == '>')
 	{
-		command->here_doc = 0;
+		command->hd_out = 1;
 		call_heredoc(terminal, command, parss);
 	}
 	else if (terminal->input[parss->i] == '<')
 	{
-		command->redirection = 0;
+		command->redir_in = 1;
 		call_redir_infile(terminal, command, parss);
 	}
 	else if (terminal->input[parss->i] == '>')
 	{
-		command->redirection = 1;
+		command->redir_out = 1;
 		call_redir_outfile(terminal, command, parss);
 	}
 	else if (terminal->input[parss->i] == '$')
@@ -216,13 +216,13 @@ void	advanced_print(t_command *command)
 			printf("arguments[%d] = %s\n", i, command->arguments[i]);
 			i++;
 		}
-		if (command->redirection == 1)
+		if (command->redir_out == 1)
 			printf("outfile = %s\n", command->outfile);
-		else if (command->redirection == 0)
+		if (command->redir_in == 1)
 			printf("infile = %s\n", command->infile);
-		if (command->here_doc == 0)
+		if (command->hd_out == 0)
 			printf("outfile = %s\n", command->outfile);
-		else if (command->here_doc == 1)
+		if (command->hd_in == 1)
 			printf("infile = %s\n", command->infile);
 		if (command->pipe == 0)
 			printf("pipe = 0\n");
@@ -232,18 +232,18 @@ void	advanced_print(t_command *command)
 			printf("int_dollar = %d\n", command->int_dollar);
 		if(command->int_dollar == 0)
 			printf("int_dollar = %s\n", command->dollar);
-		if (command->redirection == 0)
-			printf("redirection = 0\n");
-		else if (command->redirection == 1)
-			printf("redirection = 1\n");
+		if (command->redir_in == 1)
+			printf("redir_in = 1\n");
+		else if (command->redir_out == 1)
+			printf("redir_out = 1\n");
 		else
-			printf("redirection = -1\n");
-		if (command->here_doc == 0)
-			printf("here_doc = 0\n");
-		else if (command->here_doc == 1)
-			printf("here_doc = 1\n");
+			printf("redir_in = -1\nredir_out = -1\n");
+		if (command->hd_in == 1)
+			printf("hd_in = 1\n");
+		else if (command->hd_out == 1)
+			printf("hd_out = 1\n");
 		else
-			printf("Here_doc = -1\n");
+			printf("hd_in = -1\nhd_out = -1\n");
 		printf("Command out dollar : %s\n", command->out_dollar);
 		printf("builtins = %d\n", command->builtins);
 		printf("\n");
@@ -280,7 +280,7 @@ void call_dollar(t_input *terminal, t_command *command, t_parss *parss)
 		}
 		command->dollar[i] = '\0';
 		parss->i++;
-		print_commands(command);
+		// print_commands(command);
 	}
 }
 

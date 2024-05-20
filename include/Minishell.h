@@ -56,8 +56,10 @@ typedef struct t_command
 	char				*out_dollar;
 	int					int_dollar; // 0 = $ // 1 = ? //
 	int					pipe;
-	int					redirection; // 0 = < // 1 = > //
-	int					here_doc; // 0 = >> // 1 = << //
+	int					redir_in;
+	int					redir_out;
+	int					hd_in; // 0 = >> // 1 = << //
+	int					hd_out; // 0 = >> // 1 = << //
 	int					builtins;
 	struct t_command	*next;
 }				t_command;
@@ -136,6 +138,8 @@ void		last_command(t_input *terminal, t_command *command, int i);
 void		only_one_command(t_input *terminal, t_command *command, int i);
 void		parent_process(t_input *terminal, int i, pid_t pid);
 void		calling_function(t_input *terminal, t_command *command, int i);
+void    	redir_in(t_input *terminal, t_command *command, int i);
+void   		redir_out(t_input *terminal, t_command *command, int i);
 
 /*
 		Function Executing builtins

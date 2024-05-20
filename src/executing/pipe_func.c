@@ -15,26 +15,12 @@
 void	first_command(t_input *terminal, t_command *command, int i)
 {
     printf("first_command\n");
-    if (command->redirection == 0)
-    {
-        close(terminal->p_fd[i][0]);
-        command->fd = open(command->infile, O_RDONLY);
-        if (command->fd == -1)
-            error_message("Error: open failed\n");
-        dup2(command->fd, STDIN_FILENO);
-        close(command->fd);
-    }
+    if (command->redir_in == 1)
+        redir_in(terminal, command, i);
     else
 	    close(terminal->p_fd[i][0]);
-    if (command->redirection == 1)
-    {
-        close(terminal->p_fd[i][1]);
-        command->fd = open(command->outfile, O_WRONLY | O_CREAT | O_TRUNC, 0644);
-        if (command->fd == -1)
-            error_message("Error: open failed\n");
-        dup2(command->fd, STDOUT_FILENO);
-        close(command->fd);
-    }
+    if (command->redir_out == 1)
+        redir_out(terminal, command, i);
     else
     {
 	    dup2(terminal->p_fd[i][1], STDOUT_FILENO);
@@ -47,28 +33,16 @@ void	first_command(t_input *terminal, t_command *command, int i)
 void	middle_command(t_input *terminal, t_command *command, int i) // verif si redirection envoyer pipe resultat
 {
     printf("middle_command\n\n");
-    if (command->redirection == 0)
-    {
-        command->fd = open(command->infile, O_RDONLY);
-        if (command->fd == -1)
-            error_message("Error: open failed\n");
-        dup2(command->fd, STDIN_FILENO);
-        close(command->fd);
-    }
+    if (command->redir_in == 1)
+        redir_in(terminal, command, i);
     else
     {
         close(terminal->p_fd[i][0]);
         dup2(terminal->p_fd[i - 1][0], STDIN_FILENO);
         close(terminal->p_fd[i - 1][0]);
     }
-    if (command->redirection == 1)
-    {
-        command->fd = open(command->outfile, O_WRONLY | O_CREAT | O_TRUNC, 0644);
-        if (command->fd == -1)
-            error_message("Error: open failed\n");
-        dup2(command->fd, STDOUT_FILENO);
-        close(command->fd);
-    }
+    if (command->redir_out == 1)
+        redir_out(terminal, command, i);
     else
     {
         dup2(terminal->p_fd[i][1], STDOUT_FILENO);
@@ -80,30 +54,16 @@ void	middle_command(t_input *terminal, t_command *command, int i) // verif si re
 void	last_command(t_input *terminal, t_command *command, int i)
 {
     printf("last_command\n\n");
-    if (command->redirection == 0)
-    {
-        close(terminal->p_fd[i][0]);
-        command->fd = open(command->infile, O_RDONLY);
-        if (command->fd == -1)
-            error_message("Error: open failed\n");
-        dup2(command->fd, STDIN_FILENO);
-        close(command->fd);
-    }
+    if (command->redir_in == 1)
+        redir_in(terminal, command, i);
     else
     {
         close(terminal->p_fd[i][0]);
         dup2(terminal->p_fd[i - 1][0], STDIN_FILENO);
         close(terminal->p_fd[i - 1][0]);
     }
-    if (command->redirection == 1)
-    {
-        close(terminal->p_fd[i][1]);
-        command->fd = open(command->outfile, O_WRONLY | O_CREAT | O_TRUNC, 0644);
-        if (command->fd == -1)
-            error_message("Error: open failed\n");
-        dup2(command->fd, STDOUT_FILENO);
-        close(command->fd);
-    }
+    if (command->redir_out == 1)
+        redir_out(terminal, command, i);
     else
     {
         close(terminal->p_fd[i][1]);
@@ -117,26 +77,12 @@ void	last_command(t_input *terminal, t_command *command, int i)
 void	only_one_command(t_input *terminal, t_command *command, int i)
 {
     printf("only_one_command\n\n");
-    if (command->redirection == 0)
-    {
-        close(terminal->p_fd[i][0]);
-        command->fd = open(command->infile, O_RDONLY);
-        if (command->fd == -1)
-            error_message("Error: open failed\n");
-        dup2(command->fd, STDIN_FILENO);
-        close(command->fd);
-    }
+    if (command->redir_in == 1)
+        redir_in(terminal, command, i);
     else
 	    close(terminal->p_fd[i][0]);
-    if (command->redirection == 1)
-    {
-        close(terminal->p_fd[i][1]);
-        command->fd = open(command->outfile, O_WRONLY | O_CREAT | O_TRUNC, 0644);
-        if (command->fd == -1)
-            error_message("Error: open failed\n");
-        dup2(command->fd, STDOUT_FILENO);
-        close(command->fd);
-    }
+    if (command->redir_out == 1)
+        redir_out(terminal, command, i);
     else
 	    close(terminal->p_fd[i][1]);
 	builtins_child(terminal, command);

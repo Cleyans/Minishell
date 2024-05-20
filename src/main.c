@@ -20,11 +20,11 @@ int	main(int ac, char **av, char **env)
 
 	(void)ac;
 	(void)av;
-	signal_check();
 	command = malloc(sizeof(t_command));
 	if (command == NULL)
 		error_message("Error: malloc failed\n");
 	first = command;
+	signal_check();
 	while (1)
 	{
 		init(&terminal, command, env);
@@ -66,35 +66,36 @@ void	init(t_input *terminal, t_command *command, char **env)
 	command->arguments[0] = NULL;
 	command->next = NULL;
 	command->pipe = -1;
-	command->redirection = -1;
+	command->redir_in = -1;
+	command->redir_out = -1;
+	command->hd_in = -1;
+	command->hd_out = -1;
 	command->builtins = 0;
-	command->here_doc = -1;
 	command->dollar = NULL;
 	command->int_dollar = -1;
 	command->out_dollar = NULL;
 }
 
-void	print_commands(t_command *command)
-{
-	int	i;
-	int	cmd_count;
+// void	print_commands(t_command *command)
+// {
+// 	int	i;
+// 	int	cmd_count;
 
-	cmd_count = 0;
-	while (command->next != NULL)
-	{
-		if (command->command[0] != '\0')
-			printf("Commande[%d] = %s\n",cmd_count, command->command);
-		i = 0;
-		while (command->arguments[i] != NULL && command->arguments[i][0] != '\0')
-		{
-			printf("Arguments[%d] de la commande[%d] : %s\n",i, cmd_count, command->arguments[i]);
-			i++;
-		}
-		printf("Pipe: %d\n", command->pipe);
-		printf("Redirection: %d\n", command->redirection);
-		printf("\n");
-		cmd_count++;
-		command = command->next;
-	}
-}
-
+// 	cmd_count = 0;
+// 	while (command->next != NULL)
+// 	{
+// 		if (command->command[0] != '\0')
+// 			printf("Commande[%d] = %s\n",cmd_count, command->command);
+// 		i = 0;
+// 		while (command->arguments[i] != NULL && command->arguments[i][0] != '\0')
+// 		{
+// 			printf("Arguments[%d] de la commande[%d] : %s\n",i, cmd_count, command->arguments[i]);
+// 			i++;
+// 		}
+// 		printf("Pipe: %d\n", command->pipe);
+// 		printf("Redirection: %d\n", command->redirection);
+// 		printf("\n");
+// 		cmd_count++;
+// 		command = command->next;
+// 	}
+// }
