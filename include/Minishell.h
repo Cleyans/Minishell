@@ -88,6 +88,9 @@ typedef struct t_input
 	int			nb_cmd;
 	int			nb_pipe;
 	char		**env;
+	char		**export;
+	int			i;
+	int			y;
 	int			status;
 	int			p_fd[4096][2];
 	pid_t		pid[4096];
@@ -106,7 +109,7 @@ typedef struct t_input
 */
 
 t_command	*ft_lstnew_m(void);
-void		init(t_input *terminal, t_command *command, char **env);
+void		init(t_input *terminal, t_command *command);
 // void		checking_input(t_input *terminal, t_command *command);	
 int			white_space(char c);
 int			find_p_r(char c);
@@ -155,6 +158,12 @@ void		ft_putstr_echo(char *s, int fd);
 void		ft_cd(t_command *command);
 void		ft_pwd(t_command *command);
 void		ft_exit(t_input *terminal, t_command *command);
+void		init_export(t_input *terminal);
+void		ft_export(t_input *terminal, t_command *command);
+void		ft_unset(t_input *terminal, t_command *command);
+void 		free_path_line(t_input *terminal);
+void		init_env(t_input *terminal, char  **env);
+
 
 /*
 		Function signals

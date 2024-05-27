@@ -253,8 +253,10 @@ void	advanced_print(t_command *command)
 
 void call_dollar(t_input *terminal, t_command *command, t_parss *parss)
 {
+	printf("HERE 0\n");
 	while(terminal->input[parss->i] != '\0')
 	{
+		printf("HERE 1\n");
 		command->dollar = malloc(sizeof(char) * 100);
 		int i;
 
@@ -275,6 +277,7 @@ void call_dollar(t_input *terminal, t_command *command, t_parss *parss)
 		}
 		if (command->int_dollar == 0)
 		{
+			printf("HERE 2\n");
 			search_path_dollar(terminal, command);
 			parss->i++;
 		}
@@ -291,26 +294,30 @@ void	*search_path_dollar(t_input *terminal, t_command *command)
     int			j;
     int			k;
     int			l;
-
+	printf("HERE 1\n");
     command->out_dollar = malloc(sizeof(char) * 10000);
     if (command->out_dollar == NULL) {
         return NULL;
     }
-
+	printf("HERE 2\n");
     l = 0;
     i = 0;
     while (terminal->env[i] != NULL)
     {
+		printf("HERE 3\n");
         j = 0;
         k = 0;
         while (terminal->env[i][j] != '\0')
         {
+			printf("HERE 4\n");
             while (terminal->env[i][j] == command->dollar[k] && terminal->env[i][j] != '\0')
             {
+				printf("HERE 5\n");
                 j++;
                 k++;
                 if (terminal->env[i][j] == '=')
                 {
+					printf("HERE 6\n");
                     j++;
                     while (terminal->env[i][j] != '\0') {
                         command->out_dollar[l++] = terminal->env[i][j++];
@@ -326,10 +333,13 @@ void	*search_path_dollar(t_input *terminal, t_command *command)
         }
         i++;
     }
+	printf("HERE 7\n");
+	printf("out_dollar = %s\n", command->out_dollar);
     free(command->out_dollar);
     command->out_dollar = NULL;
     return NULL;
 }
+
 
 int check_char(char c)
 {

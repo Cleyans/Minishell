@@ -23,11 +23,13 @@ int	main(int ac, char **av, char **env)
 	command = malloc(sizeof(t_command));
 	if (command == NULL)
 		error_message("Error: malloc failed\n");
+	init_env(&terminal, env);
+	init_export(&terminal);
 	first = command;
 	signal_check();
 	while (1)
 	{
-		init(&terminal, command, env);
+		init(&terminal, command);
 		terminal.input = readline("\033[0;35mMinihell\033[0;37m$\033[0m ");
 		if (verif_input(&terminal) == 0)
 		{
@@ -48,10 +50,11 @@ int	main(int ac, char **av, char **env)
 	return (terminal.status);
 }
 
-void	init(t_input *terminal, t_command *command, char **env)
+void	init(t_input *terminal, t_command *command)
 {
 	terminal->input = NULL;
-	terminal->env = env;
+	// if (env != NULL)
+	// 	terminal->env = env; //call fonction init env
 	terminal->nb_cmd = 1;
 	terminal->status = 0;
 	terminal->nb_pipe = 0;
