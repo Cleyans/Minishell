@@ -36,12 +36,8 @@ int	main(int ac, char **av, char **env)
 			cheking_input(&terminal, command);
 			command = first;
 			advanced_print(command);
-			// command = first;
-			if (builtins_parent(&terminal, command) == 0)
-				executing(&terminal, command);
-			command = malloc(sizeof(t_command));
-			if (command == NULL)
-				error_message("Error: malloc failed\n");
+			command = first;
+			executing(&terminal, command);
 			command = first;
 			command->next = NULL;
 		}
@@ -67,6 +63,11 @@ void	init(t_input *terminal, t_command *command)
 	command->command[0] = '\0';
 	command->arguments = malloc(sizeof(char *) * 100);
 	command->arguments[0] = NULL;
+	command->dollar = malloc(sizeof(char) * 100);
+	command->dollar = NULL;
+	command->out_dollar = malloc(sizeof(char) * 100);
+	command->out_dollar = NULL;
+	command->int_dollar = -1;
 	command->next = NULL;
 	command->pipe = -1;
 	command->redir_in = -1;
@@ -74,9 +75,6 @@ void	init(t_input *terminal, t_command *command)
 	command->hd_in = -1;
 	command->hd_out = -1;
 	command->builtins = 0;
-	command->dollar = NULL;
-	command->int_dollar = -1;
-	command->out_dollar = NULL;
 }
 
 // void	print_commands(t_command *command)

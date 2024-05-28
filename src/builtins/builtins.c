@@ -12,26 +12,22 @@
 
 #include "../../include/Minishell.h"
 
-void	builtins_child(t_input *terminal, t_command *command)
-{
-	if (ft_strcmp(command->command, "echo") == 0)
-	{
-		ft_echo(terminal, command);
-		exit(1);
-	}
-}
-
-int	builtins_parent(t_input *terminal, t_command *command)
+void	builtins(t_input *terminal, t_command *command)
 {
 	if (ft_strcmp(command->command, "export") == 0)
 	{
 	    ft_export(terminal, command);
-	    return (1);
+	    exit(1);
 	}
 	else if (ft_strcmp(command->command, "unset") == 0)
 	{
 	    ft_unset(terminal, command);
-	    return (1);
+	    exit(1);
+	}
+	if (ft_strcmp(command->command, "echo") == 0)
+	{
+		ft_echo(terminal, command);
+		exit(1);
 	}
 	// else if (ft_strcmp(command->command, "env") == 0)
 	// {
@@ -41,16 +37,16 @@ int	builtins_parent(t_input *terminal, t_command *command)
 	else if (ft_strcmp(command->command, "cd") == 0)
 	{
 		ft_cd(command);
-		return (1);
+		exit(1);
 	}
 	else if (ft_strcmp(command->command, "pwd") == 0)
 	{
 		ft_pwd(command);
-		return (1);
+		exit(1);
 	}
 	else if (ft_strcmp(command->command, "exit") == 0)
 		ft_exit(terminal, command);
-	return (0);
+	return;
 }
 
 void	ft_cd(t_command *command) // ne pas oublier le status
