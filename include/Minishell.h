@@ -51,16 +51,15 @@ typedef struct t_command
 	char				**arguments;
 	char					*infile;
 	char					*outfile;
-	char					*word;
+	int					fd;
 	char				*dollar;
 	char				*out_dollar;
-	int					fd;
-	int					int_dollar; // 0 = $ // 1 = ?
+	int					int_dollar; // 0 = $ // 1 = ? //
 	int					pipe;
 	int					redir_in;
 	int					redir_out;
-	int					hd_in; // 0 = >> // 1 = <<
-	int					hd_out; // 0 = >> // 1 = <<
+	int					hd_in; // 0 = >> // 1 = << //
+	int					hd_out; // 0 = >> // 1 = << //
 	int					builtins;
 	struct t_command	*next;
 }				t_command;
@@ -92,6 +91,7 @@ typedef struct t_input
 	char		**export;
 	int			i;
 	int			y;
+	int			env_size;
 	int			status;
 	int			p_fd[4096][2];
 	pid_t		pid[4096];
@@ -144,10 +144,6 @@ void		parent_process(t_input *terminal, int i, pid_t pid);
 void		calling_function(t_input *terminal, t_command *command, int i);
 void    	redir_in(t_input *terminal, t_command *command, int i);
 void   		redir_out(t_input *terminal, t_command *command, int i);
-void		hd_out(t_input *terminal, t_command *command, int i);
-void		hd_in(t_input *terminal, t_command *command, int i);
-char   		*readline_here_doc(char *eof);
-
 
 /*
 		Function Executing builtins
@@ -157,7 +153,8 @@ int			check_echo_args(t_command *command, t_input *terminal, int i, int valid);
 int			ft_echo_check(char *s, char *s2, t_input *terminal,
 				t_command *command);
 void		ft_echo(t_input *terminal, t_command *command);
-void		builtins(t_input *terminal, t_command *command);
+int			builtins_parent(t_input *terminal, t_command *command);
+void		builtins_child(t_input *terminal, t_command *command);
 void		ft_putstr_echo(char *s, int fd);
 void		ft_cd(t_command *command);
 void		ft_pwd(t_command *command);
@@ -165,8 +162,10 @@ void		ft_exit(t_input *terminal, t_command *command);
 void		init_export(t_input *terminal);
 void		ft_export(t_input *terminal, t_command *command);
 void		ft_unset(t_input *terminal, t_command *command);
+void 		free_path_line(t_input *terminal);
 void		init_env(t_input *terminal, char  **env);
-// void 		free_path_line(t_input *terminal);
+void		env(t_input *terminal);
+void	add_to_env(t_input *terminal, t_command *command, int arg_index);
 
 
 /*
@@ -196,11 +195,10 @@ void		init_parss(t_parss *parss);
 void		cheking_input(t_input *terminal, t_command *command);
 // void		call_heredoc_infile(t_input *terminal, t_command *command, t_parss *parss);
 // void		call_heredoc_outfile(t_input *terminal, t_command *command, t_parss *parss);
-void		call_heredoc_out(t_input *terminal, t_command *command, t_parss *parss);
-void		call_heredoc_in(t_input *terminal, t_command *command, t_parss *parss);
+void		call_heredoc(t_input *terminal, t_command *command, t_parss *parss);
 int 		check_char(char c);
 void 		call_dollar(t_input *terminal, t_command *command, t_parss *parss);
-// void		call_dollar_interogation(t_input *terminal, t_command *command, t_parss *parss);
+void		call_dollar_interogation(t_input *terminal, t_command *command, t_parss *parss);
 void	*search_path_dollar(t_input *terminal, t_command *command);
 // void	*search_path_dollar_interogation(t_input *terminal);
 
