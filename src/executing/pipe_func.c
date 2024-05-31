@@ -89,8 +89,23 @@ void	only_one_command(t_input *terminal, t_command *command, int i)
 	exec_cmd(command, terminal);
 }
 
-void	parent_process(t_input *terminal, int i, pid_t pid)
+void	parent_process(t_input *terminal, t_command *command, int i, pid_t pid)
 {
-	waitpid(pid, NULL, 0);
-	close(terminal->p_fd[i][1]);
+    if (builtins_check(command) == 1)
+    {
+        if (command->redir_in == 1)
+            redir_in(terminal, command, i);
+        else
+            close(terminal->p_fd[i][0]);
+        if (command->redir_out == 1)
+            redir_out(terminal, command, i);
+        else
+            close(terminal->p_fd[i][1]);
+        builtins_parent(terminal, command);
+    }
+    else
+    {
+        waitpid(pid, NULL, 0);
+        close(terminal->p_fd[i][1]);
+    }
 }

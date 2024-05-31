@@ -9,7 +9,7 @@ SOURCE := 	src/main.c \
 			src/list/lst.c \
 			src/executing/main_exec.c src/executing/pipe_func.c src/executing/utils_exec.c src/executing/redir.c\
 			src/signals/signals.c \
-			src/builtins/builtins.c src/builtins/builtins_func.c src/builtins/echo.c \
+			src/builtins/builtins.c src/builtins/builtins_func.c src/builtins/echo.c src/builtins/builtins_utils.c\
 			src/parssing/parss.c \
 
 OBJ 	= $(SOURCE:.c=.o)

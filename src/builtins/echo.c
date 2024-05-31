@@ -26,6 +26,11 @@ void	ft_echo(t_input *terminal, t_command *command)
 	}
 	while (command->arguments[i] != NULL && terminal->echo.close == 0)
 	{
+		// if (command->arguments[0][0] == '$')
+		// {
+		// 	call_dollar(terminal, command, parss);
+		// 	break;
+		// }
 		ft_putstr_echo(command->arguments[i], 2);
 		if (command->arguments[i + 1] != NULL)
 			ft_putstr_fd(" ", 1);

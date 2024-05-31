@@ -12,9 +12,6 @@
 
 #include "../../include/Minishell.h"
 
-// only for one command || if we want to do more then one and more
-//then one pipe, we have to know the amouth of pipe before the execution
-
 void	executing(t_input *terminal, t_command *command)
 {
 	int		i;
@@ -28,13 +25,16 @@ void	executing(t_input *terminal, t_command *command)
 	{
 		if (pipe(terminal->p_fd[i]) == -1)
 			error_message("Error: pipe failed\n");
-		pid[i] = fork();
+		if (builtins_check(command) == 0)
+			pid[i] = fork();
+		else
+			pid[i] = NOTCHILD;
 		if (pid[i] == -1)
 			error_message("Error: fork failed\n");
 		else if (pid[i] == 0)
 			calling_function(terminal, command, i);
 		else
-			parent_process(terminal, i, pid[i]);
+			parent_process(terminal, command, i, pid[i]);
 		i++;
 		command = command->next;
 		terminal->nb_cmd++;

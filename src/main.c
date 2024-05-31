@@ -27,7 +27,7 @@ int	main(int ac, char **av, char **env)
 	init_export(&terminal);
 	first = command;
 	signal_check();
-	while (1)
+	while (1)  // faire une fonction qui free a chaque iteration.
 	{
 		init(&terminal, command);
 		terminal.input = readline("\033[0;35mMinihell\033[0;37m$\033[0m ");
@@ -35,13 +35,9 @@ int	main(int ac, char **av, char **env)
 		{
 			cheking_input(&terminal, command);
 			command = first;
-			advanced_print(command);
+			// advanced_print(command);
 			// command = first;
-			if (builtins_parent(&terminal, command) == 0)
-				executing(&terminal, command);
-			command = malloc(sizeof(t_command));
-			if (command == NULL)
-				error_message("Error: malloc failed\n");
+			executing(&terminal, command);
 			command = first;
 			command->next = NULL;
 		}

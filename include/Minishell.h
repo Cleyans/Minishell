@@ -30,6 +30,8 @@
 # include <unistd.h>
 # include <fcntl.h>
 
+# define NOTCHILD -2
+
 /*
 *****************************************************
                         STRUCT                     
@@ -49,8 +51,9 @@ typedef struct t_command
 {
 	char				*command;
 	char				**arguments;
-	char					*infile;
-	char					*outfile;
+	char				*infile;
+	char				*outfile;
+	char				*word;
 	int					fd;
 	char				*dollar;
 	char				*out_dollar;
@@ -140,7 +143,7 @@ void		first_command(t_input *terminal, t_command *command, int i);
 void		middle_command(t_input *terminal, t_command *command, int i);
 void		last_command(t_input *terminal, t_command *command, int i);
 void		only_one_command(t_input *terminal, t_command *command, int i);
-void		parent_process(t_input *terminal, int i, pid_t pid);
+void		parent_process(t_input *terminal, t_command *command, int i, pid_t pid);
 void		calling_function(t_input *terminal, t_command *command, int i);
 void    	redir_in(t_input *terminal, t_command *command, int i);
 void   		redir_out(t_input *terminal, t_command *command, int i);
@@ -149,6 +152,7 @@ void   		redir_out(t_input *terminal, t_command *command, int i);
 		Function Executing builtins
 */
 
+int			builtins_check(t_command *command);
 int			check_echo_args(t_command *command, t_input *terminal, int i, int valid);
 int			ft_echo_check(char *s, char *s2, t_input *terminal,
 				t_command *command);
@@ -162,7 +166,7 @@ void		ft_exit(t_input *terminal, t_command *command);
 void		init_export(t_input *terminal);
 void		ft_export(t_input *terminal, t_command *command);
 void		ft_unset(t_input *terminal, t_command *command);
-void 		free_path_line(t_input *terminal);
+// void 		free_path_line(t_input *terminal);
 void		init_env(t_input *terminal, char  **env);
 void		env(t_input *terminal);
 void	add_to_env(t_input *terminal, t_command *command, int arg_index);
