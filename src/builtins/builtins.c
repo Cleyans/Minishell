@@ -202,6 +202,7 @@ static void	add_export(t_input *terminal, t_command *command, int arg_index)
 		new_str = create_new_str(command->arguments[arg_index], equal_sign);
 		tmp[i] = ft_strjoin_pipex("declare -x ", new_str);
 		free(new_str);
+		add_to_env(terminal, command, arg_index); // Moved inside the if block
 	}
 	else
 	{
@@ -210,8 +211,8 @@ static void	add_export(t_input *terminal, t_command *command, int arg_index)
 	tmp[i + 1] = NULL;
 	terminal->export = tmp;
 	terminal->i++;
-	add_to_env(terminal, command, arg_index);
 }
+
 void	add_to_env(t_input *terminal, t_command *command, int arg_index)
 {
 	terminal->env = realloc(terminal->env, (terminal->env_size + 2) * sizeof(char *));
