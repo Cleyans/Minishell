@@ -76,17 +76,20 @@ void	exec_cmd(t_command *command, t_input *terminal)
 	}
 	if (access(command->command, F_OK) == 0)
 	{
-		execve(command->command, command->arguments, terminal->env);
-		fprintf(stderr, "Minishell: %s: command not found\n", command->command);
-		exit(EXIT_FAILURE);
+		cmd_path = command->command;
+		execve(cmd_path, cmd_split, terminal->env);
+		exec_error(command, cmd_path, cmd_split);
 	}
 	cmd_path = search_path(terminal->env, command->command);
 	if (execve(cmd_path, cmd_split, terminal->env) == -1)
-	{
-		fprintf(stderr, "Minishell: %s: command not found\n", command->command);
-		free_exec_error(command, cmd_path, cmd_split);
-		exit(EXIT_FAILURE);
-	}
+		exec_error(command, cmd_path, cmd_split);
+}
+
+void	exec_error(t_command *command, char *cmd_path, char **cmd_split)
+{
+	fprintf(stderr, "Minishell: %s: command not found\n", command->command);
+	free_exec_error(command, cmd_path, cmd_split);
+	exit(EXIT_FAILURE);
 }
 
 void	error_message(char *message)

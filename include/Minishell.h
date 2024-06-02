@@ -130,10 +130,12 @@ void		ft_lstclear_m(t_command *command, void (*del)(t_command *));
         Function Executing
 */
 
+char		**remove_empty_args(char **args);
 char		*search_path(char **env, char *cmd_split);
 void		executing(t_input *terminal, t_command *command);
 void		exec_cmd(t_command *command, t_input *terminal);
-char		**remove_empty_args(char **args);
+void		exec_error(t_command *command, char *cmd_path, char **cmd_split);
+
 
 /*
 		Function Executing pipes
@@ -212,7 +214,7 @@ void	*search_path_dollar(t_input *terminal, t_command *command);
 		Function Utils
 */
 
-void		print_commands(t_command *command);
+// void		print_commands(t_command *command);
 void		free_exec_cmd(t_command *command);
 void		advanced_print(t_command *command);
 void		free_exec_error(t_command *command,

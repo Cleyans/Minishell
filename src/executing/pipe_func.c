@@ -48,6 +48,7 @@ void	middle_command(t_input *terminal, t_command *command, int i) // verif si re
         dup2(terminal->p_fd[i][1], STDOUT_FILENO);
         close(terminal->p_fd[i][1]);
     }
+    builtins_child(terminal, command);
 	exec_cmd(command, terminal);
 }
 
@@ -97,7 +98,7 @@ void	parent_process(t_input *terminal, t_command *command, int i, pid_t pid)
             redir_in(terminal, command, i);
         else
             close(terminal->p_fd[i][0]);
-        if (command->redir_out == 1)
+        if (command->redir_out == 1) 
             redir_out(terminal, command, i);
         else
             close(terminal->p_fd[i][1]);
@@ -105,7 +106,7 @@ void	parent_process(t_input *terminal, t_command *command, int i, pid_t pid)
     }
     else
     {
-        waitpid(pid, NULL, 0);
+        waitpid(pid, &terminal->status, 0);
         close(terminal->p_fd[i][1]);
     }
 }
