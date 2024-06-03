@@ -31,8 +31,8 @@ void	executing(t_input *terminal, t_command *command)
 			pid[i] = NOTCHILD;
 		if (pid[i] == -1)
 			error_message("Error: fork failed\n");
-		else if (pid[i] == 0)
-			calling_function(terminal, command, i);
+		else if (pid[i] == 0 || pid[i] == NOTCHILD)
+			calling_function(terminal, command, i, pid[i]);
 		else
 			parent_process(terminal, command, i, pid[i]);
 		i++;
@@ -42,13 +42,13 @@ void	executing(t_input *terminal, t_command *command)
 	free(pid);
 }
 
-void	calling_function(t_input *terminal, t_command *command, int i)
+void	calling_function(t_input *terminal, t_command *command, int i, int pid)
 {
-	if (command->pipe == 0 && i == 0)
+	if (command->pipe == 0 && i == 0 || command->pipe == 0 && i == 0 && pid == NOTCHILD)
 		first_command(terminal, command, i);
-	else if (command->pipe == 0 && i > 0)
+	else if (command->pipe == 0 && i > 0 || command->pipe == 0 && i > 0 && pid == NOTCHILD)
 		middle_command(terminal, command, i);
-	else if (command->pipe == -1)
+	else if (command->pipe == -1 || command->pipe == -1 && pid == NOTCHILD)
 	{
 		if (terminal->nb_cmd > 1)
 			last_command(terminal, command, i);

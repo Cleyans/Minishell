@@ -26,6 +26,9 @@ void	first_command(t_input *terminal, t_command *command, int i)
 	    dup2(terminal->p_fd[i][1], STDOUT_FILENO);
         close(terminal->p_fd[i][1]);
     }
+    if (builtins_check(command) == 1)
+        if (builtins_parent(terminal, command))
+            return ;
 	builtins_child(terminal, command);
 	exec_cmd(command, terminal);
 }
@@ -48,6 +51,9 @@ void	middle_command(t_input *terminal, t_command *command, int i) // verif si re
         dup2(terminal->p_fd[i][1], STDOUT_FILENO);
         close(terminal->p_fd[i][1]);
     }
+    if (builtins_check(command) == 1)
+        if (builtins_parent(terminal, command))
+            return ;
     builtins_child(terminal, command);
 	exec_cmd(command, terminal);
 }
@@ -71,6 +77,9 @@ void	last_command(t_input *terminal, t_command *command, int i)
         dup2(terminal->p_fd[i - 1][1], STDIN_FILENO);
         close(terminal->p_fd[i - 1][1]);
     }
+    if (builtins_check(command) == 1)
+        if (builtins_parent(terminal, command))
+            return ;
     builtins_child(terminal, command);
 	exec_cmd(command, terminal);
 }
@@ -85,28 +94,16 @@ void	only_one_command(t_input *terminal, t_command *command, int i)
     if (command->redir_out == 1)
         redir_out(terminal, command, i);
     else
-	    close(terminal->p_fd[i][1]);
+	    close(terminal->p_fd[i][1]);\
+    if (builtins_check(command) == 1)
+        if (builtins_parent(terminal, command))
+            return ;
 	builtins_child(terminal, command);
 	exec_cmd(command, terminal);
 }
 
 void	parent_process(t_input *terminal, t_command *command, int i, pid_t pid)
 {
-    if (builtins_check(command) == 1)
-    {
-        if (command->redir_in == 1)
-            redir_in(terminal, command, i);
-        else
-            close(terminal->p_fd[i][0]);
-        if (command->redir_out == 1) 
-            redir_out(terminal, command, i);
-        else
-            close(terminal->p_fd[i][1]);
-        builtins_parent(terminal, command);
-    }
-    else
-    {
         waitpid(pid, &terminal->status, 0);
         close(terminal->p_fd[i][1]);
-    }
 }

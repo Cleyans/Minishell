@@ -190,6 +190,7 @@ void	put_arg_cmd(t_input *terminal, t_command *command, t_parss *parss)
 		parss->k++;
 	}
 	command->arguments[parss->j][parss->k] = '\0';
+	command->arguments[parss->j + 1] = '\0';
 	parss->k = 0;
 	parss->j++;
 }

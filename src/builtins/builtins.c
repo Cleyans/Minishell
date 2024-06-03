@@ -26,7 +26,7 @@ int	builtins_parent(t_input *terminal, t_command *command)
 	if (ft_strcmp(command->command, "export") == 0)
 	{
 	    ft_export(terminal, command);
-	    return (1);
+	   	return (1);
 	}
 	else if (ft_strcmp(command->command, "unset") == 0)
 	{

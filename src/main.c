@@ -36,8 +36,8 @@ int	main(int ac, char **av, char **env)
 		{
 			cheking_input(&terminal, command);
 			command = first;
-			// advanced_print(command);
-			// command = first;
+			advanced_print(command);
+			command = first;
 			executing(&terminal, command);
 			command = first;
 			command->next = NULL;
