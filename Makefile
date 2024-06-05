@@ -1,11 +1,11 @@
 NAME := minishell
 
 CC := cc
-CFLAGS = -g -Wall -Wextra -Werror
+CFLAGS = -g 
 FT			= include/libft
 LIBFT		= $(FT)/libft.a
 
-SOURCE := 	src/main.c \
+SOURCE := 	src/main.c src/init.c src/free.c\
 			src/list/lst.c \
 			src/executing/main_exec.c src/executing/pipe_func.c src/executing/utils_exec.c src/executing/redir.c\
 			src/signals/signals.c \

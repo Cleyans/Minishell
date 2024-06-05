@@ -12,21 +12,6 @@
 
 #include "../../include/Minishell.h"
 
-void	free_exec_error(t_command *command, char *cmd_path, char **cmd_split)
-{
-	int	i;
-
-	i = 0;
-	free(cmd_path);
-	while (cmd_split[i])
-	{
-		free(cmd_split[i]);
-		i++;
-	}
-	free(cmd_split);
-	free_exec_cmd(command);
-}
-
 char	**remove_empty_args(char **args)
 {
 	int		i;
@@ -82,16 +67,3 @@ char	*search_path(char **env, char *cmd_split)
 	return (NULL);
 }
 
-void	free_exec_cmd(t_command *command)
-{
-	int	i;
-
-	i = 0;
-	free(command->command);
-	while (command->arguments[i])
-	{
-		free(command->arguments[i]);
-		i++;
-	}
-	free(command->arguments);
-}

@@ -89,7 +89,7 @@ typedef struct t_input
 {
 	char		*input;
 	int			nb_cmd;
-	int			nb_pipe;
+	int			count_cmd;
 	char		**env;
 	char		**export;
 	int			i;
@@ -114,6 +114,10 @@ typedef struct t_input
 
 t_command	*ft_lstnew_m(void);
 void		init(t_input *terminal, t_command *command);
+void		init_terminal(t_input *terminal);
+void		init_command(t_command *command);
+void 		free_nodes(t_command *first);
+
 // void		checking_input(t_input *terminal, t_command *command);	
 int			white_space(char c);
 int			find_p_r(char c);
@@ -123,8 +127,8 @@ int			find_p_r(char c);
 */
 
 void		ft_lstadd_back_m(t_command **lst, t_command *new);
-// void		del_command(t_command *command);
 void		ft_lstclear_m(t_command *command, void (*del)(t_command *));
+// void		del_command(t_command *command);
 
 /*
         Function Executing
@@ -208,7 +212,7 @@ void		cheking_input(t_input *terminal, t_command *command);
 void		call_heredoc(t_input *terminal, t_command *command, t_parss *parss);
 int 		check_char(char c);
 void 		call_dollar(t_input *terminal, t_command *command, t_parss *parss);
-void		call_dollar_interogation(t_input *terminal, t_command *command, t_parss *parss);
+// void		call_dollar_interogation(t_input *terminal, t_command *command, t_parss *parss);
 void	*search_path_dollar(t_input *terminal, t_command *command);
 // void	*search_path_dollar_interogation(t_input *terminal);
 
@@ -221,6 +225,8 @@ void	*search_path_dollar(t_input *terminal, t_command *command);
 // void		print_commands(t_command *command);
 void		free_exec_cmd(t_command *command);
 void		advanced_print(t_command *command);
+void		free_cmd(t_command *command);
+void		free_str_tab(char **strtab);
 void		free_exec_error(t_command *command,
 				char *cmd_path, char **cmd_split);
 

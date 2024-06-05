@@ -12,6 +12,8 @@
 
 #include "../../include/Minishell.h"
 
+int g_freed = 0;
+
 void	executing(t_input *terminal, t_command *command)
 {
 	int		i;
@@ -21,7 +23,7 @@ void	executing(t_input *terminal, t_command *command)
 	pid = malloc(sizeof(int) * 4096);
 	if (pid == NULL)
 		error_message("Error: malloc failed\n");
-	while (terminal->nb_pipe >= 0 && i <= terminal->nb_pipe)
+	while ( i < terminal->count_cmd)
 	{
 		if (pipe(terminal->p_fd[i]) == -1)
 			error_message("Error: pipe failed\n");
@@ -36,7 +38,8 @@ void	executing(t_input *terminal, t_command *command)
 		else
 			parent_process(terminal, i, pid[i]);
 		i++;
-		command = command->next;
+		if (command->next)
+			command = command->next;
 		terminal->nb_cmd++;
 	}
 	free(pid);
@@ -48,7 +51,7 @@ void	calling_function(t_input *terminal, t_command *command, int i, int pid)
 		first_command(terminal, command, i);
 	else if ((command->pipe == 0 && i > 0) || (command->pipe == 0 && i > 0 && pid == NOTCHILD))
 		middle_command(terminal, command, i);
-	else if ((command->pipe == -1) || (command->pipe == -1 && pid == NOTCHILD))
+	else if ((command->pipe == -1))
 	{
 		if (terminal->nb_cmd > 1)
 			last_command(terminal, command, i);

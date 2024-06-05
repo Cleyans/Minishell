@@ -33,16 +33,28 @@ int	check_builtins_call(t_command *command)
 {
 	if (command->redir_in == 1 || command->redir_out == 1
 		|| command->hd_in == 1 || command->hd_out == 1)
+		{
+		printf("builtins_child_cheking_1\n");
 		return (1);
+		}
 	else
+	{
+		printf("builtins_parent_cheking_0\n");
 		return (0);
+	}
 }
 
 void	builtins_call(t_input *terminal, t_command *command)
 {
 	if (command->redir_in == 1 || command->redir_out == 1
 		|| command->hd_in == 1 || command->hd_out == 1)
+		{
+			printf("builtins_child_exec\n");
 		builtins_child(terminal, command);
+		}
 	else
+	{
+		printf("builtins_parent_exec\n");
 		builtins_parent(terminal, command);
+	}
 }

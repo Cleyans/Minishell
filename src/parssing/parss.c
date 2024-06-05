@@ -77,7 +77,7 @@ void	cheking_input(t_input *terminal, t_command *command) // doit pouvoir prendr
 		}
 		if (terminal->input[parss.i] == '|')
 		{
-			terminal->nb_pipe++;
+			// terminal->nb_pipe++;
 			command->pipe = 0;
 			parss.i++;
 		}
@@ -85,6 +85,7 @@ void	cheking_input(t_input *terminal, t_command *command) // doit pouvoir prendr
 			command->pipe = -1;
 		parss.cmd_c = -1;
 		parss.j = 0;
+		terminal->count_cmd++;
 		// parss.i++;
 		ft_lstadd_back_m(&command, ft_lstnew_m());
 		command->arguments = remove_empty_args(command->arguments);
