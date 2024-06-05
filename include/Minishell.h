@@ -145,7 +145,7 @@ void		first_command(t_input *terminal, t_command *command, int i);
 void		middle_command(t_input *terminal, t_command *command, int i);
 void		last_command(t_input *terminal, t_command *command, int i);
 void		only_one_command(t_input *terminal, t_command *command, int i);
-void		parent_process(t_input *terminal, t_command *command, int i, pid_t pid);
+void		parent_process(t_input *terminal, int i, pid_t pid);
 void		calling_function(t_input *terminal, t_command *command, int i, int pid);
 void    	redir_in(t_input *terminal, t_command *command, int i);
 void   		redir_out(t_input *terminal, t_command *command, int i);
@@ -158,9 +158,13 @@ int			builtins_check(t_command *command);
 int			check_echo_args(t_command *command, t_input *terminal, int i, int valid);
 int			ft_echo_check(char *s, char *s2, t_input *terminal,
 				t_command *command);
-void		ft_echo(t_input *terminal, t_command *command);
 int			builtins_parent(t_input *terminal, t_command *command);
-void		builtins_child(t_input *terminal, t_command *command);
+int			builtins_parent_2(t_input *terminal, t_command *command);
+int			builtins_child(t_input *terminal, t_command *command);
+int			builtins_child_2(t_input *terminal, t_command *command);
+int			check_builtins_call(t_command *command);
+void		builtins_call(t_input *terminal, t_command *command);
+void		ft_echo(t_input *terminal, t_command *command);
 void		ft_putstr_echo(char *s, int fd);
 void		ft_cd(t_command *command);
 void		ft_pwd(t_command *command);
@@ -168,10 +172,10 @@ void		ft_exit(t_input *terminal, t_command *command);
 void		init_export(t_input *terminal);
 void		ft_export(t_input *terminal, t_command *command);
 void		ft_unset(t_input *terminal, t_command *command);
-// void 		free_path_line(t_input *terminal);
 void		init_env(t_input *terminal, char  **env);
 void		env(t_input *terminal);
-void	add_to_env(t_input *terminal, t_command *command, int arg_index);
+void		add_to_env(t_input *terminal, t_command *command, int arg_index);
+// void 		free_path_line(t_input *terminal);
 
 
 /*
