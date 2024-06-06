@@ -64,6 +64,7 @@ typedef struct t_command
 	int					hd_in; // 0 = >> // 1 = << //
 	int					hd_out; // 0 = >> // 1 = << //
 	int					builtins;
+	int					args;
 	struct t_command	*next;
 }				t_command;
 
@@ -109,26 +110,26 @@ typedef struct t_input
 */
 
 /*
-        Function main
+        Function List
 */
 
 t_command	*ft_lstnew_m(void);
+void		ft_lstadd_back_m(t_command **lst, t_command *new);
+void		ft_lstclear_m(t_command *command, void (*del)(t_command *));
+// void		del_command(t_command *command);
+
+/*
+        Function main
+*/
+
+int			white_space(char c);
+int			find_p_r(char c);
 void		init(t_input *terminal, t_command *command);
 void		init_terminal(t_input *terminal);
 void		init_command(t_command *command);
 void 		free_nodes(t_command *first);
-
 // void		checking_input(t_input *terminal, t_command *command);	
-int			white_space(char c);
-int			find_p_r(char c);
 
-/*
-        Function List
-*/
-
-void		ft_lstadd_back_m(t_command **lst, t_command *new);
-void		ft_lstclear_m(t_command *command, void (*del)(t_command *));
-// void		del_command(t_command *command);
 
 /*
         Function Executing
@@ -181,7 +182,6 @@ void		env(t_input *terminal);
 void		add_to_env(t_input *terminal, t_command *command, int arg_index);
 // void 		free_path_line(t_input *terminal);
 
-
 /*
 		Function signals
 */
@@ -189,31 +189,24 @@ void		add_to_env(t_input *terminal, t_command *command, int arg_index);
 void		signal_check(void);
 void		handler_c(int signal);
 
-
-/*
-		Function Error
-*/
-
-void		error_message(char *message);
-
 /*
         Function parssing
 */
 
 int			verif_input(t_input *terminal);
+int 		check_char(char c);
 void		check_redir(t_input *terminal, t_command *command, t_parss *parss);
 void		call_redir_infile(t_input *terminal, t_command *command, t_parss *parss);
 void		call_redir_outfile(t_input *terminal, t_command *command, t_parss *parss);
 void		put_arg_cmd(t_input *terminal, t_command *command, t_parss *parss);
 void		init_parss(t_parss *parss);
 void		cheking_input(t_input *terminal, t_command *command);
+void		call_heredoc(t_input *terminal, t_command *command, t_parss *parss);
+void 		call_dollar(t_input *terminal, t_command *command, t_parss *parss);
+void	*search_path_dollar(t_input *terminal, t_command *command);
 // void		call_heredoc_infile(t_input *terminal, t_command *command, t_parss *parss);
 // void		call_heredoc_outfile(t_input *terminal, t_command *command, t_parss *parss);
-void		call_heredoc(t_input *terminal, t_command *command, t_parss *parss);
-int 		check_char(char c);
-void 		call_dollar(t_input *terminal, t_command *command, t_parss *parss);
 // void		call_dollar_interogation(t_input *terminal, t_command *command, t_parss *parss);
-void	*search_path_dollar(t_input *terminal, t_command *command);
 // void	*search_path_dollar_interogation(t_input *terminal);
 
 
@@ -223,10 +216,11 @@ void	*search_path_dollar(t_input *terminal, t_command *command);
 */
 
 // void		print_commands(t_command *command);
-void		free_exec_cmd(t_command *command);
+// void		free_exec_cmd(t_command *command);
+// void		free_cmd(t_command *command);
+void		error_message(char *message);
 void		advanced_print(t_command *command);
-void		free_cmd(t_command *command);
-void		free_str_tab(char **strtab);
+void		free_args(char **strtab);
 void		free_exec_error(t_command *command,
 				char *cmd_path, char **cmd_split);
 

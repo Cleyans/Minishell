@@ -1,15 +1,18 @@
 #include "../include/Minishell.h"
 
-void	free_str_tab(char **strtab)
+void	free_args(char **argument)
 {
 	size_t	i;
 
 	i = 0;
-	if (!strtab)
+	if (!argument)
 		return ;
-	while (strtab[i])
-		free(strtab[i++]);
-	free(strtab);
+	while (argument[i])
+	{
+		free(argument[i]);
+		i++;
+	}
+	free(argument);
 }
 
 void	free_exec_error(t_command *command, char *cmd_path, char **cmd_split)
@@ -41,6 +44,6 @@ void free_nodes(t_command *first)
 		}
 		first->next = NULL;
 	}
-	free_str_tab(first->arguments);
+	free_args(first->arguments);
 	free(first);
 }

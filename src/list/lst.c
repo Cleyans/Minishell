@@ -6,7 +6,7 @@
 /*   By: brclemen <brclemen@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/01 13:49:02 by brclemen          #+#    #+#             */
-/*   Updated: 2024/06/03 08:45:09 by brclemen         ###   ########.fr       */
+/*   Updated: 2024/06/06 05:47:55 by brclemen         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -48,6 +48,7 @@ t_command	*ft_lstnew_m(void)
 	new->next = NULL;
 	new->hd_in = -1;
 	new->hd_out = -1;
+	new->args = 0;
 	return (new);
 }
 

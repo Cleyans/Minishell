@@ -35,4 +35,5 @@ void	init_command(t_command *command)
 	command->dollar = NULL;
 	command->int_dollar = -1;
 	command->out_dollar = NULL;
+	command->args = 0;
 }

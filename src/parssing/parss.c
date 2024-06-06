@@ -194,6 +194,7 @@ void	put_arg_cmd(t_input *terminal, t_command *command, t_parss *parss)
 	command->arguments[parss->j + 1] = '\0';
 	parss->k = 0;
 	parss->j++;
+	command->args++;
 }
 
 void	init_parss(t_parss *parss)
