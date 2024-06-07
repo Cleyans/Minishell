@@ -69,22 +69,13 @@ void	exec_cmd(t_command *command, t_input *terminal)
 
 	i = 0;
 	j = 0;
-	cmd_split = malloc(sizeof(char **) * 100);
-	cmd_path = malloc(sizeof(char) * 100);
+	cmd_split = ft_calloc(command->args + 2, sizeof(char *));
+	args_alloc(command, cmd_split);
 	cmd_split[j++] = ft_strdup(command->command);
 	for (int i = 0; command->arguments[i] != NULL; i++)
 		printf("command->arguments[%d]: %s\n\n", i, command->arguments[i]);
-	if (command->arguments[i]) 
-	{
-		printf("command->args = %d\n\n", command->args);
-		// printf("before the command : cmd_split[0]: %s\n\n", cmd_split[0]);
-		while (command->args > 0)
-		{
-			printf("test\n\n");
-			cmd_split[j++] = ft_strdup(command->arguments[i++]);
-			command->args--;
-		}
-	}
+	if (command->arguments[i])
+		args_dup(command, cmd_split);
 	if (access(command->command, F_OK) == 0)
 	{
 		cmd_path = command->command;
@@ -98,6 +89,37 @@ void	exec_cmd(t_command *command, t_input *terminal)
 	printf("\n");
 	if (execve(cmd_path, cmd_split, terminal->env) == -1)
 		exec_error(command, cmd_path, cmd_split);
+}
+
+void	args_dup(t_command *command, char **cmd_split)
+{
+	int		i;
+	int		j;
+
+	i = 0;
+	j = 1;
+	printf("command->args = %d\n\n", command->args);
+	while (command->arguments[i] != NULL)
+	{
+		cmd_split[j] = ft_strdup(command->arguments[i]);
+		i++;
+		j++;
+	}
+	printf("test\n\n");
+	cmd_split[j] = NULL;
+}
+
+void	args_alloc(t_command *command, char **cmd_split)
+{
+	int i;
+
+	i = 0;
+
+	while (command->arguments[i] != NULL)
+	{
+		cmd_split[i] = malloc(sizeof(char) * ft_strlen(command->arguments[i]) + 1);
+		i++;
+	}
 }
 
 void	exec_error(t_command *command, char *cmd_path, char **cmd_split)

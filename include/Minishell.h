@@ -140,7 +140,8 @@ char		*search_path(char **env, char *cmd_split);
 void		executing(t_input *terminal, t_command *command);
 void		exec_cmd(t_command *command, t_input *terminal);
 void		exec_error(t_command *command, char *cmd_path, char **cmd_split);
-
+void		args_alloc(t_command *command, char **cmd_split);
+void		args_dup(t_command *command, char **cmd_split);
 
 /*
 		Function Executing pipes
