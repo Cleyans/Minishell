@@ -37,7 +37,7 @@ int	verif_input(t_input *terminal)
 	return (1);
 }
 
-void	cheking_input(t_input *terminal, t_command *command) // doit pouvoir prendre outfile et infile dans la meme commande, pour l'instant il ne prend que le premier, quand redirection la commande ne veux pas se mettre dedans
+void	cheking_input(t_input *terminal, t_command *command)
 {
 	t_parss	parss;
 	init_parss(&parss);
@@ -98,12 +98,12 @@ void	check_redir(t_input *terminal, t_command *command, t_parss *parss)
 	if (terminal->input[parss->i] == '<' && terminal->input[parss->i + 1] == '<')
 	{
 		command->hd_in = 1;
-		call_heredoc(terminal, command, parss);
+		call_heredoc_in(terminal, command, parss);
 	}
 	else if (terminal->input[parss->i] == '>' && terminal->input[parss->i + 1] == '>')
 	{
 		command->hd_out = 1;
-		call_heredoc(terminal, command, parss);
+		call_heredoc_out(terminal, command, parss);
 	}
 	else if (terminal->input[parss->i] == '<')
 	{
@@ -119,38 +119,78 @@ void	check_redir(t_input *terminal, t_command *command, t_parss *parss)
 		call_dollar(terminal, command, parss);
 }
 
-void		call_heredoc(t_input *terminal, t_command *command, t_parss *parss)
+void		call_heredoc_in(t_input *terminal, t_command *command, t_parss *parss)
 {
 	int i;
+	int	len;
+	int mem;
 
 	i = 0;
-	parss->i++;
-	parss->i++;
+	len = parss->i;
+	mem = 0;
+	parss->i = parss->i + 2;
 	while (terminal->input[parss->i] == ' ')
 		parss->i++;
-	command->infile = malloc(sizeof(char) * 100);
-	// command->infile[0] = terminal->input[parss->i];
-	// parss->i++;
+	while (terminal->input[len] != ' ' && terminal->input[len] != '\0')
+	{
+		len++;
+		mem++;
+	}
+	command->word = malloc(sizeof(char) * mem + 1);
 	while (terminal->input[parss->i] != ' ' && terminal->input[parss->i] != '\0')
 	{
-		command->infile[i] = terminal->input[parss->i];
+		command->word[i] = terminal->input[parss->i];
 		parss->i++;
 		i++;
 	}
-	command->infile[i] = '\0';
+	command->word[i] = '\0';
+}
+
+void	call_heredoc_out(t_input *terminal, t_command *command, t_parss *parss)
+{
+	int i;
+	int	len;
+	int mem;
+
+	i = 0;
+	len = parss->i;
+	mem = 0;
+	parss->i = parss->i + 2;
+	while (terminal->input[parss->i] == ' ')
+		parss->i++;
+	while (terminal->input[len] != ' ' && terminal->input[len] != '\0')
+	{
+		len++;
+		mem++;
+	}
+	command->outfile = malloc(sizeof(char) * mem + 1);
+	while (terminal->input[parss->i] != ' ' && terminal->input[parss->i] != '\0')
+	{
+		command->outfile[i] = terminal->input[parss->i];
+		parss->i++;
+		i++;
+	}
+	command->outfile[i] = '\0';
 }
 
 void	call_redir_infile(t_input *terminal, t_command *command, t_parss *parss)
 {
 	int i;
+	int len;
+	int mem;
 
 	i = 0;
+	len = parss->i;
+	mem = 0;
 	parss->i++;
 	while (terminal->input[parss->i] == ' ')
 		parss->i++;
-	command->infile = malloc(sizeof(char) * 100);
-	// command->infile[0] = terminal->input[parss->i];
-	// parss->i++;
+	while (terminal->input[len] != ' ' && terminal->input[len] != '\0')
+	{
+		len++;
+		mem++;
+	}
+	command->infile = malloc(sizeof(char) * mem + 1);
 	while (terminal->input[parss->i] != ' ' && terminal->input[parss->i] != '\0')
 	{
 		command->infile[i] = terminal->input[parss->i];
@@ -163,14 +203,21 @@ void	call_redir_infile(t_input *terminal, t_command *command, t_parss *parss)
 void	call_redir_outfile(t_input *terminal, t_command *command, t_parss *parss)
 {
 	int i;
+	int len;
+	int mem;
 
 	i = 0;
+	len = parss->i;
+	mem = 0;
 	parss->i++;
 	while (terminal->input[parss->i] == ' ')
 		parss->i++;
-	command->outfile = malloc(sizeof(char) * 100);
-	// command->outfile[i] = terminal->input[parss->i];
-	// parss->i++;
+	while (terminal->input[len] != ' ' && terminal->input[len] != '\0')
+	{
+		len++;
+		mem++;
+	}
+	command->outfile = malloc(sizeof(char) * mem + 1);
 	while (terminal->input[parss->i] != ' ' && terminal->input[parss->i] != '\0')
 	{
 		command->outfile[i] = terminal->input[parss->i];
@@ -178,12 +225,21 @@ void	call_redir_outfile(t_input *terminal, t_command *command, t_parss *parss)
 		i++;
 	}
 	command->outfile[i] = '\0';
-	// parss->j = 0;
 }
 
 void	put_arg_cmd(t_input *terminal, t_command *command, t_parss *parss)
 {
-	command->arguments[parss->j] = malloc(sizeof(char) * 100);
+	int	len;
+	int	mem;
+
+	len = parss->i;
+	mem = 0;
+	while (terminal->input[len] != ' ' && terminal->input[len])
+	{
+		len++;
+		mem++;
+	}
+	command->arguments[parss->j] = malloc(sizeof(char) * mem + 1);
 	while (terminal->input[parss->i] != ' ' && terminal->input[parss->i])
 	{
 		command->arguments[parss->j][parss->k] = terminal->input[parss->i];
@@ -191,7 +247,6 @@ void	put_arg_cmd(t_input *terminal, t_command *command, t_parss *parss)
 		parss->k++;
 	}
 	command->arguments[parss->j][parss->k] = '\0';
-	command->arguments[parss->j + 1] = '\0';
 	parss->k = 0;
 	parss->j++;
 	command->args++;

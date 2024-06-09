@@ -17,10 +17,14 @@ void	first_command(t_input *terminal, t_command *command, int i)
     printf("first_command\n");
     if (command->redir_in == 1)
         redir_in(terminal, command, i);
+    else if (command->hd_in == 1)
+        here_in(terminal, command, i);
     else
 	    close(terminal->p_fd[i][0]);
     if (command->redir_out == 1)
         redir_out(terminal, command, i);
+    else if (command->hd_out == 1)
+        here_out(terminal, command, i);
     else
     {
 	    dup2(terminal->p_fd[i][1], STDOUT_FILENO);
@@ -37,6 +41,8 @@ void	middle_command(t_input *terminal, t_command *command, int i) // verif si re
     printf("middle_command\n\n");
     if (command->redir_in == 1)
         redir_in(terminal, command, i);
+    else if (command->hd_in == 1)
+        here_in(terminal, command, i);
     else
     {
         close(terminal->p_fd[i][0]);
@@ -45,6 +51,8 @@ void	middle_command(t_input *terminal, t_command *command, int i) // verif si re
     }
     if (command->redir_out == 1)
         redir_out(terminal, command, i);
+    else if (command->hd_out == 1)
+        here_out(terminal, command, i);
     else
     {
         dup2(terminal->p_fd[i][1], STDOUT_FILENO);
@@ -61,6 +69,8 @@ void	last_command(t_input *terminal, t_command *command, int i)
     printf("last_command\n\n");
     if (command->redir_in == 1)
         redir_in(terminal, command, i);
+    else if (command->hd_in == 1)
+        here_in(terminal, command, i);
     else
     {
         close(terminal->p_fd[i][0]);
@@ -69,6 +79,8 @@ void	last_command(t_input *terminal, t_command *command, int i)
     }
     if (command->redir_out == 1)
         redir_out(terminal, command, i);
+    else if (command->hd_out == 1)
+        here_out(terminal, command, i);
     else
     {
         close(terminal->p_fd[i][1]);
@@ -86,16 +98,21 @@ void	only_one_command(t_input *terminal, t_command *command, int i)
     printf("only_one_command\n\n");
     if (command->redir_in == 1)
         redir_in(terminal, command, i);
+    else if (command->hd_in == 1)
+        here_in(terminal, command, i);
     else
 	    close(terminal->p_fd[i][0]);
     if (command->redir_out == 1)
         redir_out(terminal, command, i);
+    else if (command->hd_out == 1)
+        here_out(terminal, command, i);
     else
 	    close(terminal->p_fd[i][1]);\
     if (builtins_check(command) == 1)
         builtins_call(terminal, command);
     else
 	    exec_cmd(command, terminal);
+    printf("only_one_command\n\n");
 }
 
 void	parent_process(t_input *terminal, int i, pid_t pid)

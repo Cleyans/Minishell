@@ -34,7 +34,8 @@ void free_nodes(t_command *first)
 	t_command	*tmp;
 	t_command	*next_node;
 
-	if (first != NULL) {
+	if (first != NULL)
+	{
 		tmp = first->next;
 		while (tmp != NULL)
 		{

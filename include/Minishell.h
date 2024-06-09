@@ -155,6 +155,8 @@ void		parent_process(t_input *terminal, int i, pid_t pid);
 void		calling_function(t_input *terminal, t_command *command, int i, int pid);
 void    	redir_in(t_input *terminal, t_command *command, int i);
 void   		redir_out(t_input *terminal, t_command *command, int i);
+void    	here_out(t_input *terminal, t_command *command, int i);
+void    	here_in(t_input *terminal, t_command *command, int i);
 
 /*
 		Function Executing builtins
@@ -199,10 +201,11 @@ int 		check_char(char c);
 void		check_redir(t_input *terminal, t_command *command, t_parss *parss);
 void		call_redir_infile(t_input *terminal, t_command *command, t_parss *parss);
 void		call_redir_outfile(t_input *terminal, t_command *command, t_parss *parss);
+void		call_heredoc_in(t_input *terminal, t_command *command, t_parss *parss);
+void		call_heredoc_out(t_input *terminal, t_command *command, t_parss *parss);
 void		put_arg_cmd(t_input *terminal, t_command *command, t_parss *parss);
 void		init_parss(t_parss *parss);
 void		cheking_input(t_input *terminal, t_command *command);
-void		call_heredoc(t_input *terminal, t_command *command, t_parss *parss);
 void 		call_dollar(t_input *terminal, t_command *command, t_parss *parss);
 void	*search_path_dollar(t_input *terminal, t_command *command);
 // void		call_heredoc_infile(t_input *terminal, t_command *command, t_parss *parss);

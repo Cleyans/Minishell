@@ -32,10 +32,23 @@ void    redir_out(t_input *terminal, t_command *command, int i)
     close(command->fd);
 }
 
-// void    here_in(t_input *terminal, t_command *command, int i)
-// {
-//     //
-// }
+void    here_in(t_input *terminal, t_command *command, int i)
+{
+    char   *line;
+    int     nb;
+
+    nb = 0;
+    close(terminal->p_fd[i][0]);
+    while (1)
+    {
+        line = readline("> ");
+        if (ft_strcmp(command->word, line) == 0)
+            break ;
+        command->arguments[nb] = ft_strdup(line);
+        nb++;
+        free(line);
+    }
+}
 
 void    here_out(t_input *terminal, t_command *command, int i)
 {
