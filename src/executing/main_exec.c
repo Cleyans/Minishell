@@ -72,8 +72,6 @@ void	exec_cmd(t_command *command, t_input *terminal)
 	cmd_split = ft_calloc(command->args + 2, sizeof(char *));
 	args_alloc(command, cmd_split);
 	cmd_split[j++] = ft_strdup(command->command);
-	for (int i = 0; command->arguments[i] != NULL; i++)
-		printf("command->arguments[%d]: %s\n\n", i, command->arguments[i]);
 	if (command->arguments[i])
 		args_dup(command, cmd_split);
 	if (access(command->command, F_OK) == 0)
@@ -83,10 +81,6 @@ void	exec_cmd(t_command *command, t_input *terminal)
 		exec_error(command, cmd_path, cmd_split);
 	}
 	cmd_path = search_path(terminal->env, command->command);
-	printf("cmd_path: %s\n\n", cmd_path);
-	for (int i = 0; cmd_split[i] != NULL; i++)
-		printf("cmd_split[%d]: %s\n", i, cmd_split[i]);
-	printf("\n");
 	if (execve(cmd_path, cmd_split, terminal->env) == -1)
 		exec_error(command, cmd_path, cmd_split);
 }
@@ -98,14 +92,12 @@ void	args_dup(t_command *command, char **cmd_split)
 
 	i = 0;
 	j = 1;
-	printf("command->args = %d\n\n", command->args);
 	while (command->arguments[i] != NULL)
 	{
 		cmd_split[j] = ft_strdup(command->arguments[i]);
 		i++;
 		j++;
 	}
-	printf("test\n\n");
 	cmd_split[j] = NULL;
 }
 

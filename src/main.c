@@ -34,8 +34,6 @@ int	main(int ac, char **av, char **env)
 		if (verif_input(&terminal) == 0)
 		{
 			cheking_input(&terminal, command);
-			for (int i = 0; i < command->args; i++)
-				printf("Arguments[%d] = %s\n", i, command->arguments[i]);
 			advanced_print(command);
 			executing(&terminal, command);
 			free_nodes(command);

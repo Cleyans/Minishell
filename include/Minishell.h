@@ -157,6 +157,8 @@ void    	redir_in(t_input *terminal, t_command *command, int i);
 void   		redir_out(t_input *terminal, t_command *command, int i);
 void    	here_out(t_input *terminal, t_command *command, int i);
 void    	here_in(t_input *terminal, t_command *command, int i);
+int   		verif_absolute_path(t_command *command);
+
 
 /*
 		Function Executing builtins
@@ -208,6 +210,7 @@ void		init_parss(t_parss *parss);
 void		cheking_input(t_input *terminal, t_command *command);
 void 		call_dollar(t_input *terminal, t_command *command, t_parss *parss);
 void	*search_path_dollar(t_input *terminal, t_command *command);
+void	put_command(t_input *terminal, t_command *command, t_parss *parss);
 // void		call_heredoc_infile(t_input *terminal, t_command *command, t_parss *parss);
 // void		call_heredoc_outfile(t_input *terminal, t_command *command, t_parss *parss);
 // void		call_dollar_interogation(t_input *terminal, t_command *command, t_parss *parss);

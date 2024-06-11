@@ -57,13 +57,14 @@ void	cheking_input(t_input *terminal, t_command *command)
 			}	
 			if (parss.cmd_c == 1 && terminal->input[parss.i])
 				put_arg_cmd(terminal, command, &parss);
-			while ((terminal->input[parss.i] != ' ' && terminal->input[parss.i] != '\0' && parss.cmd_c == 0) || (terminal->input[parss.i] != ' ' && terminal->input[parss.i] != '\0' && parss.cmd_c == -1))
-			{
-				command->command[parss.j] = terminal->input[parss.i];
-				parss.i++;
-				parss.j++;
-				parss.cmd_c = 0;
-			}
+			if ((parss.cmd_c == 0) || parss.cmd_c == -1)
+				put_command(terminal, command, &parss);
+			// {
+			// 	command->command[parss.j] = terminal->input[parss.i];
+			// 	parss.i++;
+			// 	parss.j++;
+			// 	parss.cmd_c = 0;
+			// }
 			if (parss.cmd_c == 0)
 			{
 				command->command[parss.j] = '\0';
@@ -91,6 +92,29 @@ void	cheking_input(t_input *terminal, t_command *command)
 		command->arguments = remove_empty_args(command->arguments);
 		command = command->next;
 	}
+}
+
+void	put_command(t_input *terminal, t_command *command, t_parss *parss)
+{
+	int	i;
+	int	mem;
+
+	i = parss->i;
+	mem = 0;
+	while (terminal->input[i] != ' ' && terminal->input[i] != '\0')
+	{
+		i++;
+		mem++;
+	}
+	command->command = malloc(sizeof(char) * mem + 1);
+	while (terminal->input[parss->i] != ' ' && terminal->input[parss->i] != '\0')
+	{
+		command->command[parss->j] = terminal->input[parss->i];
+		parss->i++;
+		parss->j++;
+		parss->cmd_c = 0;
+	}
+	command->command[parss->j] = '\0';
 }
 
 void	check_redir(t_input *terminal, t_command *command, t_parss *parss)
