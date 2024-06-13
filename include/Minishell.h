@@ -185,6 +185,11 @@ void		ft_unset(t_input *terminal, t_command *command);
 void		init_env(t_input *terminal, char  **env);
 void		env(t_input *terminal);
 void		add_to_env(t_input *terminal, t_command *command, int arg_index);
+int 		check_if_sort_export(char *str, char **env);
+int 		check_alpha_export(char *str);
+void 		print_export(t_input *terminal);
+void		add_export(t_input *terminal, t_command *command, int arg_index);
+char		*create_new_str(char *str, char *equal_pos);
 // void 		free_path_line(t_input *terminal);
 
 /*

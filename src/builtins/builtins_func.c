@@ -85,3 +85,15 @@ void	ft_pwd(t_command *command) // ne pas oublier le status
 	ft_printf("%s\n", buffer);
 	free(buffer);
 }
+
+void print_export(t_input *terminal)
+{
+	int i;
+
+	i = 0;
+	while (terminal->export[i] != NULL)
+	{
+		printf("%s\n", terminal->export[i]);
+		i++;
+	}
+}
