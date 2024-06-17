@@ -20,6 +20,8 @@ int	builtins_check(t_command *command)
 		return (1);
 	else if (ft_strcmp(command->command, "env") == 0)
 		return (1);
+	else if (ft_strcmp(command->command, "echo") == 0)
+		return (1);
 	else if (ft_strcmp(command->command, "cd") == 0)
 		return (1);
 	else if (ft_strcmp(command->command, "pwd") == 0)
@@ -31,30 +33,16 @@ int	builtins_check(t_command *command)
 
 int	check_builtins_call(t_command *command)
 {
-	if (command->redir_in == 1 || command->redir_out == 1
-		|| command->hd_in == 1 || command->hd_out == 1)
-		{
-		printf("builtins_child_cheking_1\n");
-		return (1);
-		}
-	else
-	{
-		printf("builtins_parent_cheking_0\n");
+	if (ft_strcmp(command->command, "export") == 0)
 		return (0);
-	}
+	else
+		return (1);
 }
 
-void	builtins_call(t_input *terminal, t_command *command)
+int	builtins_call(t_input *terminal, t_command *command)
 {
-	if (command->redir_in == 1 || command->redir_out == 1
-		|| command->hd_in == 1 || command->hd_out == 1)
-		{
-			printf("builtins_child_exec\n");
-		builtins_child(terminal, command);
-		}
+	if (ft_strcmp(command->command, "export") == 0)
+		return (builtins_parent(terminal, command));
 	else
-	{
-		printf("builtins_parent_exec\n");
-		builtins_parent(terminal, command);
-	}
+		return (builtins_child(terminal, command));
 }

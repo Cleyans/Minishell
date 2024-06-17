@@ -12,7 +12,7 @@
 
 #include "../../include/Minishell.h"
 
-void	ft_echo(t_input *terminal, t_command *command)
+int	ft_echo(t_input *terminal, t_command *command)
 {
 	int	i;
 	int	flag;
@@ -26,18 +26,14 @@ void	ft_echo(t_input *terminal, t_command *command)
 	}
 	while (command->arguments[i] != NULL && terminal->echo.close == 0)
 	{
-		// if (command->arguments[0][0] == '$')
-		// {
-		// 	call_dollar(terminal, command, parss);
-		// 	break;
-		// }
-		ft_putstr_echo(command->arguments[i], 2);
+		printf_echo(command->arguments[i]);
 		if (command->arguments[i + 1] != NULL)
-			ft_putstr_fd(" ", 1);
+			printf(" ");
 		i++;
 	}
 	if (flag == 0 && terminal->echo.close == 0)
-		ft_putstr_fd("\n", 1);
+		printf("\n");
+	return (0);
 }
 
 int	ft_echo_check(char *s, char *s2, t_input *terminal, t_command *command)
@@ -96,7 +92,7 @@ int	check_echo_args(t_command *command, t_input *terminal, int i, int valid)
 	return (0);
 }
 
-void	ft_putstr_echo(char *s, int fd)
+void	printf_echo(char *s)
 {
 	size_t	index;
 
@@ -104,7 +100,7 @@ void	ft_putstr_echo(char *s, int fd)
 	while (s[index])
 	{
 		if (s[index] != '\'' && s[index] != '\"')
-			ft_putchar_fd(s[index], fd);
+			printf("%c", s[index]);
 		index++;
 	}
 }

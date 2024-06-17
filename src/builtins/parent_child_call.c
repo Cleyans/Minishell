@@ -60,8 +60,7 @@ int	builtins_child(t_input *terminal, t_command *command)
 	    env(terminal);
 	    exit (1);
 	}
-	builtins_child_2(terminal, command);
-	return (0);
+	return (builtins_child_2(terminal, command));
 }
 
 int	builtins_child_2(t_input *terminal, t_command *command)
@@ -77,10 +76,7 @@ int	builtins_child_2(t_input *terminal, t_command *command)
 		exit (1);
 	}
 	else if (ft_strcmp(command->command, "echo") == 0)
-	{
-		ft_echo(terminal, command);
-		exit (1);
-	}
+		return (ft_echo(terminal, command));
 	else if (ft_strcmp(command->command, "exit") == 0)
 		ft_exit(terminal, command);
 	return (0);

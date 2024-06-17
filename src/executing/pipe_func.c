@@ -12,9 +12,11 @@
 
 #include "../../include/Minishell.h" // executer dans le main pipe le builtins enfant et si pas trouver parent
 
+extern int g_signal;
+
 void	first_command(t_input *terminal, t_command *command, int i)
 {
-    printf("first_command\n");
+    // printf("first_command\n");
     if (command->redir_in == 1)
         redir_in(terminal, command, i);
     else if (command->hd_in == 1)
@@ -31,14 +33,14 @@ void	first_command(t_input *terminal, t_command *command, int i)
         close(terminal->p_fd[i][1]);
     }
     if (builtins_check(command) == 1)
-        builtins_call(terminal, command);
+        g_signal = builtins_call(terminal, command);
 	else
         exec_cmd(command, terminal);
 }
 
 void	middle_command(t_input *terminal, t_command *command, int i) // verif si redirection envoyer pipe resultat
 {
-    printf("middle_command\n\n");
+    // printf("middle_command\n\n");
     if (command->redir_in == 1)
         redir_in(terminal, command, i);
     else if (command->hd_in == 1)
@@ -59,14 +61,14 @@ void	middle_command(t_input *terminal, t_command *command, int i) // verif si re
         close(terminal->p_fd[i][1]);
     }
     if (builtins_check(command) == 1)
-        builtins_call(terminal, command);
+        g_signal = builtins_call(terminal, command);
 	else
         exec_cmd(command, terminal);
 }
 
 void	last_command(t_input *terminal, t_command *command, int i)
 {
-    printf("last_command\n\n");
+    // printf("last_command\n\n");
     if (command->redir_in == 1)
         redir_in(terminal, command, i);
     else if (command->hd_in == 1)
@@ -88,14 +90,14 @@ void	last_command(t_input *terminal, t_command *command, int i)
         close(terminal->p_fd[i - 1][1]);
     }
     if (builtins_check(command) == 1)
-        builtins_call(terminal, command);
+        g_signal = builtins_call(terminal, command);
     else
 	    exec_cmd(command, terminal);
 }
 
 void	only_one_command(t_input *terminal, t_command *command, int i)
 {
-    printf("only_one_command\n\n");
+    // printf("only_one_command\n\n");
     if (command->redir_in == 1)
         redir_in(terminal, command, i);
     else if (command->hd_in == 1)
@@ -109,10 +111,9 @@ void	only_one_command(t_input *terminal, t_command *command, int i)
     else
 	    close(terminal->p_fd[i][1]);\
     if (builtins_check(command) == 1)
-        builtins_call(terminal, command);
+        g_signal = builtins_call(terminal, command);
     else
 	    exec_cmd(command, terminal);
-    printf("only_one_command\n\n");
 }
 
 void	parent_process(t_input *terminal, int i, pid_t pid)
