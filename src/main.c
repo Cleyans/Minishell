@@ -42,7 +42,7 @@ int	main(int ac, char **av, char **env)
 		}
 		free(terminal.input);
 	}
-	return (terminal.status);
+	return (WEXITSTATUS(terminal.status));
 }
 
 // void	print_commands(t_command *command)

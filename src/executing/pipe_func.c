@@ -116,8 +116,9 @@ void	only_one_command(t_input *terminal, t_command *command, int i)
 	    exec_cmd(command, terminal);
 }
 
-void	parent_process(t_input *terminal, int i, pid_t pid)
+int	parent_process(t_input *terminal, int i, pid_t pid)
 {
         waitpid(pid, &terminal->status, 0);
+        return(WEXITSTATUS(terminal->status));
         close(terminal->p_fd[i][1]);
 }

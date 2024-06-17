@@ -36,7 +36,7 @@ void	executing(t_input *terminal, t_command *command)
 		else if (pid[i] == 0 || pid[i] == NOTCHILD)
 			calling_function(terminal, command, i, pid[i]);
 		else
-			parent_process(terminal, i, pid[i]);
+			g_signal = parent_process(terminal, i, pid[i]);
 		if (pid[i] == 0)
 			exit (g_signal);
 		i++;
