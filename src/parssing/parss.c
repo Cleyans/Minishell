@@ -44,11 +44,11 @@ void	cheking_input(t_input *terminal, t_command *command)
 
 	while (terminal->input[parss.i] && terminal->input[parss.i] != '\0')
 	{
-		while (terminal->input[parss.i] != '\0' && terminal->input[parss.i] != '|' && terminal->input[parss.i] != '$')
+		while (terminal->input[parss.i] != '\0' && terminal->input[parss.i] != '|')
 		{
 			while (terminal->input[parss.i] == ' ')
 				parss.i++;
-			if (terminal->input[parss.i] == '<' || terminal->input[parss.i] == '>' || terminal->input[parss.i] == '$')
+			if (terminal->input[parss.i] == '<' || terminal->input[parss.i] == '>')
 			{
 				check_redir(terminal, command, &parss);
 				parss.i++;
@@ -87,7 +87,6 @@ void	cheking_input(t_input *terminal, t_command *command)
 		parss.cmd_c = -1;
 		parss.j = 0;
 		terminal->count_cmd++;
-		// parss.i++;
 		ft_lstadd_back_m(&command, ft_lstnew_m());
 		command->arguments = remove_empty_args(command->arguments);
 		command = command->next;
@@ -139,8 +138,8 @@ void	check_redir(t_input *terminal, t_command *command, t_parss *parss)
 		command->redir_out = 1;
 		call_redir_outfile(terminal, command, parss);
 	}
-	else if (terminal->input[parss->i] == '$')
-		call_dollar(terminal, command, parss);
+	// else if (terminal->input[parss->i] == '$')
+	// 	call_dollar(terminal, command, parss);
 }
 
 void		call_heredoc_in(t_input *terminal, t_command *command, t_parss *parss)

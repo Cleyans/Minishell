@@ -119,7 +119,7 @@ void	args_alloc(t_command *command, char **cmd_split)
 void	exec_error(t_command *command, char *cmd_path, char **cmd_split)
 {
 	fprintf(stderr, "Minishell: %s: command not found\n", command->command);
-	free_exec_error(command, cmd_path, cmd_split);
+	free_exec_error(cmd_path, cmd_split);
 	exit(EXIT_FAILURE);
 }
 

@@ -52,6 +52,7 @@ typedef struct t_command
 	char				*command;
 	char				**arguments;
 	char				*infile;
+	char				sd;
 	char				*outfile;
 	char				*word;
 	int					fd;
@@ -168,14 +169,20 @@ int			builtins_check(t_command *command);
 int			check_echo_args(t_command *command, t_input *terminal, int i, int valid);
 int			ft_echo_check(char *s, char *s2, t_input *terminal,
 				t_command *command);
+char		*ft_quote(char *s, t_command *command);
+int			quote_zero(char *s);
+char		*put_all_that_shit(t_command *command);
+char		*ft_put_arg_echo(char *s, char c);
+char			ft_quote_close_verif(char *s, char around, char between);
 int			builtins_parent(t_input *terminal, t_command *command);
-int			builtins_parent_2(t_input *terminal, t_command *command);
+int			ft_dollar_echo(t_input *terminal, char *arg, int there);
+void		ft_call_dollar_env(t_input *terminal, char *dollar);
 int			builtins_child(t_input *terminal, t_command *command);
 int			builtins_child_2(t_input *terminal, t_command *command);
 int			check_builtins_call(t_command *command);
 int			builtins_call(t_input *terminal, t_command *command);
 int			ft_echo(t_input *terminal, t_command *command);
-void		printf_echo(char *s);
+void		printf_echo(char *s, char c, t_input *terminal, t_command *command);
 void		ft_cd(t_command *command);
 void		ft_pwd(t_command *command);
 void		ft_exit(t_input *terminal, t_command *command);
@@ -233,7 +240,6 @@ void	put_command(t_input *terminal, t_command *command, t_parss *parss);
 void		error_message(char *message);
 void		advanced_print(t_command *command);
 void		free_args(char **strtab);
-void		free_exec_error(t_command *command,
-				char *cmd_path, char **cmd_split);
+void		free_exec_error(char *cmd_path, char **cmd_split);
 
 #endif

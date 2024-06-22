@@ -36,12 +36,12 @@ int	check_builtins_call(t_command *command)
 	if (ft_strcmp(command->command, "export") == 0)
 		return (0);
 	else
-		return (1);
+		return (1); // 0 pour les test // 1 pour le vrai return
 }
 
 int	builtins_call(t_input *terminal, t_command *command)
 {
-	if (ft_strcmp(command->command, "export") == 0)
+	if (ft_strcmp(command->command, "export"))
 		return (builtins_parent(terminal, command));
 	else
 		return (builtins_child(terminal, command));

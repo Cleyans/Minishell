@@ -15,7 +15,7 @@ void	free_args(char **argument)
 	free(argument);
 }
 
-void	free_exec_error(t_command *command, char *cmd_path, char **cmd_split)
+void	free_exec_error(char *cmd_path, char **cmd_split)
 {
 	int	i;
 
