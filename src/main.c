@@ -37,7 +37,7 @@ int	main(int ac, char **av, char **env)
 			cheking_input(&terminal, command);
 			// advanced_print(command);
 			executing(&terminal, command);
-			// free_nodes(command);
+			free_nodes(command);
 		}
 		free(terminal.input);
 	}

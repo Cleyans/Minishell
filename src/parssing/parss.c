@@ -37,7 +37,7 @@ int	verif_input(t_input *terminal)
 	return (1);
 }
 
-void	cheking_input(t_input *terminal, t_command *command)
+void	cheking_input(t_input *terminal, t_command *command) // if echo and betweneen "" everything goes into argument even if > < 
 {
 	t_parss	parss;
 	init_parss(&parss);
@@ -48,6 +48,10 @@ void	cheking_input(t_input *terminal, t_command *command)
 		{
 			while (terminal->input[parss.i] == ' ')
 				parss.i++;
+			// if (terminal->input[parss.i] == '\"' && parss.cmd_c == 1)
+			// 	args_quotes(terminal, command, &parss);
+			// if (terminal->input[parss.i] == '\'' && parss.cmd_c == 1)
+			// 	args_quote(terminal, command, &parss);
 			if (terminal->input[parss.i] == '<' || terminal->input[parss.i] == '>')
 			{
 				check_redir(terminal, command, &parss);
@@ -59,12 +63,6 @@ void	cheking_input(t_input *terminal, t_command *command)
 				put_arg_cmd(terminal, command, &parss);
 			if ((parss.cmd_c == 0) || parss.cmd_c == -1)
 				put_command(terminal, command, &parss);
-			// {
-			// 	command->command[parss.j] = terminal->input[parss.i];
-			// 	parss.i++;
-			// 	parss.j++;
-			// 	parss.cmd_c = 0;
-			// }
 			if (parss.cmd_c == 0)
 			{
 				command->command[parss.j] = '\0';
@@ -74,23 +72,82 @@ void	cheking_input(t_input *terminal, t_command *command)
 			if(terminal->input[parss.i] == '\0')
 				break;
 			parss.i++;
-
 		}
 		if (terminal->input[parss.i] == '|')
 		{
-			// terminal->nb_pipe++;
 			command->pipe = 0;
 			parss.i++;
 		}
 		else
 			command->pipe = -1;
-		parss.cmd_c = -1;
 		parss.j = 0;
+		parss.cmd_c = -1;
 		terminal->count_cmd++;
 		ft_lstadd_back_m(&command, ft_lstnew_m());
 		command->arguments = remove_empty_args(command->arguments);
 		command = command->next;
 	}
+	command->arguments[parss.j] = NULL;
+}
+
+void	args_quotes(t_input *terminal, t_command *command, t_parss *parss)
+{
+	int	len;
+	int	mem;
+	parss->i++;
+
+	len = parss->i;
+	mem = 0;
+	while (terminal->input[len] != '\"' && terminal->input[len] != '\0')
+	{
+		len++;
+		mem++;
+	}
+	if (terminal->input[len] == '\"')
+		command->arguments[parss->j] = malloc(sizeof(char *) * (mem + 1));
+	else
+		return ;
+	len = 0;
+	while (terminal->input[parss->i] != '\"' && terminal->input[parss->i] != '\0')
+	{
+		command->arguments[parss->j][len] = terminal->input[parss->i];
+		len++;
+		parss->i++;
+	}
+	command->arguments[parss->j][len] = '\0';
+	if (terminal->input[parss->i] == '\"')
+		parss->i++;
+	parss->j++;
+}
+
+void	args_quote(t_input *terminal, t_command *command, t_parss *parss)
+{
+	int	len;
+	int	mem;
+	parss->i++;
+
+	len = parss->i;
+	mem = 0;
+	while (terminal->input[len] != '\'' && terminal->input[len] != '\0')
+	{
+		len++;
+		mem++;
+	}
+	if (terminal->input[len] == '\'')
+		command->arguments[parss->j] = malloc(sizeof(char *) * (mem + 1));
+	else
+		return ;
+	len = 0;
+	while (terminal->input[parss->i] != '\'' && terminal->input[parss->i] != '\0')
+	{
+		command->arguments[parss->j][len] = terminal->input[parss->i];
+		len++;
+		parss->i++;
+	}
+	command->arguments[parss->j][len] = '\0';
+	if (terminal->input[parss->i] == '\'')
+		parss->i++;
+	parss->j++;
 }
 
 void	put_command(t_input *terminal, t_command *command, t_parss *parss)
@@ -115,6 +172,7 @@ void	put_command(t_input *terminal, t_command *command, t_parss *parss)
 	}
 	command->command[parss->j] = '\0';
 }
+
 
 void	check_redir(t_input *terminal, t_command *command, t_parss *parss)
 {
@@ -250,29 +308,74 @@ void	call_redir_outfile(t_input *terminal, t_command *command, t_parss *parss)
 	command->outfile[i] = '\0';
 }
 
-void	put_arg_cmd(t_input *terminal, t_command *command, t_parss *parss)
+void	put_arg_cmd(t_input *terminal, t_command *command, t_parss *parss) // si tu trouves " tu mets dans le meme arguments jusqua trouver la fermeture
 {
 	int	len;
 	int	mem;
 
 	len = parss->i;
 	mem = 0;
-	while (terminal->input[len] != ' ' && terminal->input[len])
+	while (terminal->input[len] != ' ' && terminal->input[len]) // verif if ' "" are closed amd then malloc... bro
 	{
+		if (terminal->input[len] == '\'' || terminal->input[len] == '\"')
+			len = len + is_quote_len(terminal, parss, terminal->input[len]);
 		len++;
 		mem++;
 	}
-	command->arguments[parss->j] = malloc(sizeof(char) * mem + 1);
+	command->arguments[parss->j] = malloc(sizeof(char) * mem + 100);
 	while (terminal->input[parss->i] != ' ' && terminal->input[parss->i])
+	{
+		if (terminal->input[parss->i] == '\'' || terminal->input[parss->i] == '\"')
+			if (is_quote(terminal, command, parss) == 42)
+				break;
+		if (terminal->input[parss->i] != ' ')
+		{
+			command->arguments[parss->j][parss->k] = terminal->input[parss->i];
+			parss->i++;
+			parss->k++;
+		}
+	}
+	command->arguments[parss->j][parss->k] = '\0';
+	if (command->arg_q[parss->j] != 34 && command->arg_q[parss->j] != 39)
+		command->arg_q[parss->j] = 0;
+	parss->k = 0;
+	parss->j++;
+	command->args++;
+}
+
+int	is_quote(t_input *terminal, t_command *command, t_parss *parss)
+{
+	char	c;
+
+	c = terminal->input[parss->i];
+	parss->i++;
+	while (terminal->input[parss->i] != c && terminal->input[parss->i] != '\0')
 	{
 		command->arguments[parss->j][parss->k] = terminal->input[parss->i];
 		parss->i++;
 		parss->k++;
 	}
-	command->arguments[parss->j][parss->k] = '\0';
-	parss->k = 0;
-	parss->j++;
-	command->args++;
+	command->arg_q[parss->j] = c;
+	if (terminal->input[parss->i] == '\0')
+		return (42);
+	if (terminal->input[parss->i] == c)
+		parss->i++;
+	return (0);
+}
+
+int	is_quote_len(t_input *terminal, t_parss *parss, char c)
+{
+	int	i;
+	int len;
+
+	len = 0;
+	i = parss->i;
+	while (terminal->input[i] != c && terminal->input[i] != '\0')
+	{
+		len++;
+		i++;
+	}
+	return (len);
 }
 
 void	init_parss(t_parss *parss)
@@ -420,7 +523,6 @@ void	*search_path_dollar(t_input *terminal, t_command *command)
     command->out_dollar = NULL;
     return NULL;
 }
-
 
 int check_char(char c)
 {

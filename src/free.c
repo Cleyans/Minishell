@@ -46,5 +46,4 @@ void free_nodes(t_command *first)
 		first->next = NULL;
 	}
 	free_args(first->arguments);
-	free(first);
 }

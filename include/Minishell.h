@@ -60,6 +60,7 @@ typedef struct t_command
 	char				*out_dollar;
 	int					int_dollar; // 0 = $ // 1 = ? //
 	int					pipe;
+	int					arg_q[100];
 	int					redir_in;
 	int					redir_out;
 	int					hd_in; // 0 = >> // 1 = << //
@@ -109,6 +110,15 @@ typedef struct t_input
                         FUNCTION                     
 *****************************************************
 */
+
+
+//NEW//
+
+int	is_quote(t_input *terminal, t_command *command, t_parss *parss);
+int	is_quote_len(t_input *terminal, t_parss *parss, char c);
+int	status_print(t_input *terminal);
+void		printf_echo_s(t_input *terminal, t_command *command);
+
 
 /*
         Function List
@@ -172,7 +182,7 @@ int			ft_echo_check(char *s, char *s2, t_input *terminal,
 char		*ft_quote(char *s, t_command *command);
 int			quote_zero(char *s);
 char		*put_all_that_shit(t_command *command);
-char		*ft_put_arg_echo(char *s, char c);
+char		*ft_put_arg_echo(char *s, int c);
 char			ft_quote_close_verif(char *s, char around, char between);
 int			builtins_parent(t_input *terminal, t_command *command);
 int			ft_dollar_echo(t_input *terminal, char *arg, int there);
@@ -219,6 +229,8 @@ void		call_heredoc_in(t_input *terminal, t_command *command, t_parss *parss);
 void		call_heredoc_out(t_input *terminal, t_command *command, t_parss *parss);
 void		put_arg_cmd(t_input *terminal, t_command *command, t_parss *parss);
 void		init_parss(t_parss *parss);
+void		args_quote(t_input *terminal, t_command *command, t_parss *parss);
+void		args_quotes(t_input *terminal, t_command *command, t_parss *parss);
 void		cheking_input(t_input *terminal, t_command *command);
 void 		call_dollar(t_input *terminal, t_command *command, t_parss *parss);
 void	*search_path_dollar(t_input *terminal, t_command *command);

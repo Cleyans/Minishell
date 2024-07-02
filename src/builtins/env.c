@@ -22,7 +22,7 @@ void init_env(t_input *terminal, char  **env)
 		i = 0;
 		while (env[i] != NULL)
 			i++;
-		terminal->env = malloc(sizeof(char *) * (i + 1));
+		terminal->env = ft_calloc(i + 1, sizeof(char *));
 		if (terminal->env == NULL)
 			return ;
 		i = 0;
@@ -32,7 +32,7 @@ void init_env(t_input *terminal, char  **env)
 			i++;
 			terminal->env_size++;
 		}
-		terminal->env[terminal->env_size] = NULL;
+		terminal->env[i] = NULL;
 		i = 0;
 	}
 }
