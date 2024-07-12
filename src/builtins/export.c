@@ -85,6 +85,7 @@ void	init_export(t_input *terminal)
 	int		i;
 	char	*equal_pos;
 	char	*new_str;
+	terminal->i = 0;
 
 	i = 0;
 	while (terminal->env[i] != NULL)

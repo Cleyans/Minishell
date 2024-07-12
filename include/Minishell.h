@@ -60,12 +60,13 @@ typedef struct t_command
 	char				*out_dollar;
 	int					int_dollar; // 0 = $ // 1 = ? //
 	int					pipe;
-	int					arg_q[100];
+	int					*arg_q;
 	int					redir_in;
 	int					redir_out;
 	int					hd_in; // 0 = >> // 1 = << //
 	int					hd_out; // 0 = >> // 1 = << //
 	int					builtins;
+	int					mem_cmd;
 	int					args;
 	struct t_command	*next;
 }				t_command;
@@ -114,10 +115,13 @@ typedef struct t_input
 
 //NEW//
 
+void	count_nb_args(t_input *terminal, t_command *command);
+int	is_quote_nb_args(t_input *terminal, t_command *command, char c, int i);
 int	is_quote(t_input *terminal, t_command *command, t_parss *parss);
 int	is_quote_len(t_input *terminal, t_parss *parss, char c);
 int	status_print(t_input *terminal);
 void		printf_echo_s(t_input *terminal, t_command *command);
+void	all_init_malloc(t_command *command, t_input *terminal, t_parss *parss);
 
 
 /*

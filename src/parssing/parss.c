@@ -37,21 +37,34 @@ int	verif_input(t_input *terminal)
 	return (1);
 }
 
+void	all_init_malloc(t_command *command, t_input *terminal, t_parss *parss)
+{
+	int i;
+
+	init_parss(parss);
+	count_nb_args(terminal, command);
+	command->arguments = malloc(sizeof(char *) * command->args + 1);
+	command->command = malloc(sizeof(char) * command->mem_cmd + 1);
+	command->arg_q = (int *)malloc((command->args + 1) * sizeof(int));
+	i = 0;
+	while (i < command->args + 1)
+	{
+		command->arg_q[i] = 0;
+		i++;
+	}
+}
+
 void	cheking_input(t_input *terminal, t_command *command) // if echo and betweneen "" everything goes into argument even if > < 
 {
 	t_parss	parss;
-	init_parss(&parss);
 
+	all_init_malloc(command, terminal, &parss);
 	while (terminal->input[parss.i] && terminal->input[parss.i] != '\0')
 	{
 		while (terminal->input[parss.i] != '\0' && terminal->input[parss.i] != '|')
 		{
 			while (terminal->input[parss.i] == ' ')
 				parss.i++;
-			// if (terminal->input[parss.i] == '\"' && parss.cmd_c == 1)
-			// 	args_quotes(terminal, command, &parss);
-			// if (terminal->input[parss.i] == '\'' && parss.cmd_c == 1)
-			// 	args_quote(terminal, command, &parss);
 			if (terminal->input[parss.i] == '<' || terminal->input[parss.i] == '>')
 			{
 				check_redir(terminal, command, &parss);
@@ -80,6 +93,7 @@ void	cheking_input(t_input *terminal, t_command *command) // if echo and betwene
 		}
 		else
 			command->pipe = -1;
+		command->arguments[parss.j] = NULL;
 		parss.j = 0;
 		parss.cmd_c = -1;
 		terminal->count_cmd++;
@@ -315,32 +329,80 @@ void	put_arg_cmd(t_input *terminal, t_command *command, t_parss *parss) // si tu
 
 	len = parss->i;
 	mem = 0;
-	while (terminal->input[len] != ' ' && terminal->input[len]) // verif if ' "" are closed amd then malloc... bro
+	while (terminal->input[len] != ' ' && terminal->input[len]) // verif if ' "" are closed amd then malloc... br
 	{
 		if (terminal->input[len] == '\'' || terminal->input[len] == '\"')
 			len = len + is_quote_len(terminal, parss, terminal->input[len]);
 		len++;
 		mem++;
 	}
-	command->arguments[parss->j] = malloc(sizeof(char) * mem + 100);
+	command->arguments[parss->j] = malloc(sizeof(char) * mem + 1);
 	while (terminal->input[parss->i] != ' ' && terminal->input[parss->i])
 	{
-		if (terminal->input[parss->i] == '\'' || terminal->input[parss->i] == '\"')
+		if ((terminal->input[parss->i] == '\'' || terminal->input[parss->i] == '\"') && (terminal->input[parss->i] != '\0'))
 			if (is_quote(terminal, command, parss) == 42)
 				break;
-		if (terminal->input[parss->i] != ' ')
+		if (terminal->input[parss->i] != ' ' && terminal->input[parss->i] != '\0')
 		{
 			command->arguments[parss->j][parss->k] = terminal->input[parss->i];
 			parss->i++;
 			parss->k++;
 		}
+		if (terminal->input[parss->i] == '\0')
+			break;
+		else
+			parss->i++;
 	}
 	command->arguments[parss->j][parss->k] = '\0';
-	if (command->arg_q[parss->j] != 34 && command->arg_q[parss->j] != 39)
-		command->arg_q[parss->j] = 0;
+		if (command->arg_q[parss->j] != '\'' && command->arg_q[parss->j] != '\"')
+			command->arg_q[parss->j] = 0;
 	parss->k = 0;
 	parss->j++;
-	command->args++;
+}
+
+void	count_nb_args(t_input *terminal, t_command *command)
+{
+	int i;
+	int k;
+	int flag;
+
+	flag = 0;
+	i = 0;
+	k = 0;
+	while (terminal->input[i] == ' ')
+	{
+		i++;
+		command->mem_cmd++;
+	}
+	while (terminal->input[i] != '\0')
+	{
+		while (terminal->input[i] != ' ' && terminal->input[i])
+		{
+			if (terminal->input[i] == '\'' || terminal->input[i] == '\"')
+				if (is_quote_nb_args(terminal, command, terminal->input[i], i) == 42)
+				{
+					flag = 1;
+					break;
+				}
+			if (terminal->input[i] != ' ')
+				i++;
+		}
+		if (terminal->input[i] != '\0')
+			i++;
+		if (flag != 0)
+			break;
+		command->args++;
+	}
+}
+
+int	is_quote_nb_args(t_input *terminal, t_command *command, char c, int i)
+{
+	i++;
+	while (terminal->input[i] != c && terminal->input[i] != '\0')
+		i++;
+	if (terminal->input[i] == '\0')
+		return (42);
+	return (0);
 }
 
 int	is_quote(t_input *terminal, t_command *command, t_parss *parss)
@@ -358,7 +420,7 @@ int	is_quote(t_input *terminal, t_command *command, t_parss *parss)
 	command->arg_q[parss->j] = c;
 	if (terminal->input[parss->i] == '\0')
 		return (42);
-	if (terminal->input[parss->i] == c)
+	else if (terminal->input[parss->i] == c)
 		parss->i++;
 	return (0);
 }

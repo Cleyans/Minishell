@@ -21,10 +21,13 @@ void	init_terminal(t_input *terminal)
 
 void	init_command(t_command *command)
 {
-	command->command = malloc(sizeof(char) * 100);
-	command->command[0] = '\0';
-	command->arguments = malloc(sizeof(char *) * 100);
-	command->arguments[0] = NULL;
+	// command->command = malloc(sizeof(char) * 100);
+	// command->command[0] = '\0';
+	// command->arguments = malloc(sizeof(char *) * 100);
+	// command->arguments[0] = NULL;
+	command->command = NULL;
+	command->arguments = NULL;
+	command->mem_cmd = 0;
 	command->next = NULL;
 	command->pipe = -1;
 	command->redir_in = -1;
