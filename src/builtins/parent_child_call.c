@@ -1,5 +1,7 @@
 #include "../../include/Minishell.h"
 
+extern int g_signal;
+
 int	builtins_parent(t_input *terminal, t_command *command)
 {
 	if (ft_strcmp(command->command, "export") == 0)
@@ -56,8 +58,8 @@ int	builtins_child_2(t_input *terminal, t_command *command)
 	}
 	else if (ft_strcmp(command->command, "echo") == 0)
 	{
-		ft_echo(terminal, command);
-		exit (0);
+		g_signal = ft_echo(terminal, command);
+		exit (g_signal);
 	}
 	return (0);
 }

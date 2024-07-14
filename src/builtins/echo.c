@@ -12,6 +12,8 @@
 
 #include "../../include/Minishell.h"
 
+extern int g_signal;
+
 int	ft_echo(t_input *terminal, t_command *command)
 {
 	int	i;
@@ -29,6 +31,8 @@ int	ft_echo(t_input *terminal, t_command *command)
 		printf("\n");
 	return (0);
 }
+
+// arg_q not used
 
 void	printf_echo_s(t_input *terminal, t_command *command) // 34 == double quotes, 39 == single quotes
 {
@@ -49,7 +53,7 @@ void	printf_echo_s(t_input *terminal, t_command *command) // 34 == double quotes
 		j = 0;
 		while (command->arguments[i][j])
 		{
-			if (command->arguments[i][j] == '$' && command->arguments[i][j + 1] == '?' && command->arg_q[i] == 0)
+			if (command->arguments[i][j] == '$' && command->arguments[i][j + 1] == '?')
 				j = j + status_print(terminal);
 			else if (command->arguments[i][j] == '$' && command->arguments[i][j + 1]
 					&& command->arg_q[i] == 34) // c'est le moment ou faut print tout le env $
@@ -67,8 +71,7 @@ int	status_print(t_input *terminal)
 {
 	int	i;
 	char	*status;
-	
-	status = ft_itoa(terminal->status);
+	status = ft_itoa(g_signal);
 	while (status[i] != '\0')
 	{
 		write(1, &status[i], 1);

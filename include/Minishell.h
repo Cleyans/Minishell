@@ -115,7 +115,7 @@ typedef struct t_input
 
 //NEW//
 
-void	count_nb_args(t_input *terminal, t_command *command);
+void	count_nb_args(t_input *terminal, t_command *command, t_parss *parss);
 int	is_quote_nb_args(t_input *terminal, t_command *command, char c, int i);
 int	is_quote(t_input *terminal, t_command *command, t_parss *parss);
 int	is_quote_len(t_input *terminal, t_parss *parss, char c);

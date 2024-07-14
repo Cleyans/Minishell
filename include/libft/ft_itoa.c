@@ -60,6 +60,15 @@ static char	*convertion(char *resultat, int n, int nlen)
 	return (resultat);
 }
 
+static char *zero(void)
+{
+	char	*resultat;
+	resultat = malloc(2);
+	resultat[0] = '0';
+	resultat[1] = '\0';
+	return (resultat);
+}
+
 char	*ft_itoa(int n)
 {
 	int		nlen;
@@ -71,6 +80,8 @@ char	*ft_itoa(int n)
 		if (resultat)
 			ft_strlcpy(resultat, "-2147483648", 12);
 	}
+	else if (n == 0)
+		resultat = zero();
 	else
 	{
 		nlen = digit(n);

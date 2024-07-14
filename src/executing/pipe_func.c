@@ -33,7 +33,7 @@ void	first_command(t_input *terminal, t_command *command, int i)
         close(terminal->p_fd[i][1]);
     }
     if (builtins_check(command) == 1)
-        g_signal = builtins_call(terminal, command);
+        builtins_call(terminal, command);
 	else
         exec_cmd(command, terminal);
 }
@@ -61,7 +61,7 @@ void	middle_command(t_input *terminal, t_command *command, int i) // verif si re
         close(terminal->p_fd[i][1]);
     }
     if (builtins_check(command) == 1)
-        g_signal = builtins_call(terminal, command);
+        builtins_call(terminal, command);
 	else
         exec_cmd(command, terminal);
 }
@@ -90,7 +90,7 @@ void	last_command(t_input *terminal, t_command *command, int i)
         close(terminal->p_fd[i - 1][1]);
     }
     if (builtins_check(command) == 1)
-        g_signal = builtins_call(terminal, command);
+        builtins_call(terminal, command);
     else
 	    exec_cmd(command, terminal);
 }
@@ -111,13 +111,13 @@ void	only_one_command(t_input *terminal, t_command *command, int i)
     else
 	    close(terminal->p_fd[i][1]);\
     if (builtins_check(command) == 1)
-        g_signal = builtins_call(terminal, command);
+        builtins_call(terminal, command);
     else
 	    exec_cmd(command, terminal);
 }
 
 void	parent_process(t_input *terminal, int i, pid_t pid)
 {
-        waitpid(pid, &terminal->status, 0);
+        waitpid(pid, &g_signal, 0);
         close(terminal->p_fd[i][1]);
 }

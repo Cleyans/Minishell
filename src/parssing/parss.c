@@ -12,6 +12,8 @@
 
 #include "../../include/Minishell.h"
 
+extern int g_singal;
+
 int	find_p_r(char c)
 {
 	if (c == '|' || c == '<' || c == '>')
@@ -39,19 +41,22 @@ int	verif_input(t_input *terminal)
 
 void	all_init_malloc(t_command *command, t_input *terminal, t_parss *parss)
 {
-	int i;
+	// int i;
+
+	// arg_q not used !!!!!!!!! solve the problem
+
 
 	init_parss(parss);
-	count_nb_args(terminal, command);
+	// count_nb_args(terminal, command);
 	command->arguments = malloc(sizeof(char *) * command->args + 1);
 	command->command = malloc(sizeof(char) * command->mem_cmd + 1);
-	command->arg_q = (int *)malloc((command->args + 1) * sizeof(int));
-	i = 0;
-	while (i < command->args + 1)
-	{
-		command->arg_q[i] = 0;
-		i++;
-	}
+	// command->arg_q = (int *)malloc((command->args + 1) * sizeof(int));
+	// i = 0;
+	// while (i < command->args + 1)
+	// {
+	// 	command->arg_q[i] = 0;
+	// 	i++;
+	// }
 }
 
 void	cheking_input(t_input *terminal, t_command *command) // if echo and betweneen "" everything goes into argument even if > < 
@@ -350,24 +355,24 @@ void	put_arg_cmd(t_input *terminal, t_command *command, t_parss *parss) // si tu
 		}
 		if (terminal->input[parss->i] == '\0')
 			break;
-		else
-			parss->i++;
+		// else
+		// 	parss->i++;
 	}
 	command->arguments[parss->j][parss->k] = '\0';
-		if (command->arg_q[parss->j] != '\'' && command->arg_q[parss->j] != '\"')
-			command->arg_q[parss->j] = 0;
+		// if (command->arg_q[parss->j] != '\'' && command->arg_q[parss->j] != '\"')
+		// 	command->arg_q[parss->j] = 0;
 	parss->k = 0;
 	parss->j++;
 }
 
-void	count_nb_args(t_input *terminal, t_command *command)
+void	count_nb_args(t_input *terminal, t_command *command, t_parss *parss) // doesn't word with pipe, because start at the begin of the input
 {
 	int i;
 	int k;
 	int flag;
 
 	flag = 0;
-	i = 0;
+	i = parss->i;
 	k = 0;
 	while (terminal->input[i] == ' ')
 	{
@@ -493,6 +498,7 @@ void	advanced_print(t_command *command)
 		printf("Command out dollar : %s\n", command->out_dollar);
 		printf("builtins = %d\n", command->builtins);
 		printf("\n");
+		printf("G_SINGAL = %d\n", g_singal);
 		command = command->next;
 	}
 }
