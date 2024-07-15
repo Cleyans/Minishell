@@ -30,12 +30,16 @@ int check_if_sort_export(char *str, char **env)
 				k++;
 				j++;
 				if (env[i][k] == '\0')
+				{
+					printf("Already in export\n");
 					return (0);
+				}
 			}
 			k = 11;
 		}
 		i++;
 	}
+	printf("Not in export\n");
 	return(1);
 }
 
@@ -49,7 +53,10 @@ void ft_export(t_input *terminal, t_command *command)
 		while (command->arguments[i])
 		{
 			if (check_if_sort_export(command->arguments[i], terminal->export) == 1 && check_alpha_export(command->arguments[i]) == 1)
+			{
+				printf("Adding %s to export\n", command->arguments[i]);
 				add_export(terminal, command, i);
+			}
 			i++;
 		}
 	}
@@ -144,4 +151,5 @@ void    add_export(t_input *terminal, t_command *command, int arg_index)
 	tmp[i + 1] = NULL;
 	terminal->export = tmp;
 	terminal->i++;
+	printf("Export added\n");
 }

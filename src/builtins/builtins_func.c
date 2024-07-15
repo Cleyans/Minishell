@@ -91,7 +91,7 @@ void print_export(t_input *terminal)
 	int i;
 
 	i = 0;
-	while (terminal->export[i] != NULL)
+	while (terminal->export[i])
 	{
 		printf("%s\n", terminal->export[i]);
 		i++;
