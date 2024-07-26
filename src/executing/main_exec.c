@@ -72,9 +72,11 @@ void	exec_cmd(t_command *command, t_input *terminal)
 	i = 0;
 	j = 0;
 	cmd_split = ft_calloc(command->args + 2, sizeof(char *));
+	if (cmd_split == NULL)
+		error_message("Error: malloc failed\n");
 	args_alloc(command, cmd_split);
 	cmd_split[j++] = ft_strdup(command->command);
-	if (command->arguments[i])
+	if (command->arguments && command->arguments[i])
 		args_dup(command, cmd_split);
 	if (access(command->command, F_OK) == 0)
 	{
@@ -94,8 +96,10 @@ void	args_dup(t_command *command, char **cmd_split)
 
 	i = 0;
 	j = 1;
+	printf("comand->args = %d\n", command->args);
 	while (command->arguments[i] != NULL)
 	{
+		printf("ARGUMENT[%d] = %s\n", i, command->arguments[i]);
 		cmd_split[j] = ft_strdup(command->arguments[i]);
 		i++;
 		j++;
@@ -109,9 +113,11 @@ void	args_alloc(t_command *command, char **cmd_split)
 
 	i = 0;
 
-	while (command->arguments[i] != NULL)
+	while (command->arguments && command->arguments[i] != NULL)
 	{
-		cmd_split[i] = malloc(sizeof(char) * ft_strlen(command->arguments[i]) + 1);
+		cmd_split[i] = malloc(sizeof(char) * (ft_strlen(command->arguments[i]) + 1));
+		if (cmd_split[i] == NULL)
+			error_message("Error: malloc failed\n");
 		i++;
 	}
 }

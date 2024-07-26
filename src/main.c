@@ -35,7 +35,7 @@ int	main(int ac, char **av, char **env)
 		if (verif_input(&terminal) == 0)
 		{
 			cheking_input(&terminal, command);
-			advanced_print(command);
+			// advanced_print(command);
 			executing(&terminal, command);
 			free_nodes(command);
 		}
@@ -43,27 +43,3 @@ int	main(int ac, char **av, char **env)
 	}
 	return (terminal.status);
 }
-
-// void	print_commands(t_command *command)
-// {
-// 	int	i;
-// 	int	cmd_count;
-
-// 	cmd_count = 0;
-// 	while (command->next != NULL)
-// 	{
-// 		if (command->command[0] != '\0')
-// 			printf("Commande[%d] = %s\n",cmd_count, command->command);
-// 		i = 0;
-// 		while (command->arguments[i] != NULL && command->arguments[i][0] != '\0')
-// 		{
-// 			printf("Arguments[%d] de la commande[%d] : %s\n",i, cmd_count, command->arguments[i]);
-// 			i++;
-// 		}
-// 		printf("Pipe: %d\n", command->pipe);
-// 		printf("Redirection: %d\n", command->redirection);
-// 		printf("\n");
-// 		cmd_count++;
-// 		command = command->next;
-// 	}
-// }

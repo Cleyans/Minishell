@@ -79,7 +79,7 @@ char	*create_new_str(char *str, char *equal_pos)
 	int		i;
 	int		j;
 
-	new_str = malloc((equal_pos - str) + ft_strlen(equal_pos) + 3); // For "" and '\0'
+	new_str = malloc((equal_pos - str) + (ft_strlen(equal_pos) + 3)); // For "" and '\0'
 	if (new_str == NULL)
 		return (NULL);
 	

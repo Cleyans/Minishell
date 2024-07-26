@@ -34,10 +34,8 @@ t_command	*ft_lstnew_m(void)
 	new = (t_command *)malloc(sizeof(t_command));
 	if (!new)
 		return (NULL);
-	new->command = malloc(sizeof(char) * 100);
-	new->command[0] = '\0';
-	new->arguments = malloc(sizeof(char *) * 100);
-	new->arguments[0] = NULL;
+	new->command = NULL;
+	new->arguments = NULL;
 	new->pipe = -1;
 	new->redir_in = -1;
 	new->redir_out = -1;

@@ -41,15 +41,23 @@ int	verif_input(t_input *terminal)
 
 void	all_init_malloc(t_command *command, t_input *terminal, t_parss *parss)
 {
-	// int i;
+	int i;
 
 	// arg_q not used !!!!!!!!! solve the problem
 
-
-	init_parss(parss);
-	// count_nb_args(terminal, command);
-	command->arguments = malloc(sizeof(char *) * command->args + 1);
-	command->command = malloc(sizeof(char) * command->mem_cmd + 1);
+	i = 0;
+	count_nb_args(terminal, command, parss);
+	command->arguments = malloc(sizeof(char *) * (command->args + 1));
+	if (command->arguments == NULL)
+		error_message("Error: malloc failed\n");
+	// while (i <= command->args)
+	// {
+	// 	command->arguments[i] = NULL;
+	// 	i++;
+	// }
+	command->command = malloc(sizeof(char) * (command->mem_cmd + 1));
+	if (command->command == NULL)
+		error_message("Error: malloc failed\n");
 	// command->arg_q = (int *)malloc((command->args + 1) * sizeof(int));
 	// i = 0;
 	// while (i < command->args + 1)
@@ -62,21 +70,16 @@ void	all_init_malloc(t_command *command, t_input *terminal, t_parss *parss)
 void	cheking_input(t_input *terminal, t_command *command) // if echo and betweneen "" everything goes into argument even if > < 
 {
 	t_parss	parss;
-
-	all_init_malloc(command, terminal, &parss);
+	init_parss(&parss);
 	while (terminal->input[parss.i] && terminal->input[parss.i] != '\0')
 	{
+		all_init_malloc(command, terminal, &parss);
 		while (terminal->input[parss.i] != '\0' && terminal->input[parss.i] != '|')
 		{
 			while (terminal->input[parss.i] == ' ')
 				parss.i++;
 			if (terminal->input[parss.i] == '<' || terminal->input[parss.i] == '>')
-			{
 				check_redir(terminal, command, &parss);
-				parss.i++;
-				if (terminal->input[parss.i] == '<' || terminal->input[parss.i] == '>')
-					parss.i++;
-			}	
 			if (parss.cmd_c == 1 && terminal->input[parss.i])
 				put_arg_cmd(terminal, command, &parss);
 			if ((parss.cmd_c == 0) || parss.cmd_c == -1)
@@ -103,10 +106,11 @@ void	cheking_input(t_input *terminal, t_command *command) // if echo and betwene
 		parss.cmd_c = -1;
 		terminal->count_cmd++;
 		ft_lstadd_back_m(&command, ft_lstnew_m());
-		command->arguments = remove_empty_args(command->arguments);
 		command = command->next;
+		// command->arguments = remove_empty_args(command->arguments);
+		// all_init_malloc(command, terminal, &parss);
 	}
-	command->arguments[parss.j] = NULL;
+	// command->arguments[parss.j] = NULL;
 }
 
 void	args_quotes(t_input *terminal, t_command *command, t_parss *parss)
@@ -181,7 +185,7 @@ void	put_command(t_input *terminal, t_command *command, t_parss *parss)
 		i++;
 		mem++;
 	}
-	command->command = malloc(sizeof(char) * mem + 1);
+	command->command = malloc(sizeof(char) * (mem + 1));
 	while (terminal->input[parss->i] != ' ' && terminal->input[parss->i] != '\0')
 	{
 		command->command[parss->j] = terminal->input[parss->i];
@@ -197,11 +201,13 @@ void	check_redir(t_input *terminal, t_command *command, t_parss *parss)
 {
 	if (terminal->input[parss->i] == '<' && terminal->input[parss->i + 1] == '<')
 	{
+		parss->i = parss->i + 2;
 		command->hd_in = 1;
 		call_heredoc_in(terminal, command, parss);
 	}
 	else if (terminal->input[parss->i] == '>' && terminal->input[parss->i + 1] == '>')
 	{
+		parss->i = parss->i + 2;
 		command->hd_out = 1;
 		call_heredoc_out(terminal, command, parss);
 	}
@@ -236,7 +242,7 @@ void		call_heredoc_in(t_input *terminal, t_command *command, t_parss *parss)
 		len++;
 		mem++;
 	}
-	command->word = malloc(sizeof(char) * mem + 1);
+	command->word = malloc(sizeof(char) * (mem + 1));
 	while (terminal->input[parss->i] != ' ' && terminal->input[parss->i] != '\0')
 	{
 		command->word[i] = terminal->input[parss->i];
@@ -263,7 +269,7 @@ void	call_heredoc_out(t_input *terminal, t_command *command, t_parss *parss)
 		len++;
 		mem++;
 	}
-	command->outfile = malloc(sizeof(char) * mem + 1);
+	command->outfile = malloc(sizeof(char) * (mem + 1));
 	while (terminal->input[parss->i] != ' ' && terminal->input[parss->i] != '\0')
 	{
 		command->outfile[i] = terminal->input[parss->i];
@@ -290,7 +296,7 @@ void	call_redir_infile(t_input *terminal, t_command *command, t_parss *parss)
 		len++;
 		mem++;
 	}
-	command->infile = malloc(sizeof(char) * mem + 1);
+	command->infile = malloc(sizeof(char) * (mem + 1));
 	while (terminal->input[parss->i] != ' ' && terminal->input[parss->i] != '\0')
 	{
 		command->infile[i] = terminal->input[parss->i];
@@ -307,17 +313,17 @@ void	call_redir_outfile(t_input *terminal, t_command *command, t_parss *parss)
 	int mem;
 
 	i = 0;
-	len = parss->i;
 	mem = 0;
 	parss->i++;
 	while (terminal->input[parss->i] == ' ')
 		parss->i++;
+	len = parss->i;
 	while (terminal->input[len] != ' ' && terminal->input[len] != '\0')
 	{
 		len++;
 		mem++;
 	}
-	command->outfile = malloc(sizeof(char) * mem + 1);
+	command->outfile = malloc(sizeof(char) * (mem + 1));
 	while (terminal->input[parss->i] != ' ' && terminal->input[parss->i] != '\0')
 	{
 		command->outfile[i] = terminal->input[parss->i];
@@ -341,7 +347,7 @@ void	put_arg_cmd(t_input *terminal, t_command *command, t_parss *parss) // si tu
 		len++;
 		mem++;
 	}
-	command->arguments[parss->j] = malloc(sizeof(char) * mem + 1);
+	command->arguments[parss->j] = malloc(sizeof(char) * (mem + 1));
 	while (terminal->input[parss->i] != ' ' && terminal->input[parss->i])
 	{
 		if ((terminal->input[parss->i] == '\'' || terminal->input[parss->i] == '\"') && (terminal->input[parss->i] != '\0'))
@@ -359,6 +365,7 @@ void	put_arg_cmd(t_input *terminal, t_command *command, t_parss *parss) // si tu
 		// 	parss->i++;
 	}
 	command->arguments[parss->j][parss->k] = '\0';
+
 		// if (command->arg_q[parss->j] != '\'' && command->arg_q[parss->j] != '\"')
 		// 	command->arg_q[parss->j] = 0;
 	parss->k = 0;
@@ -368,35 +375,28 @@ void	put_arg_cmd(t_input *terminal, t_command *command, t_parss *parss) // si tu
 void	count_nb_args(t_input *terminal, t_command *command, t_parss *parss) // doesn't word with pipe, because start at the begin of the input
 {
 	int i;
-	int k;
-	int flag;
 
-	flag = 0;
-	i = parss->i;
-	k = 0;
-	while (terminal->input[i] == ' ')
+	i = 0;
+	command->args = 0;
+	command->mem_cmd = 0;
+
+	while (terminal->input[i] != ' ' && terminal->input[i])
 	{
-		i++;
 		command->mem_cmd++;
+		i++;
 	}
-	while (terminal->input[i] != '\0')
+	while (terminal->input[i] != '\0' && terminal->input[i] != '|')
 	{
-		while (terminal->input[i] != ' ' && terminal->input[i])
+		if (terminal->input[i] == ' ')
 		{
-			if (terminal->input[i] == '\'' || terminal->input[i] == '\"')
-				if (is_quote_nb_args(terminal, command, terminal->input[i], i) == 42)
-				{
-					flag = 1;
-					break;
-				}
-			if (terminal->input[i] != ' ')
+			while (terminal->input[i] == ' ')
 				i++;
+		if (terminal->input[i] == '|')
+			break;
+			command->args++;
 		}
 		if (terminal->input[i] != '\0')
 			i++;
-		if (flag != 0)
-			break;
-		command->args++;
 	}
 }
 

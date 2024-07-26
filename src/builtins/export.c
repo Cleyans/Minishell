@@ -18,15 +18,17 @@ int check_if_sort_export(char *str, char **env)
 	int j;
 	int k;
 
-	j = 0;
-	j = 0;
+	i = 0;
 	k = 11;
 	while (env[i])
 	{
+		j = 0;
 		if(env[i][k] == str[j])
 		{
+			// printf("%s\n", str);
 			while (env[i][k] == str[j])
 			{
+				// printf("%c\n", str[j]);
 				k++;
 				j++;
 				if (env[i][k] == '\0')
@@ -90,8 +92,8 @@ int check_alpha_export(char *str)
 void	init_export(t_input *terminal)
 {
 	int		i;
-	char	*equal_pos;
-	char	*new_str;
+	// char	*equal_pos;
+	// char	*new_str;
 	terminal->i = 0;
 
 	i = 0;
@@ -103,18 +105,19 @@ void	init_export(t_input *terminal)
 	i = 0;
 	while (terminal->env[i] != NULL)
 	{
-		equal_pos = ft_strchr(terminal->env[i], '=');
-		if (equal_pos != NULL)
-		{
-			new_str = create_new_str(terminal->env[i], equal_pos);
-			if (new_str == NULL)
-				return ;
-			terminal->export[terminal->i] = ft_strjoin_pipex("declare -x ", new_str);
-			free(new_str);
-		}
-		else
-			terminal->export[terminal->i] = ft_strjoin_pipex("declare -x ", terminal->env[i]);
-		terminal->i++;
+	// 	equal_pos = ft_strchr(terminal->env[i], '=');
+	// 	if (equal_pos != NULL)
+	// 	{
+	// 		new_str = create_new_str(terminal->env[i], equal_pos);
+	// 		if (new_str == NULL)
+	// 			return ;
+	// 		terminal->export[terminal->i] = ft_strjoin_pipex("declare -x ", new_str);
+	// 		free(new_str);
+	// 	}
+	// 	else
+	// 		terminal->export[terminal->i] = ft_strjoin_pipex("declare -x ", terminal->env[i]);
+	// 	terminal->i++;
+		terminal->export[i] = ft_strjoin_pipex("declare -x ", terminal->env[i]);
 		i++;
 	}
 }
@@ -136,20 +139,22 @@ void    add_export(t_input *terminal, t_command *command, int arg_index)
 		i++;
 	}
 	free(terminal->export);
+	equal_sign = malloc(sizeof(char) * 1);
 	equal_sign = ft_strchr(command->arguments[arg_index], '=');
 	if (equal_sign != NULL) 
 	{
 		new_str = create_new_str(command->arguments[arg_index], equal_sign);
 		tmp[i] = ft_strjoin_pipex("declare -x ", new_str);
-		free(new_str);
 		add_to_env(terminal, command, arg_index); // Moved inside the if block
 	}
 	else
-	{
 		tmp[i] = ft_strjoin_pipex("declare -x ", command->arguments[arg_index]);
-	}
 	tmp[i + 1] = NULL;
 	terminal->export = tmp;
+	free(equal_sign);
+	free(new_str);
+	for (int j = 0; tmp[j]; j++)
+		free(tmp[j]);
 	terminal->i++;
 	printf("Export added\n");
 }

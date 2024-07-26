@@ -71,6 +71,14 @@ typedef struct t_command
 	struct t_command	*next;
 }				t_command;
 
+// typedef struct t_count
+// {
+// 	int	args
+// 	int	j;
+// 	int	k;
+// 	int	cmd_c;
+// }				t_count;
+
 typedef struct t_echo
 {
 	int	i;
