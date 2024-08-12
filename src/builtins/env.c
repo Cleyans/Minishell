@@ -39,7 +39,7 @@ void init_env(t_input *terminal, char  **env)
 
 void	add_to_env(t_input *terminal, t_command *command, int arg_index)
 {
-	terminal->env = realloc(terminal->env, (terminal->env_size + 2) * sizeof(char *));
+	terminal->env = malloc(sizeof(char *) * (terminal->env_size + 1));
 	if (terminal->env == NULL)
 		return ;
 	terminal->env[terminal->env_size] = ft_strdup(command->arguments[arg_index]);
