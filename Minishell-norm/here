@@ -1,9 +1,0 @@
-comand->args = 1
-ARGUMENT[0] = -e
-comand->args = 1$
-ARGUMENT[0] = -l$
-total 204$
--rwxrwxrwx 1 cleyan cleyan    971 Aug 19 17:44 Makefile$
-drwxrwxrwx 1 cleyan cleyan   4096 Jul 10 16:13 include$
--rwxrwxrwx 1 cleyan cleyan 201088 Aug 19 18:01 minishell$
-drwxrwxrwx 1 cleyan cleyan   4096 Aug 19 18:01 src$
