@@ -120,7 +120,6 @@ void    add_export(t_input *terminal, t_command *command, int arg_index)
 	char    *equal_sign;
 	char    *new_str;
 
-	printf("Nombre de ligne : %d\n", terminal->i);
 	tmp = malloc(sizeof(char *) * (terminal->i + 1));
 	if (tmp == NULL)
 		return ;
@@ -141,7 +140,7 @@ void    add_export(t_input *terminal, t_command *command, int arg_index)
 	}
 	else
 		tmp[i] = ft_strjoin_pipex("declare -x ", command->arguments[arg_index]);
-	tmp[i] = NULL;
+	tmp[i + 1] = NULL;
 	terminal->export = tmp;
 	terminal->i++;
 }

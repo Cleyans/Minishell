@@ -31,6 +31,11 @@ int	builtins_parent(t_input *terminal, t_command *command)
 		ft_cd(command);
 		return (0);
 	}
+	else if (ft_strcmp(command->command, "env") == 0)
+	{
+		env(terminal);
+		return (0);
+	}
 	return (1);
 }
 
@@ -44,11 +49,6 @@ int	builtins_child(t_input *terminal, t_command *command)
 	else if (ft_strcmp(command->command, "unset") == 0)
 	{
 		ft_unset(terminal, command);
-		exit (0);
-	}
-	else if (ft_strcmp(command->command, "env") == 0)
-	{
-		env(terminal);
 		exit (0);
 	}
 	return (builtins_child_2(terminal, command));

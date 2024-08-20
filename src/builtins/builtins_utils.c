@@ -34,7 +34,8 @@ int	builtins_check(t_command *command)
 int	check_builtins_call(t_command *command)
 {
 	if (ft_strcmp(command->command, "export") == 0
-		|| ft_strcmp(command->command, "exit") == 0)
+		|| ft_strcmp(command->command, "exit") == 0
+		|| ft_strcmp(command->command, "unset"))
 		return (0);
 	else
 		return (1);
@@ -45,7 +46,8 @@ int	check_builtins_call(t_command *command)
 int	builtins_call(t_input *terminal, t_command *command)
 {
 	if (ft_strcmp(command->command, "export") == 0
-		|| ft_strcmp(command->command, "exit") == 0)
+		|| ft_strcmp(command->command, "exit") == 0
+		|| ft_strcmp(command->command, "unset"))
 		return (builtins_parent(terminal, command));
 	else
 		builtins_child(terminal, command);

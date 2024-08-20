@@ -87,7 +87,7 @@ void	exec_cmd(t_command *command, t_input *terminal)
 		exec_error(command, cmd_path, cmd_split);
 	}
 	cmd_path = search_path(terminal->env, command->command);
-	if (execve(cmd_path, cmd_split, terminal->env) == -1)
+	if (execve(cmd_path, cmd_split, terminal->env) == -1) //LEAK
 		exec_error(command, cmd_path, cmd_split);
 }
 
