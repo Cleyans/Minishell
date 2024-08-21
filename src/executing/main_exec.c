@@ -76,7 +76,7 @@ void	exec_cmd(t_command *command, t_input *terminal)
 	cmd_split = ft_calloc(command->args + 2, sizeof(char *));
 	if (cmd_split == NULL)
 		error_message("Error: malloc failed\n");
-	args_alloc(command, cmd_split);
+	// args_alloc(command, cmd_split);
 	cmd_split[j++] = ft_strdup(command->command);
 	if (command->arguments && command->arguments[i])
 		args_dup(command, cmd_split);

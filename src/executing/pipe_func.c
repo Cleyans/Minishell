@@ -12,6 +12,8 @@
 
 #include "../../include/Minishell.h"
 
+
+
 void	first_command(t_input *terminal, t_command *command, int i)
 {
 	if (command->redir_in == 1)
@@ -30,7 +32,7 @@ void	first_command(t_input *terminal, t_command *command, int i)
 		close(terminal->p_fd[i][1]);
 	}
 	if (builtins_check(command) == 1)
-		builtins_call(terminal, command);
+		g_signal = builtins_call(terminal, command);
 	else
 		exec_cmd(command, terminal);
 }
@@ -57,7 +59,7 @@ void	middle_command(t_input *terminal, t_command *command, int i)
 		close(terminal->p_fd[i][1]);
 	}
 	if (builtins_check(command) == 1)
-		builtins_call(terminal, command);
+		g_signal = builtins_call(terminal, command);
 	else
 		exec_cmd(command, terminal);
 }
@@ -85,7 +87,7 @@ void	last_command(t_input *terminal, t_command *command, int i)
 		close(terminal->p_fd[i - 1][1]);
 	}
 	if (builtins_check(command) == 1)
-		builtins_call(terminal, command);
+		g_signal = builtins_call(terminal, command);
 	else
 		exec_cmd(command, terminal);
 }
@@ -105,7 +107,7 @@ void	only_one_command(t_input *terminal, t_command *command, int i)
 	else
 		close(terminal->p_fd[i][1]);
 	if (builtins_check(command) == 1)
-		builtins_call(terminal, command);
+		g_signal = builtins_call(terminal, command);
 	else
 		exec_cmd(command, terminal);
 }

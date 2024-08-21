@@ -39,6 +39,7 @@ void	printf_echo_s(t_input *terminal, t_command *command, int flag)
 	if (flag == 1)
 		i = 1;
 	j = 0;
+	printf("arguments = %s\n index = %d\n", command->arguments[i], i);
 	while (command->arguments[i])
 	{
 		j = 0;
@@ -48,8 +49,7 @@ void	printf_echo_s(t_input *terminal, t_command *command, int flag)
 				&& command->arguments[i][j + 1] == '?')
 				j = j + status_print();
 			else if (command->arguments[i][j] == '$'
-				&& command->arguments[i][j + 1]
-					&& command->arg_q[i] == 34)
+				&& command->arguments[i][j + 1])
 				j = j + ft_dollar_echo(terminal, command->arguments[i], j);
 			write(1, &command->arguments[i][j], 1);
 			j++;
