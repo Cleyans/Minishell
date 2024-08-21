@@ -200,6 +200,7 @@ int			check_alpha_export(char *str);
 void		print_export(t_input *terminal);
 void		add_export(t_input *terminal, t_command *command, int arg_index);
 char		*create_new_str(char *str, char *equal_pos);
+void		remove_export_var(t_input *terminal, char *arg);
 
 /*
 		Function signals

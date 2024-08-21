@@ -12,41 +12,49 @@
 
 #include "../../include/Minishell.h"
 
+#include <stdlib.h>
+#include <string.h>
+
 void	init_env(t_input *terminal, char **env)
 {
-	int	i;
+	int i = 0;
 
-	terminal->env_size = 0;
+	if (env == NULL)
+		return ;
+	while (env[i])
+		i++;
+	terminal->env = malloc(sizeof(char **) * (i + 1));
+	if (terminal->env == NULL)
+		return ;
 	i = 0;
-	if (env != NULL)
+	while (env[i] != NULL)
 	{
-		while (env[i] != NULL)
-			i++;
-		terminal->env = ft_calloc(i + 1, sizeof(char *));
-		if (terminal->env == NULL)
-			return ;
-		i = 0;
-		while (env[i] != NULL)
-		{
-			terminal->env[terminal->env_size] = ft_strdup(env[i]);
-			i++;
-			terminal->env_size++;
-		}
-		terminal->env[i] = NULL;
-		i = 0;
+		terminal->env[i] = env[i];
+		i++;
 	}
+	terminal->env[i] = NULL;
+	terminal->env_size = i;
 }
 
 void	add_to_env(t_input *terminal, t_command *command, int arg_index)
 {
-	terminal->env = realloc(terminal->env,
-			(terminal->env_size + 2) * sizeof(char *));
-	if (terminal->env == NULL)
-		return ;
-	terminal->env[terminal->env_size]
-		= ft_strdup(command->arguments[arg_index]);
-	terminal->env[terminal->env_size + 1] = NULL;
-	terminal->env_size++;
+    char	**new_env;
+    int		i;
+
+    new_env = malloc((terminal->env_size + 2) * sizeof(char *));
+    if (new_env == NULL)
+        return ;
+    i = 0;
+    while (i < terminal->env_size)
+    {
+        new_env[i] = terminal->env[i];
+        i++;
+    }
+    new_env[i] = ft_strdup(command->arguments[arg_index]);
+    new_env[i + 1] = NULL;
+    free(terminal->env);
+    terminal->env = new_env;
+    terminal->env_size++;
 }
 
 void	env(t_input *terminal)

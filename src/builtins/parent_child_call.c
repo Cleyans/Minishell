@@ -46,7 +46,7 @@ int	builtins_child(t_input *terminal, t_command *command)
 		ft_export(terminal, command);
 		exit (0);
 	}
-	else if (ft_strcmp(command->command, "unset") == 0)
+	if (ft_strcmp(command->command, "unset") == 0)
 	{
 		ft_unset(terminal, command);
 		exit (0);

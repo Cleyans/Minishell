@@ -12,7 +12,7 @@
 
 #include "../../include/Minishell.h"
 
-int	check_if_sort_export(char *str, char **env) //CORR
+int	check_if_sort_export(char *str, char **env)
 {
 	int	i;
 	int	j;
@@ -30,16 +30,12 @@ int	check_if_sort_export(char *str, char **env) //CORR
 				k++;
 				j++;
 				if (env[i][k] == '\0')
-				{
-					printf("Already in export\n");
 					return (0);
-				}
 			}
 			k = 11;
 		}
 		i++;
 	}
-	printf("Not in export\n");
 	return (1);
 }
 
@@ -73,7 +69,7 @@ int	check_alpha_export(char *str) //CORR
 	i = 0;
 	if (ft_isalpha(str[i]) == 0 && str[i] != '_')
 	{
-		fprintf(stderr, "\033[0;35mMinihell\033[0;37m$\033[0m export: `%s': not a valid identifier\n", str);
+		fprintf(stderr, "export: `%s': not a valid identifier\n", str);
 		return (0);
 	}
 	i++;
@@ -83,7 +79,7 @@ int	check_alpha_export(char *str) //CORR
 			break ;
 		if (ft_isalnum(str[i]) == 0 && str[i] != '_')
 		{
-			fprintf(stderr, "\033[0;35mMinihell\033[0;37m$\033[0m export: `%s': not a valid identifier\n", str);
+			fprintf(stderr, "export: `%s': not a valid identifier\n", str);
 			return (0);
 		}
 		i++;
@@ -96,7 +92,6 @@ void	init_export(t_input *terminal)
 	int		i;
 
 	terminal->i = 0;
-
 	i = 0;
 	while (terminal->env[i] != NULL)
 		i++;
@@ -113,27 +108,25 @@ void	init_export(t_input *terminal)
 	terminal->export[i] = NULL;
 }
 
-void    add_export(t_input *terminal, t_command *command, int arg_index)
+void	add_export(t_input *terminal, t_command *command, int arg_index)
 {
 	char	**tmp;
 	int		i;
-	char    *equal_sign;
-	char    *new_str;
+	char	*equal_sign;
+	char	*new_str;
 
-	tmp = malloc(sizeof(char *) * (terminal->i + 1));
-	if (tmp == NULL)
-		return ;
+	tmp = malloc(sizeof(char *) * (terminal->i + 2));
 	i = 0;
 	while (terminal->export[i] != NULL)
 	{
 		tmp[i] = terminal->export[i];
 		i++;
 	}
-	// equal_sign = malloc(sizeof (char *));
 	free(terminal->export);
 	equal_sign = ft_strchr(command->arguments[arg_index], '=');
 	if (equal_sign != NULL) 
 	{
+		printf("Adding %s to env\n", command->arguments[arg_index]);
 		new_str = create_new_str(command->arguments[arg_index], equal_sign);
 		tmp[i] = ft_strjoin_pipex("declare -x ", new_str);
 		add_to_env(terminal, command, arg_index);
