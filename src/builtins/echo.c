@@ -10,7 +10,7 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../../include/Minishell.h"
+#include "../../include/Minishell.h" //CORR
 
 int	ft_echo(t_input *terminal, t_command *command)
 {
@@ -21,7 +21,7 @@ int	ft_echo(t_input *terminal, t_command *command)
 	{
 		if (ft_strcmp("-n", command->arguments[0]) == 0)
 			flag = 1;
-		printf_echo_s(terminal, command);
+		printf_echo_s(terminal, command, flag);
 	}
 	if (flag == 0)
 		printf("\n");
@@ -30,12 +30,14 @@ int	ft_echo(t_input *terminal, t_command *command)
 
 // arg_q not used
 
-void	printf_echo_s(t_input *terminal, t_command *command)
+void	printf_echo_s(t_input *terminal, t_command *command, int flag)
 {
 	int	i;
 	int	j;
 
 	i = 0;
+	if (flag == 1)
+		i = 1;
 	j = 0;
 	while (command->arguments[i])
 	{

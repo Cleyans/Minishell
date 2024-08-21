@@ -9,7 +9,7 @@ SOURCE := 	src/main.c src/init.c src/free.c src/testing.c src/error.c\
 			src/list/lst.c \
 			src/executing/main_exec.c src/executing/pipe_func.c src/executing/utils_exec.c src/executing/redir.c\
 			src/signals/signals.c \
-			src/builtins/builtins_func.c src/builtins/echo.c src/builtins/builtins_utils.c src/builtins/parent_child_call.c src/builtins/env.c src/builtins/export.c src/builtins/unset.c\
+			src/builtins/builtins_func.c src/builtins/echo.c src/builtins/builtins_utils.c src/builtins/parent_child_call.c src/builtins/env.c src/builtins/export.c src/builtins/unset.c src/builtins/echo_deux.c\
 			src/parssing/parss.c src/parssing/heredoc_redir.c src/parssing/args.c src/parssing/quotes.c src/parssing/verif_white_space.c\
 
 OBJ 	= $(SOURCE:.c=.o)

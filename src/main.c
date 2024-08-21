@@ -14,6 +14,8 @@
 
 int	g_signal = 0;
 
+//HEREDOC FONCTIONNE PAS
+
 int	main(int ac, char **av, char **env) //CORR
 {
 	t_input		terminal;
@@ -35,7 +37,7 @@ int	main(int ac, char **av, char **env) //CORR
 		if (verif_input(&terminal) == 0 && terminal.input != NULL)
 		{
 			cheking_input(&terminal, command);
-			advanced_print(command);
+			// advanced_print(command);
 			executing(&terminal, command);
 			free_nodes(command);
 		}

@@ -29,7 +29,7 @@ void	advanced_print(t_command *command)
 			printf("outfile = %s\n", command->outfile);
 		if (command->redir_in == 1)
 			printf("infile = %s\n", command->infile);
-		if (command->hd_out == 0)
+		if (command->hd_out == 0 && command->outfile)
 			printf("outfile = %s\n", command->outfile);
 		if (command->hd_in == 1)
 			printf("infile = %s\n", command->infile);

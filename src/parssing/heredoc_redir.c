@@ -49,11 +49,10 @@ void	call_heredoc_in(t_input *terminal, t_command *command, t_parss *parss)
 	int	mem;
 
 	i = 0;
-	len = parss->i;
 	mem = 0;
-	parss->i = parss->i + 2;
 	while (terminal->input[parss->i] == ' ')
 		parss->i++;
+	len = parss->i;
 	while (terminal->input[len] != ' ' && terminal->input[len] != '\0')
 	{
 		len++;
@@ -68,6 +67,7 @@ void	call_heredoc_in(t_input *terminal, t_command *command, t_parss *parss)
 		i++;
 	}
 	command->word[i] = '\0';
+	printf("word = %s\n", command->word);
 }
 
 void	call_heredoc_out(t_input *terminal, t_command *command, t_parss *parss)
@@ -77,11 +77,10 @@ void	call_heredoc_out(t_input *terminal, t_command *command, t_parss *parss)
 	int	mem;
 
 	i = 0;
-	len = parss->i;
 	mem = 0;
-	parss->i = parss->i + 2;
 	while (terminal->input[parss->i] == ' ')
 		parss->i++;
+	len = parss->i;
 	while (terminal->input[len] != ' '
 		&& terminal->input[len] != '\0')
 	{
@@ -106,11 +105,11 @@ void	call_redir_infile(t_input *terminal, t_command *command, t_parss *parss)
 	int	mem;
 
 	i = 0;
-	len = parss->i;
 	mem = 0;
 	parss->i++;
 	while (terminal->input[parss->i] == ' ')
 		parss->i++;
+	len = parss->i;
 	while (terminal->input[len] != ' '
 		&& terminal->input[len] != '\0')
 	{
@@ -118,6 +117,7 @@ void	call_redir_infile(t_input *terminal, t_command *command, t_parss *parss)
 		mem++;
 	}
 	command->infile = malloc(sizeof(char) * (mem + 1));
+	printf("parsss->i = %d\ni = %d\n", parss->i, i);
 	while (terminal->input[parss->i] != ' '
 		&& terminal->input[parss->i] != '\0')
 	{

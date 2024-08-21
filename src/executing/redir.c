@@ -12,7 +12,7 @@
 
 #include "../../include/Minishell.h"
 
-void	redir_in(t_input *terminal, t_command *command, int i)
+void	redir_in(t_input *terminal, t_command *command, int i) //CORR
 {
 	close(terminal->p_fd[i][0]);
 	command->fd = open(command->infile, O_RDONLY);

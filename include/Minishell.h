@@ -117,12 +117,12 @@ typedef struct t_input
 //NEW//
 
 void		free_terminal(t_input *terminal);
-void		count_nb_args(t_input *terminal, t_command *command);
+void		count_nb_args(t_input *terminal, t_command *command);	
 int			is_quote_nb_args(t_input *terminal, char c, int i);
 int			is_quote(t_input *terminal, t_command *command, t_parss *parss);
 int			is_quote_len(t_input *terminal, t_parss *parss, char c);
 int			status_print(void);
-void		printf_echo_s(t_input *terminal, t_command *command);
+void		printf_echo_s(t_input *terminal, t_command *command, int flag);
 void		all_init_malloc(t_command *command, t_input *terminal);
 
 /*
