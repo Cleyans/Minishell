@@ -67,7 +67,7 @@ void	call_dollar(t_input *terminal, t_command *command, t_parss *parss)
 	i = 0;
 	while (terminal->input[parss->i] != '\0')
 	{
-		command->dollar = malloc(sizeof(char) * 100); //CORR
+		command->dollar = malloc(sizeof(char) * 1); //CORR
 		if ((terminal->input[parss->i] == '$')
 			&& terminal->input[parss->i + 1] == '?'
 			&& terminal->input[parss->i + 1] != '\0')

@@ -1,0 +1,9 @@
+comand->args = 3
+ARGUMENT[0] = -l
+total 136
+-rwxr-xr-x 1 kclement 2023_le-havre     34 Aug 26 16:10 HERE
+drwxr-xr-x 3 kclement 2023_le-havre     38 Aug 21 14:33 include
+-rw-r--r-- 1 kclement 2023_le-havre    996 Aug 21 14:33 Makefile
+-rwxr-xr-x 1 kclement 2023_le-havre 120072 Aug 26 16:09 minishell
+-rw-r--r-- 1 kclement 2023_le-havre    371 Aug 21 17:01 rl.supp
+drwxr-xr-x 7 kclement 2023_le-havre   4096 Aug 26 16:06 src

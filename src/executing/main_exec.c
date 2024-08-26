@@ -18,7 +18,7 @@ void	executing(t_input *terminal, t_command *command) //CORR
 	int		*pid;
 
 	i = 0;
-	pid = malloc(sizeof(int) * 4096);
+	pid = malloc(sizeof(int) * terminal->count_cmd);
 	if (pid == NULL)
 		error_message("Error: malloc failed\n");
 	while (i < terminal->count_cmd)

@@ -54,8 +54,8 @@ void	ft_export(t_input *terminal, t_command *command)
 				== 1
 				&& check_alpha_export(command->arguments[i]) == 1)
 			{
-				printf("Adding %s to export\n", command->arguments[i]);
 				add_export(terminal, command, i);
+				g_signal = 0;
 			}
 			i++;
 		}
@@ -70,6 +70,7 @@ int	check_alpha_export(char *str) //CORR
 	if (ft_isalpha(str[i]) == 0 && str[i] != '_')
 	{
 		fprintf(stderr, "export: `%s': not a valid identifier\n", str);
+		g_signal = 1;
 		return (0);
 	}
 	i++;
@@ -79,6 +80,7 @@ int	check_alpha_export(char *str) //CORR
 			break ;
 		if (ft_isalnum(str[i]) == 0 && str[i] != '_')
 		{
+			g_signal = 1;
 			fprintf(stderr, "export: `%s': not a valid identifier\n", str);
 			return (0);
 		}
@@ -126,7 +128,6 @@ void	add_export(t_input *terminal, t_command *command, int arg_index)
 	equal_sign = ft_strchr(command->arguments[arg_index], '=');
 	if (equal_sign != NULL) 
 	{
-		printf("Adding %s to env\n", command->arguments[arg_index]);
 		new_str = create_new_str(command->arguments[arg_index], equal_sign);
 		tmp[i] = ft_strjoin_pipex("declare -x ", new_str);
 		add_to_env(terminal, command, arg_index);

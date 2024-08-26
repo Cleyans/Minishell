@@ -18,7 +18,6 @@
 void	all_init_malloc(t_command *command, t_input *terminal)
 {
 	count_nb_args(terminal, command);
-	printf("Command->args = %d\n", command->args);
 	command->arguments = malloc(sizeof(char *) * (command->args + 1)); //LEAK
 	if (command->arguments == NULL)
 		error_message("Error: malloc failed\n");

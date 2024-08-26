@@ -74,6 +74,7 @@ void	ft_unset(t_input *terminal, t_command *command)
     {
         remove_export_var(terminal, command->arguments[i]);
         unset_env(terminal, command->arguments[i]);
+		g_signal = 0;
         i++;
     }
 }

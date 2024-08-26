@@ -77,7 +77,7 @@ void	ft_cd(t_command *command) // ne pas oublier le status
 	}
 }
 
-void	ft_pwd(t_command *command) // ne pas oublier le status
+void	ft_pwd(t_command *command) // ne pas oublier le status //CORR
 {
 	char	*buffer;
 	int		buffer_size;
@@ -114,4 +114,5 @@ void	print_export(t_input *terminal)
 		printf("%s\n", terminal->export[i]);
 		i++;
 	}
+	g_signal = 0;
 }

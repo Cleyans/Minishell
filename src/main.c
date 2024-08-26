@@ -40,7 +40,7 @@ int	main(int ac, char **av, char **env) //CORR
 			// advanced_print(command);
 			executing(&terminal, command);
 			free_nodes(command);
-		}
+ 		}
 		if (terminal.input != NULL)
 			free(terminal.input);
 	}
