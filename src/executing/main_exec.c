@@ -12,57 +12,135 @@
 
 #include "../../include/Minishell.h"
 
-void	executing(t_input *terminal, t_command *command) //CORR
+// create the right number of pid ?? if the process need to go through the parent??
+// create the right number of pipe
+// fork if needed
+// dup2 / open / the output or input if needed
+// executing the command ?
+
+void	executing(t_input *terminal, t_command *command)
 {
-	int		i;
-	int		*pid;
+	int	i;
 
 	i = 0;
-	pid = malloc(sizeof(int) * terminal->count_cmd);
-	if (pid == NULL)
-		error_message("Error: malloc failed\n");
-	while (i < terminal->count_cmd)
+	while (i < terminal->count_cmd - 1)
 	{
 		if (pipe(terminal->p_fd[i]) == -1)
-			error_message("Error: pipe failed\n");
-		if ((builtins_check(command) == 0)
-			|| (builtins_check(command) == 1
-				&& check_builtins_call(command) == 1))
-			pid[i] = fork();
-		else
-			pid[i] = NOTCHILD;
-		if (pid[i] == -1)
-			error_message("Error: fork failed\n");
-		else if (pid[i] == 0 || pid[i] == NOTCHILD)
-			calling_function(terminal, command, i, pid[i]);
-		else
-			parent_process(terminal, i, pid[i]);
-		if (pid[i] == 0)
-			exit (g_signal);
+			error_message("Pipe failed.\n");
 		i++;
-		if (command->next)
-			command = command->next;
-		terminal->nb_cmd++;
 	}
-	free(pid);
+
+	commands(terminal, command);
 }
 
-void	calling_function(t_input *terminal, t_command *command, int i, int pid)
+
+void	o_command(t_input *terminal, t_command *command, int i)
 {
-	if ((command->pipe == 0 && i == 0)
-		|| (command->pipe == 0 && i == 0 && pid == NOTCHILD))
-		first_command(terminal, command, i);
-	else if ((command->pipe == 0 && i > 0)
-		|| (command->pipe == 0 && i > 0 && pid == NOTCHILD))
-		middle_command(terminal, command, i);
-	else if (command->pipe == -1)
-	{
-		if (terminal->nb_cmd > 1)
-			last_command(terminal, command, i);
-		else
-			only_one_command(terminal, command, i);
-	}
+	check_redirs(terminal, command, i);
+	exec_cmd(command, terminal);
 }
+
+void	s_command(t_input *terminal, t_command *command, int i)
+{
+	check_redirs(terminal, command, i);
+	// check redir func
+}
+
+void	commands(t_input *terminal, t_command *command)
+{
+	 // out 0 | in 1 | stderr 2 | piepe out 3 | pipe in 4
+	pid_t	*pid;
+	int	i;
+
+	pid = malloc(sizeof(pid_t) * terminal->count_cmd);
+	i = 0;
+	// handle output | input
+	while (i < terminal->count_cmd)
+	{
+		pipe(terminal->p_fd[i]);
+		pid[i] = fork();
+		if (pid[i] == -1)
+			error_message("Fork failed.\n");
+		else if (pid[i] == 0)
+		{
+			if (terminal->count_cmd == 1)
+				o_command(terminal, command, i);
+			else
+				s_command(terminal, command, i);
+		}
+		else
+			waitpid(pid[i], &g_signal, 0);
+		i++;
+	}
+	// close pipe
+}
+void	check_redirs(t_input *terminal, t_command *command, int i)
+{
+	if (command->redir_in == 1)
+		redir_in(terminal, command, i);
+	if (command->redir_out == 1)
+		redir_out(terminal, command, i);
+}
+
+// 0 = in | 1 = out || pipe 0 = out pipe 1 = in ??
+// child one send the result in the in pipe
+// child two in pipe = out pipe of child one
+
+// void	child_process(t_input *terminal, t_command *command, int i){
+
+// }
+
+// void	executing(t_input *terminal, t_command *command) //CORR
+// {
+// 	int		i;
+// 	int		*pid;
+
+// 	i = 0;
+// 	pid = malloc(sizeof(int) * terminal->count_cmd);
+// 	if (pid == NULL)
+// 		error_message("Error: malloc failed\n");
+// 	while (i < terminal->count_cmd)
+// 	{
+// 		if (pipe(terminal->p_fd[i]) == -1)
+// 			error_message("Error: pipe failed\n");
+// 		if ((builtins_check(command) == 0)
+// 			|| (builtins_check(command) == 1
+// 				&& check_builtins_call(command) == 1))
+// 			pid[i] = fork();
+// 		else
+// 			pid[i] = NOTCHILD;
+// 		if (pid[i] == -1)
+// 			error_message("Error: fork failed\n");
+// 		else if (pid[i] == 0 || pid[i] == NOTCHILD)
+// 			calling_function(terminal, command, i, pid[i]);
+// 		else
+// 			parent_process(terminal, i, pid[i]);
+// 		if (pid[i] == 0)
+// 			exit (g_signal);
+// 		i++;
+// 		if (command->next)
+// 			command = command->next;
+// 		terminal->nb_cmd++;
+// 	}
+// 	free(pid);
+// }
+
+// void	calling_function(t_input *terminal, t_command *command, int i, int pid)
+// {
+// 	if ((command->pipe == 0 && i == 0)
+// 		|| (command->pipe == 0 && i == 0 && pid == NOTCHILD))
+// 		first_command(terminal, command, i);
+// 	else if ((command->pipe == 0 && i > 0)
+// 		|| (command->pipe == 0 && i > 0 && pid == NOTCHILD))
+// 		middle_command(terminal, command, i);
+// 	else if (command->pipe == -1)
+// 	{
+// 		if (terminal->nb_cmd > 1)
+// 			last_command(terminal, command, i);
+// 		else
+// 			only_one_command(terminal, command, i);
+// 	}
+// }
 
 void	exec_cmd(t_command *command, t_input *terminal)
 {

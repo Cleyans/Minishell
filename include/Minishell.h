@@ -116,6 +116,12 @@ typedef struct t_input
 
 //NEW//
 
+void	check_redirs(t_input *terminal, t_command *command, int i);
+void	o_command(t_input *terminal, t_command *command, int i);
+void	s_command(t_input *terminal, t_command *command, int i);
+void	commands(t_input *terminal, t_command *command);
+void	child_process(t_input *terminal, t_command *command, int i);
+void	parent_process(t_input *terminal, t_command *command, int i);
 void		free_terminal(t_input *terminal);
 void		count_nb_args(t_input *terminal, t_command *command);	
 int			is_quote_nb_args(t_input *terminal, char c, int i);
@@ -164,7 +170,7 @@ void		first_command(t_input *terminal, t_command *command, int i);
 void		middle_command(t_input *terminal, t_command *command, int i);
 void		last_command(t_input *terminal, t_command *command, int i);
 void		only_one_command(t_input *terminal, t_command *command, int i);
-void		parent_process(t_input *terminal, int i, pid_t pid);
+// void		parent_process(t_input *terminal, int i, pid_t pid);
 void		calling_function(t_input *terminal, t_command *command,
 				int i, int pid);
 void		redir_in(t_input *terminal, t_command *command, int i);

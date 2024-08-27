@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ft_strjoin_pipex.c                                 :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: brclemen <brclemen@student.42.fr>          +#+  +:+       +#+        */
+/*   By: brclemen <brclemen@student.42lehavre.fr    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/19 15:37:17 by brclemen          #+#    #+#             */
-/*   Updated: 2024/04/04 16:13:12 by brclemen         ###   ########.fr       */
+/*   Updated: 2024/08/26 16:36:20 by brclemen         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,7 +20,7 @@ char	*ft_strjoin_pipex(char const *s1, char const *s2)
 
 	if (s1 == NULL || s2 == NULL)
 		return (NULL);
-	total_len = (ft_strlen(s1) + ft_strlen(s2));
+	total_len = ((ft_strlen(s1) + ft_strlen(s2)));
 	result = (char *)malloc(total_len + 1);
 	if (result == NULL)
 		return (NULL);
