@@ -18,12 +18,11 @@
 void	all_init_malloc(t_command *command, t_input *terminal)
 {
 	count_nb_args(terminal, command);
+	if (command->arguments != NULL)
+		free(command->arguments);
 	command->arguments = malloc(sizeof(char *) * (command->args + 1)); //LEAK
 	if (command->arguments == NULL)
 		error_message("Error: malloc failed\n");
-// 	command->command = malloc(sizeof(char) * (command->mem_cmd + 1));
-// 	if (command->command == NULL)
-// 		error_message("Error: malloc failed\n");
 }
 
 void	init_parss(t_parss *parss)
@@ -51,6 +50,7 @@ void	init_terminal(t_input *terminal)
 	terminal->echo.i = 0;
 	terminal->echo.search_s2 = 0;
 	terminal->echo.close = 0;
+	terminal->prev_fd = -1;
 }
 
 void	init_command(t_command *command)

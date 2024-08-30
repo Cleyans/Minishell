@@ -14,7 +14,6 @@
 
 void	redir_in(t_input *terminal, t_command *command, int i) //CORR
 {
-	close(terminal->p_fd[i][0]);
 	command->fd = open(command->infile, O_RDONLY);
 	if (command->fd == -1)
 		error_message("Error: open failed\n");
@@ -24,7 +23,6 @@ void	redir_in(t_input *terminal, t_command *command, int i) //CORR
 
 void	redir_out(t_input *terminal, t_command *command, int i)
 {
-	close(terminal->p_fd[i][1]);
 	command->fd = open(command->outfile, O_WRONLY | O_CREAT | O_TRUNC, 0777);
 	if (command->fd == -1)
 		error_message("Error: open failed\n");
@@ -38,7 +36,6 @@ void	here_in(t_input *terminal, t_command *command, int i) //CORR
 	char	*join;
 	char	*rline;
 
-	close(terminal->p_fd[i][0]);
 	rline = ft_strdup("");
 	while (1)
 	{
@@ -100,7 +97,6 @@ int	verif_absolute_path(t_command *command) //CORR
 
 void	here_out(t_input *terminal, t_command *command, int i)
 {
-	close(terminal->p_fd[i][1]);
 	command->fd = open(command->outfile, O_WRONLY | O_CREAT | O_APPEND, 0777);
 	if (command->fd == -1)
 		error_message("Error: open failed\n");

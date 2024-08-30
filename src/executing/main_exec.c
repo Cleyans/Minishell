@@ -18,129 +18,84 @@
 // dup2 / open / the output or input if needed
 // executing the command ?
 
-void	executing(t_input *terminal, t_command *command)
+void executing(t_input *terminal, t_command *command)
 {
-	int	i;
-
-	i = 0;
-	while (i < terminal->count_cmd - 1)
-	{
-		if (pipe(terminal->p_fd[i]) == -1)
-			error_message("Pipe failed.\n");
-		i++;
-	}
-
-	commands(terminal, command);
+    pid_t   *pid;
+    int     i;
+    int     p_fd[2];  // Pipe descripteur (0 = read, 1 = write)
+    // prev_fd = stocke la sortie du pipe précédent
+    pid = malloc(sizeof(pid_t) * terminal->count_cmd);
+    i = 0;
+    while (i < terminal->count_cmd)
+    {
+        // Créer un pipe pour les commandes sauf la dernière
+        if (i < terminal->count_cmd - 1)
+        {
+            if (pipe(p_fd) == -1)
+                error_message("Pipe failed.\n");
+        }
+        if (builtins_check(command) == 0)
+            pid[i] = fork();
+        if (pid[i] == -1)
+            error_message("Fork failed.\n");
+        else if (pid[i] == 0)
+            child_process(terminal, command, p_fd, i);
+        else
+            parent_process(terminal, command, pid, p_fd, i);
+        if (command->next)
+            command = command->next;
+        i++;
+    }
+    free(pid);
 }
 
-
-void	o_command(t_input *terminal, t_command *command, int i)
+void    child_process(t_input *terminal, t_command *command, int *p_fd, int i)
 {
-	check_redirs(terminal, command, i);
-	exec_cmd(command, terminal);
+    if (i > 0) // Si ce n'est pas la première commande
+    {
+        // Rediriger l'entrée de la commande actuelle vers la sortie du pipe précédent
+        dup2(terminal->prev_fd, STDIN_FILENO);
+        close(terminal->prev_fd);
+    }
+    if (i < terminal->count_cmd - 1) // Si ce n'est pas la dernière commande
+    {
+        // Rediriger la sortie de la commande actuelle vers l'entrée du prochain pipe
+        dup2(p_fd[1], STDOUT_FILENO);
+        close(p_fd[0]);
+        close(p_fd[1]);
+    }
+    check_redirs(terminal, command, i);
+    exec_cmd(command, terminal);
+    exit(EXIT_FAILURE);  // Si exec échoue
 }
 
-void	s_command(t_input *terminal, t_command *command, int i)
+void   	parent_process(t_input *terminal, t_command *command, pid_t *pid, int *p_fd, int i)
 {
-	check_redirs(terminal, command, i);
-	// check redir func
+    // Attendre l'enfant
+    waitpid(pid[i], &terminal->status, 0);        
+    // Fermer les descripteurs de fichiers inutiles dans le parent
+    if (terminal->prev_fd != -1)
+        close(terminal->prev_fd);
+    if (i < terminal->count_cmd - 1)
+        terminal->prev_fd = p_fd[0];
+    if (i < terminal->count_cmd - 1)
+        close(p_fd[1]);
+    // Le descripteur de lecture du pipe devient le précédent pour la prochaine commande
+    if (builtins_check(command) == 1)
+        builtins_parent(terminal, command);
 }
 
-void	commands(t_input *terminal, t_command *command)
-{
-	 // out 0 | in 1 | stderr 2 | piepe out 3 | pipe in 4
-	pid_t	*pid;
-	int	i;
-
-	pid = malloc(sizeof(pid_t) * terminal->count_cmd);
-	i = 0;
-	// handle output | input
-	while (i < terminal->count_cmd)
-	{
-		pipe(terminal->p_fd[i]);
-		pid[i] = fork();
-		if (pid[i] == -1)
-			error_message("Fork failed.\n");
-		else if (pid[i] == 0)
-		{
-			if (terminal->count_cmd == 1)
-				o_command(terminal, command, i);
-			else
-				s_command(terminal, command, i);
-		}
-		else
-			waitpid(pid[i], &g_signal, 0);
-		i++;
-	}
-	// close pipe
-}
 void	check_redirs(t_input *terminal, t_command *command, int i)
 {
 	if (command->redir_in == 1)
 		redir_in(terminal, command, i);
 	if (command->redir_out == 1)
 		redir_out(terminal, command, i);
+    if (command->hd_in == 1)
+        here_in(terminal, command, i);
+    if (command->hd_out == 1)
+        here_out(terminal, command, i);
 }
-
-// 0 = in | 1 = out || pipe 0 = out pipe 1 = in ??
-// child one send the result in the in pipe
-// child two in pipe = out pipe of child one
-
-// void	child_process(t_input *terminal, t_command *command, int i){
-
-// }
-
-// void	executing(t_input *terminal, t_command *command) //CORR
-// {
-// 	int		i;
-// 	int		*pid;
-
-// 	i = 0;
-// 	pid = malloc(sizeof(int) * terminal->count_cmd);
-// 	if (pid == NULL)
-// 		error_message("Error: malloc failed\n");
-// 	while (i < terminal->count_cmd)
-// 	{
-// 		if (pipe(terminal->p_fd[i]) == -1)
-// 			error_message("Error: pipe failed\n");
-// 		if ((builtins_check(command) == 0)
-// 			|| (builtins_check(command) == 1
-// 				&& check_builtins_call(command) == 1))
-// 			pid[i] = fork();
-// 		else
-// 			pid[i] = NOTCHILD;
-// 		if (pid[i] == -1)
-// 			error_message("Error: fork failed\n");
-// 		else if (pid[i] == 0 || pid[i] == NOTCHILD)
-// 			calling_function(terminal, command, i, pid[i]);
-// 		else
-// 			parent_process(terminal, i, pid[i]);
-// 		if (pid[i] == 0)
-// 			exit (g_signal);
-// 		i++;
-// 		if (command->next)
-// 			command = command->next;
-// 		terminal->nb_cmd++;
-// 	}
-// 	free(pid);
-// }
-
-// void	calling_function(t_input *terminal, t_command *command, int i, int pid)
-// {
-// 	if ((command->pipe == 0 && i == 0)
-// 		|| (command->pipe == 0 && i == 0 && pid == NOTCHILD))
-// 		first_command(terminal, command, i);
-// 	else if ((command->pipe == 0 && i > 0)
-// 		|| (command->pipe == 0 && i > 0 && pid == NOTCHILD))
-// 		middle_command(terminal, command, i);
-// 	else if (command->pipe == -1)
-// 	{
-// 		if (terminal->nb_cmd > 1)
-// 			last_command(terminal, command, i);
-// 		else
-// 			only_one_command(terminal, command, i);
-// 	}
-// }
 
 void	exec_cmd(t_command *command, t_input *terminal)
 {
@@ -154,7 +109,6 @@ void	exec_cmd(t_command *command, t_input *terminal)
 	cmd_split = ft_calloc(command->args + 2, sizeof(char *));
 	if (cmd_split == NULL)
 		error_message("Error: malloc failed\n");
-	// args_alloc(command, cmd_split);
 	cmd_split[j++] = ft_strdup(command->command);
 	if (command->arguments && command->arguments[i])
 		args_dup(command, cmd_split);
@@ -165,8 +119,10 @@ void	exec_cmd(t_command *command, t_input *terminal)
 		exec_error(command, cmd_path, cmd_split);
 	}
 	cmd_path = search_path(terminal->env, command->command);
+    if (cmd_path == NULL)
+        exec_error(command, NULL, cmd_split);
 	if (execve(cmd_path, cmd_split, terminal->env) == -1) //LEAK
-		exec_error(command, cmd_path, cmd_split);
+        exec_error(command, cmd_path, cmd_split);
 }
 
 void	args_dup(t_command *command, char **cmd_split)
@@ -176,10 +132,8 @@ void	args_dup(t_command *command, char **cmd_split)
 
 	i = 0;
 	j = 1;
-	printf("comand->args = %d\n", command->args);
 	while (command->arguments[i] != NULL)
 	{
-		printf("ARGUMENT[%d] = %s\n", i, command->arguments[i]);
 		cmd_split[j] = ft_strdup(command->arguments[i]);
 		i++;
 		j++;
@@ -187,17 +141,17 @@ void	args_dup(t_command *command, char **cmd_split)
 	cmd_split[j] = NULL;
 }
 
-void	args_alloc(t_command *command, char **cmd_split)
-{
-	int	i;
+// void	args_alloc(t_command *command, char **cmd_split)
+// {
+// 	int	i;
 
-	i = 0;
-	while (command->arguments && command->arguments[i] != NULL)
-	{
-		cmd_split[i] = malloc(sizeof(char)
-				* (ft_strlen(command->arguments[i]) + 1));
-		if (cmd_split[i] == NULL)
-			error_message("Error: malloc failed\n");
-		i++;
-	}
-}
+// 	i = 0;
+// 	while (command->arguments && command->arguments[i] != NULL)
+// 	{
+// 		cmd_split[i] = malloc(sizeof(char)
+// 				* (ft_strlen(command->arguments[i]) + 1));
+// 		if (cmd_split[i] == NULL)
+// 			error_message("Error: malloc failed\n");
+// 		i++;
+// 	}
+// }

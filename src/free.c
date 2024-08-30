@@ -27,12 +27,15 @@ void	free_args(char **argument)
 	free(argument);
 }
 
+
+
 void	free_exec_error(char *cmd_path, char **cmd_split)
 {
 	int	i;
 
 	i = 0;
-	free(cmd_path);
+	if (cmd_path)
+		free(cmd_path);
 	while (cmd_split[i])
 	{
 		free(cmd_split[i]);
@@ -41,14 +44,15 @@ void	free_exec_error(char *cmd_path, char **cmd_split)
 	free(cmd_split);
 }
 
-void	free_nodes(t_command *first)
+
+void	free_nodes(t_command *command)
 {
 	t_command	*tmp;
 	t_command	*next_node;
 
-	if (first != NULL)
+	if (command != NULL)
 	{
-		tmp = first->next;
+		tmp = command->next;
 		while (tmp != NULL)
 		{
 			next_node = tmp->next;
@@ -56,6 +60,6 @@ void	free_nodes(t_command *first)
 			free(tmp);
 			tmp = next_node;
 		}
-		first->next = NULL;
+		command->next = NULL;
 	}
 }

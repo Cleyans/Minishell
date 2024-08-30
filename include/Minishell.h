@@ -102,6 +102,7 @@ typedef struct t_input
 	int			y;
 	int			env_size;
 	int			status;
+	int			prev_fd;
 	int			p_fd[4096][2];
 	pid_t		pid[4096];
 	t_parss		parss;
@@ -116,13 +117,12 @@ typedef struct t_input
 
 //NEW//
 
-void	check_redirs(t_input *terminal, t_command *command, int i);
-void	o_command(t_input *terminal, t_command *command, int i);
-void	s_command(t_input *terminal, t_command *command, int i);
-void	commands(t_input *terminal, t_command *command);
-void	child_process(t_input *terminal, t_command *command, int i);
-void	parent_process(t_input *terminal, t_command *command, int i);
-void		free_terminal(t_input *terminal);
+void		free_struct(t_input *terminal, t_command *command);
+void 		free_terminal(t_input *terminal);
+int			builtins_parent_s(t_input *terminal, t_command *command);
+void		check_redirs(t_input *terminal, t_command *command, int i);
+void		child_process(t_input *terminal, t_command *command, int *p_fd, int i);
+void   		parent_process(t_input *terminal, t_command *command, pid_t *pid, int *p_fd, int i);
 void		count_nb_args(t_input *terminal, t_command *command);	
 int			is_quote_nb_args(t_input *terminal, char c, int i);
 int			is_quote(t_input *terminal, t_command *command, t_parss *parss);
@@ -148,7 +148,7 @@ int			find_p_r(char c);
 void		init(t_input *terminal, t_command *command);
 void		init_terminal(t_input *terminal);
 void		init_command(t_command *command);
-void		free_nodes(t_command *first);
+void		free_nodes(t_command *command);
 
 /*
         Function Executing
@@ -166,13 +166,6 @@ void		args_dup(t_command *command, char **cmd_split);
 		Function Executing pipes
 */
 
-void		first_command(t_input *terminal, t_command *command, int i);
-void		middle_command(t_input *terminal, t_command *command, int i);
-void		last_command(t_input *terminal, t_command *command, int i);
-void		only_one_command(t_input *terminal, t_command *command, int i);
-// void		parent_process(t_input *terminal, int i, pid_t pid);
-void		calling_function(t_input *terminal, t_command *command,
-				int i, int pid);
 void		redir_in(t_input *terminal, t_command *command, int i);
 void		redir_out(t_input *terminal, t_command *command, int i);
 void		here_out(t_input *terminal, t_command *command, int i);
@@ -187,10 +180,6 @@ int			builtins_check(t_command *command);
 int			builtins_parent(t_input *terminal, t_command *command);
 int			ft_dollar_echo(t_input *terminal, char *arg, int there);
 void		ft_call_dollar_env(t_input *terminal, char *dollar);
-int			builtins_child(t_input *terminal, t_command *command);
-int			builtins_child_2(t_input *terminal, t_command *command);
-int			check_builtins_call(t_command *command);
-int			builtins_call(t_input *terminal, t_command *command);
 int			ft_echo(t_input *terminal, t_command *command);
 void		ft_cd(t_command *command);
 void		ft_pwd(t_command *command);

@@ -44,5 +44,13 @@ int	main(int ac, char **av, char **env) //CORR
 		if (terminal.input != NULL)
 			free(terminal.input);
 	}
+	rl_clear_history();
+	free_struct(&terminal, command);
 	return (terminal.status);
+}
+
+void	free_struct(t_input *terminal, t_command *command)
+{
+	free_terminal(terminal);
+	free_nodes(command);
 }

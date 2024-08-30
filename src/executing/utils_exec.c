@@ -48,6 +48,8 @@ char	*search_path(char **env, char *cmd_split)
 	i = 0;
 	while (env[i] && ft_strnstr(env[i], "PATH", 4) == NULL)
 		i++;
+	if (env[i] == NULL)
+		return (NULL);
 	paths = ft_split(env[i] + 5, ':');
 	i = 0;
 	while (paths[i])
