@@ -12,7 +12,7 @@
 
 #include "../../include/Minishell.h"
 
-void	redir_in(t_input *terminal, t_command *command, int i) //CORR
+void	redir_in(t_command *command) //CORR
 {
 	command->fd = open(command->infile, O_RDONLY);
 	if (command->fd == -1)
@@ -21,7 +21,7 @@ void	redir_in(t_input *terminal, t_command *command, int i) //CORR
 	close(command->fd);
 }
 
-void	redir_out(t_input *terminal, t_command *command, int i)
+void	redir_out(t_command *command)
 {
 	command->fd = open(command->outfile, O_WRONLY | O_CREAT | O_TRUNC, 0777);
 	if (command->fd == -1)
@@ -30,7 +30,7 @@ void	redir_out(t_input *terminal, t_command *command, int i)
 	close(command->fd);
 }
 
-void	here_in(t_input *terminal, t_command *command, int i) //CORR
+void	here_in( t_command *command) //CORR
 {
 	char	*line;
 	char	*join;
@@ -95,7 +95,7 @@ int	verif_absolute_path(t_command *command) //CORR
 	return (1);
 }
 
-void	here_out(t_input *terminal, t_command *command, int i)
+void	here_out(t_command *command)
 {
 	command->fd = open(command->outfile, O_WRONLY | O_CREAT | O_APPEND, 0777);
 	if (command->fd == -1)

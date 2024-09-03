@@ -120,7 +120,7 @@ typedef struct t_input
 void		free_struct(t_input *terminal, t_command *command);
 void 		free_terminal(t_input *terminal);
 int			builtins_parent_s(t_input *terminal, t_command *command);
-void		check_redirs(t_input *terminal, t_command *command, int i);
+void		check_redirs(t_command *command);
 void		child_process(t_input *terminal, t_command *command, int *p_fd, int i);
 void   		parent_process(t_input *terminal, t_command *command, pid_t *pid, int *p_fd, int i);
 void		count_nb_args(t_input *terminal, t_command *command);	
@@ -159,17 +159,16 @@ char		*search_path(char **env, char *cmd_split);
 void		executing(t_input *terminal, t_command *command);
 void		exec_cmd(t_command *command, t_input *terminal);
 void		exec_error(t_command *command, char *cmd_path, char **cmd_split);
-void		args_alloc(t_command *command, char **cmd_split);
 void		args_dup(t_command *command, char **cmd_split);
 
 /*
 		Function Executing pipes
 */
 
-void		redir_in(t_input *terminal, t_command *command, int i);
-void		redir_out(t_input *terminal, t_command *command, int i);
-void		here_out(t_input *terminal, t_command *command, int i);
-void		here_in(t_input *terminal, t_command *command, int i);
+void		redir_in(t_command *command);
+void		redir_out(t_command *command);
+void		here_out(t_command *command);
+void		here_in(t_command *command);
 int			verif_absolute_path(t_command *command);
 
 /*

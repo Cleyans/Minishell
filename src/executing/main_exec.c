@@ -64,7 +64,7 @@ void    child_process(t_input *terminal, t_command *command, int *p_fd, int i)
         close(p_fd[0]);
         close(p_fd[1]);
     }
-    check_redirs(terminal, command, i);
+    check_redirs(command);
     exec_cmd(command, terminal);
     exit(EXIT_FAILURE);  // Si exec échoue
 }
@@ -85,16 +85,16 @@ void   	parent_process(t_input *terminal, t_command *command, pid_t *pid, int *p
         builtins_parent(terminal, command);
 }
 
-void	check_redirs(t_input *terminal, t_command *command, int i)
+void	check_redirs(t_command *command)
 {
 	if (command->redir_in == 1)
-		redir_in(terminal, command, i);
+		redir_in(command);
 	if (command->redir_out == 1)
-		redir_out(terminal, command, i);
+		redir_out(command);
     if (command->hd_in == 1)
-        here_in(terminal, command, i);
+        here_in(command);
     if (command->hd_out == 1)
-        here_out(terminal, command, i);
+        here_out(command);
 }
 
 void	exec_cmd(t_command *command, t_input *terminal)
@@ -121,7 +121,7 @@ void	exec_cmd(t_command *command, t_input *terminal)
 	cmd_path = search_path(terminal->env, command->command);
     if (cmd_path == NULL)
         exec_error(command, NULL, cmd_split);
-	if (execve(cmd_path, cmd_split, terminal->env) == -1) //LEAK
+	else if (execve(cmd_path, cmd_split, terminal->env) == -1) //LEAK
         exec_error(command, cmd_path, cmd_split);
 }
 
@@ -140,18 +140,3 @@ void	args_dup(t_command *command, char **cmd_split)
 	}
 	cmd_split[j] = NULL;
 }
-
-// void	args_alloc(t_command *command, char **cmd_split)
-// {
-// 	int	i;
-
-// 	i = 0;
-// 	while (command->arguments && command->arguments[i] != NULL)
-// 	{
-// 		cmd_split[i] = malloc(sizeof(char)
-// 				* (ft_strlen(command->arguments[i]) + 1));
-// 		if (cmd_split[i] == NULL)
-// 			error_message("Error: malloc failed\n");
-// 		i++;
-// 	}
-// }
