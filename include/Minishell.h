@@ -122,7 +122,7 @@ void 		free_terminal(t_input *terminal);
 int			builtins_parent_s(t_input *terminal, t_command *command);
 void		check_redirs(t_command *command);
 void		child_process(t_input *terminal, t_command *command, int *p_fd, int i);
-void   		parent_process(t_input *terminal, t_command *command, pid_t *pid, int *p_fd, int i);
+void   		parent_process(t_input *terminal, t_command *command, int *p_fd, pid_t *pid, int i);
 void		count_nb_args(t_input *terminal, t_command *command);	
 int			is_quote_nb_args(t_input *terminal, char c, int i);
 int			is_quote(t_input *terminal, t_command *command, t_parss *parss);

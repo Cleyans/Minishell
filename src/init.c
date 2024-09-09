@@ -64,7 +64,6 @@ void	init_command(t_command *command)
 	command->redir_out = -1;
 	command->hd_in = -1;
 	command->hd_out = -1;
-	command->builtins = 0;
 	command->dollar = NULL;
 	command->int_dollar = -1;
 	command->out_dollar = NULL;

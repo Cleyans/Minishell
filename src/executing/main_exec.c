@@ -24,7 +24,7 @@ void executing(t_input *terminal, t_command *command)
     int     i;
     int     p_fd[2];  // Pipe descripteur (0 = read, 1 = write)
     // prev_fd = stocke la sortie du pipe précédent
-    pid = malloc(sizeof(pid_t) * terminal->count_cmd);
+    pid = malloc(sizeof(pid_t) * (terminal->count_cmd));
     i = 0;
     while (i < terminal->count_cmd)
     {
@@ -34,14 +34,17 @@ void executing(t_input *terminal, t_command *command)
             if (pipe(p_fd) == -1)
                 error_message("Pipe failed.\n");
         }
-        if (builtins_check(command) == 0)
-            pid[i] = fork();
+        pid[i] = fork();
         if (pid[i] == -1)
             error_message("Fork failed.\n");
-        else if (pid[i] == 0)
-            child_process(terminal, command, p_fd, i);
+        if (pid[i] == 0)
+        {
+            if (builtins_check(command) == 0)
+                child_process(terminal, command, p_fd, i);
+            exit(0);
+        }
         else
-            parent_process(terminal, command, pid, p_fd, i);
+            parent_process(terminal, command, p_fd, pid, i); // fork tout le temps mais si builtins juste attendre l'enfant et rien exec??
         if (command->next)
             command = command->next;
         i++;
@@ -69,11 +72,12 @@ void    child_process(t_input *terminal, t_command *command, int *p_fd, int i)
     exit(EXIT_FAILURE);  // Si exec échoue
 }
 
-void   	parent_process(t_input *terminal, t_command *command, pid_t *pid, int *p_fd, int i)
+void   	parent_process(t_input *terminal, t_command *command, int *p_fd, pid_t *pid, int i)
 {
     // Attendre l'enfant
-    waitpid(pid[i], &terminal->status, 0);        
     // Fermer les descripteurs de fichiers inutiles dans le parent
+    if (pid[i])
+        waitpid(pid[i], &g_signal, 0);
     if (terminal->prev_fd != -1)
         close(terminal->prev_fd);
     if (i < terminal->count_cmd - 1)
