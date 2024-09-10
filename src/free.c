@@ -52,10 +52,13 @@ void	free_nodes(t_command *command)
 
 	if (command != NULL)
 	{
+		free(command->command);
+		free_args(command->arguments);
 		tmp = command->next;
 		while (tmp != NULL)
 		{
 			next_node = tmp->next;
+			free(tmp->command);
 			free_args(tmp->arguments);
 			free(tmp);
 			tmp = next_node;
