@@ -65,6 +65,7 @@ typedef struct t_command
 	int					*arg_q;
 	int					redir_in;
 	int					redir_out;
+	int					s_quotes;
 	int					hd_in;
 	int					hd_out;
 	int					builtins;
@@ -118,9 +119,9 @@ typedef struct t_input
 //NEW//
 
 char		*get_env_value(t_input *terminal, char *var_name);
-int			print_env_var(t_input *terminal, char *arg);
-void		print_status(void);
-void		handle_echo_argument(t_input *terminal, char *arg);
+int			print_env_var(t_input *terminal, t_command *command, char *arg);
+int		print_status(void);
+void		handle_echo_argument(t_input *terminal, t_command *command, char *arg);
 
 // CHATGPT FUNCTION EN HAUT
 

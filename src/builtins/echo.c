@@ -26,7 +26,7 @@ int	ft_echo(t_input *terminal, t_command *command)
 	}
 	while (command->arguments && command->arguments[i])
 	{
-		handle_echo_argument(terminal, command->arguments[i]);
+		handle_echo_argument(terminal, command, command->arguments[i]);
 		if (command->arguments[i + 1])
 			write(1, " ", 1);
 		i++;
@@ -36,22 +36,23 @@ int	ft_echo(t_input *terminal, t_command *command)
 	return (0);
 }
 
-// Fonction pour gérer un argument, prendre en compte les variables d'environnement
-void	handle_echo_argument(t_input *terminal, char *arg)
+void	handle_echo_argument(t_input *terminal, t_command *command, char *arg)
 {
 	int j;
 
 	j = 0;
+	if (arg[j] == '$' && arg[j + 1] == '\0')
+	{
+		write(1, "$", 1);
+		return;
+	}
 	while (arg[j])
 	{
-		if (ft_strcmp(arg, "$?") == 0)
-		{
-			print_status();
-			return;
-		}
+		if (arg[j] == '$' && arg[j + 1] == '?')
+			j += print_status();
 		else if (arg[j] == '$')
 		{
-			j += print_env_var(terminal, arg + j);
+			j += print_env_var(terminal, command, arg + j);
 		}
 		else
 		{
@@ -61,28 +62,42 @@ void	handle_echo_argument(t_input *terminal, char *arg)
 	}
 }
 
-void	print_status(void)
+int	print_status(void)
 {
 	char *status;
 
-	status = ft_itoa(g_signal); // g_signal est le code de statut global
+	status = ft_itoa(g_signal);
 	write(1, status, ft_strlen(status));
-	free(status); // Ne pas oublier de libérer la mémoire allouée par ft_itoa
+	free(status);
+	return (2);
 }
 
-// Fonction pour imprimer une variable d'environnement
-int	print_env_var(t_input *terminal, char *arg)
+int	print_env_var(t_input *terminal, t_command *command, char *arg)
 {
 	int 	len;
 	char	*var_name;
 	char	*var_value;
 
-	len = 1; // Ignorer le premier '$'
+	len = 1;
 	while (arg[len] && arg[len] != ' ') // Trouver la fin de la variable
+	{
+		if (arg[len] == '$' || arg[len + 1] == '?')
+		{
+			len++;
+			break;
+		}
 		len++;
-
-	var_name = ft_substr(arg, 1, len - 1); // Récupérer le nom de la variable sans le $
-	var_value = get_env_value(terminal, var_name); // Obtenir la valeur correspondante dans l'environnement
+	}
+	if (command->s_quotes == 1)
+	{
+		var_name = ft_substr(arg, 0, len);
+		var_value = var_name;
+	}
+	else
+	{
+		var_name = ft_substr(arg, 1, len - 1); // Récupérer le nom de la variable sans le $
+		var_value = get_env_value(terminal, var_name); // Obtenir la valeur correspondante dans l'environnement
+	}
 	if (var_value)
 		write(1, var_value, ft_strlen(var_value)); // Afficher la valeur de la variable
 	free(var_name);

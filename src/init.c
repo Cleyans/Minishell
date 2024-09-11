@@ -68,5 +68,6 @@ void	init_command(t_command *command)
 	command->int_dollar = -1;
 	command->out_dollar = NULL;
 	command->args = 0;
+	command->s_quotes = 0;
 	command->sd = 0;
 }

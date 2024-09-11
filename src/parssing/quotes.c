@@ -99,7 +99,11 @@ int	is_quote(t_input *terminal, t_command *command, t_parss *parss)
 	if (terminal->input[parss->i] == '\0')
 		return (42);
 	else if (terminal->input[parss->i] == c)
+	{
 		parss->i++;
+		if (c == '\'')
+			command->s_quotes = 1;
+	}
 	return (0);
 }
 
