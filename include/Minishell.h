@@ -117,6 +117,13 @@ typedef struct t_input
 
 //NEW//
 
+char		*get_env_value(t_input *terminal, char *var_name);
+int			print_env_var(t_input *terminal, char *arg);
+void		print_status(void);
+void		handle_echo_argument(t_input *terminal, char *arg);
+
+// CHATGPT FUNCTION EN HAUT
+
 void		free_struct(t_input *terminal, t_command *command);
 void 		free_terminal(t_input *terminal);
 int			builtins_parent_s(t_input *terminal, t_command *command);

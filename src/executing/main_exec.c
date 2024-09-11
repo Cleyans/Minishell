@@ -53,7 +53,6 @@ void executing(t_input *terminal, t_command *command)
 
 void    child_process(t_input *terminal, t_command *command, int *p_fd, int i)
 {
-    printf("test1\n");
     if (i > 0) // Si ce n'est pas la première commande
     {
         // Rediriger l'entrée de la commande actuelle vers la sortie du pipe précédent
@@ -76,7 +75,6 @@ void   	parent_process(t_input *terminal, t_command *command, int *p_fd, pid_t *
 {
     // Attendre l'enfant
     // Fermer les descripteurs de fichiers inutiles dans le parent
-    printf("test2\n");
     if (terminal->prev_fd != -1)
         close(terminal->prev_fd);
     if (i < terminal->count_cmd - 1)

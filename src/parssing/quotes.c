@@ -96,7 +96,6 @@ int	is_quote(t_input *terminal, t_command *command, t_parss *parss)
 		parss->i++;
 		parss->k++;
 	}
-	command->arg_q[parss->j] = c;
 	if (terminal->input[parss->i] == '\0')
 		return (42);
 	else if (terminal->input[parss->i] == c)
