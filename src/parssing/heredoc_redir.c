@@ -117,7 +117,6 @@ void	call_redir_infile(t_input *terminal, t_command *command, t_parss *parss)
 		mem++;
 	}
 	command->infile = malloc(sizeof(char) * (mem + 1));
-	printf("parsss->i = %d\ni = %d\n", parss->i, i);
 	while (terminal->input[parss->i] != ' '
 		&& terminal->input[parss->i] != '\0')
 	{

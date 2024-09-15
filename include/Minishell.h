@@ -122,6 +122,8 @@ char		*get_env_value(t_input *terminal, char *var_name);
 int			print_env_var(t_input *terminal, t_command *command, char *arg);
 int		print_status(void);
 void		handle_echo_argument(t_input *terminal, t_command *command, char *arg);
+void	waitingall(t_input *terminal, pid_t *pid);
+
 
 // CHATGPT FUNCTION EN HAUT
 
@@ -135,8 +137,6 @@ void		count_nb_args(t_input *terminal, t_command *command);
 int			is_quote_nb_args(t_input *terminal, char c, int i);
 int			is_quote(t_input *terminal, t_command *command, t_parss *parss);
 int			is_quote_len(t_input *terminal, t_parss *parss, char c);
-int			status_print(void);
-void		printf_echo_s(t_input *terminal, t_command *command, int flag);
 void		all_init_malloc(t_command *command, t_input *terminal);
 
 /*
