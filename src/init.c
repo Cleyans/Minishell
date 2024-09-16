@@ -50,6 +50,7 @@ void	init_terminal(t_input *terminal)
 	terminal->echo.i = 0;
 	terminal->echo.search_s2 = 0;
 	terminal->echo.close = 0;
+	terminal->builtins = 0;
 	terminal->prev_fd = -1;
 }
 

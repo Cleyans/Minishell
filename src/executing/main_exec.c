@@ -24,7 +24,8 @@ void executing(t_input *terminal, t_command *command)
 	int     i;
 	int     p_fd[2];  // Pipe descripteur (0 = read, 1 = write)
 	// prev_fd = stocke la sortie du pipe précédent
-	pid = malloc(sizeof(pid_t) * (terminal->count_cmd));
+	if ((terminal->count_cmd - terminal->builtins) > 0)
+		pid = malloc(sizeof(pid_t) * (terminal->count_cmd - terminal->builtins));
 	i = 0;
 	while (i < terminal->count_cmd)
 	{
@@ -42,13 +43,17 @@ void executing(t_input *terminal, t_command *command)
 			if (pid[i] == 0)
 				child_process(terminal, command, p_fd, i);
 		}
-		parent_process(terminal, command, p_fd, pid, i); // fork tout le temps mais si builtins juste attendre l'enfant et rien exec??
+		printf("here1\n");
+		parent_process(terminal, command, p_fd, i); // fork tout le temps mais si builtins juste attendre l'enfant et rien exec??
 		if (command->next)
 			command = command->next;
 		i++;
 	}
-	waitingall(terminal, pid);
-	free(pid);
+	if ((terminal->count_cmd - terminal->builtins) > 0)
+	{
+		waitingall(terminal, pid);
+		free(pid);
+	}
 }
 
 void	waitingall(t_input *terminal, pid_t *pid)
@@ -83,7 +88,7 @@ void    child_process(t_input *terminal, t_command *command, int *p_fd, int i)
 	exit(EXIT_FAILURE);  // Si exec échoue
 }
 
-void   	parent_process(t_input *terminal, t_command *command, int *p_fd, pid_t *pid, int i)
+void   	parent_process(t_input *terminal, t_command *command, int *p_fd, int i)
 {
 	// Attendre l'enfant
 	// Fermer les descripteurs de fichiers inutiles dans le parent
@@ -95,7 +100,10 @@ void   	parent_process(t_input *terminal, t_command *command, int *p_fd, pid_t *
 		close(p_fd[1]);
 	// Le descripteur de lecture du pipe devient le précédent pour la prochaine commande
 	if (builtins_check(command) == 1)
+	{
+		printf("here\n");
 		builtins_parent(terminal, command);
+	}
 }
 
 void	check_redirs(t_command *command)

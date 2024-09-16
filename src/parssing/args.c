@@ -37,6 +37,8 @@ void	put_command(t_input *terminal, t_command *command, t_parss *parss)
 		parss->cmd_c = 0;
 	}
 	command->command[parss->j] = '\0';
+	if (builtins_check(command) == 1)
+		terminal->builtins++;
 }
 
 void	put_arg_cmd(t_input *terminal, t_command *command, t_parss *parss) //CORR
@@ -72,7 +74,8 @@ void	put_arg_cmd(t_input *terminal, t_command *command, t_parss *parss) //CORR
 			break ;
 	}
 	command->arguments[parss->j][parss->k] = '\0';
-	parss->k = 0;
+	printf("command->arguments = %s\n", command->arguments[parss->j]);
+		parss->k = 0;
 	parss->j++;
 }
 
