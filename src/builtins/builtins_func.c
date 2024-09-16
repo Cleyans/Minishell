@@ -14,12 +14,6 @@
 
 void	ft_exit(t_input *terminal, t_command *command)
 {
-	if (command->arguments[0] != NULL)
-	{
-		ft_putstr_fd("exit\n", 2);
-		ft_putstr_fd("Minishell: exit: too many arguments\n", 2);
-		return ;
-	}
 	free(terminal->input);
 	free_terminal(terminal);
 	free_nodes(command);
@@ -84,11 +78,6 @@ void	ft_pwd(t_command *command) // ne pas oublier le status //CORR
 
 	buffer_size = 1024;
 	buffer = malloc(sizeof(char) * buffer_size);
-	if (command->arguments[0] != NULL)
-	{
-		fprintf(stderr, "Error: pwd: too many arguments\n");
-		return ;
-	}
 	if (buffer == NULL)
 	{
 		fprintf(stderr, "Error: malloc failed\n");

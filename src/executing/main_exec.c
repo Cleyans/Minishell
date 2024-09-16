@@ -43,7 +43,6 @@ void executing(t_input *terminal, t_command *command)
 			if (pid[i] == 0)
 				child_process(terminal, command, p_fd, i);
 		}
-		printf("here1\n");
 		parent_process(terminal, command, p_fd, i); // fork tout le temps mais si builtins juste attendre l'enfant et rien exec??
 		if (command->next)
 			command = command->next;
@@ -100,10 +99,7 @@ void   	parent_process(t_input *terminal, t_command *command, int *p_fd, int i)
 		close(p_fd[1]);
 	// Le descripteur de lecture du pipe devient le précédent pour la prochaine commande
 	if (builtins_check(command) == 1)
-	{
-		printf("here\n");
 		builtins_parent(terminal, command);
-	}
 }
 
 void	check_redirs(t_command *command)
