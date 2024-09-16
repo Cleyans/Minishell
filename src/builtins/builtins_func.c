@@ -14,10 +14,56 @@
 
 void	ft_exit(t_input *terminal, t_command *command)
 {
-	free(terminal->input);
-	free_terminal(terminal);
-	free_nodes(command);
-	exit(0);
+	if(command->arguments[0] != NULL)
+	{
+		if (command->arguments[1] != NULL)
+		{
+			fprintf(stderr, "Minishell: exit: too many arguments\n");
+			exit(1);
+		}
+		else if (ft_stris_numeric(command->arguments[0]) == 1)
+		{
+			if(ft_stris_alpha(command->arguments[0]) == 1)
+			{
+				fprintf(stderr, "Minishell: exit: %s: numeric argument required\n", command->arguments[0]);
+				exit(2);
+			}
+			fprintf(stderr, "Minishell: exit: %s: numeric argument required\n", command->arguments[0]);
+			exit(255);
+		}
+		else
+		{
+			exit(ft_atoi(command->arguments[0]));
+		}
+	}
+	exit(1);
+}
+
+int ft_stris_alpha(char *str)
+{
+	int i;
+
+	i = 0;
+	while (str[i])
+	{
+		if (ft_isalpha(str[i]) == 0)
+			return (1);
+		i++;
+	}
+}
+
+int ft_stris_numeric(char *str)
+{
+	int i;
+
+	i = 0;
+	while (str[i])
+	{
+		if (ft_isdigit(str[i]) == 1)
+			return (0);
+		i++;
+	}
+	return (1);
 }
 
 void	free_terminal(t_input *terminal)
@@ -50,13 +96,20 @@ void	ft_cd(t_command *command) // ne pas oublier le status
 {
 	char	*path;
 
+	if (command->arguments[1] != NULL)
+	{
+		fprintf(stderr, "Minishell: cd: too many arguments\n");
+		g_signal = 1;
+		return ;
+	}
 	if (command->arguments[0] == NULL)
 	{
 		path = getenv("HOME");
 		if (chdir(path) == -1)
 		{
-			fprintf(stderr, "Minishell: cd: %s:\
- No such file or directory\n", path);
+// 			fprintf(stderr, "Minishell: cd: %s:\
+//  No such file or directory\n", path);
+			g_signal = 0;
 			return ;
 		}
 	}
@@ -66,9 +119,11 @@ void	ft_cd(t_command *command) // ne pas oublier le status
 		{
 			fprintf(stderr, "Minishell: cd: %s: No such file or\
  directory\n", command->arguments[0]);
+			g_signal = 0;
 			return ;
 		}
 	}
+	g_signal = 1;
 }
 
 void	ft_pwd(t_command *command) // ne pas oublier le status //CORR

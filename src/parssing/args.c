@@ -74,7 +74,6 @@ void	put_arg_cmd(t_input *terminal, t_command *command, t_parss *parss) //CORR
 			break ;
 	}
 	command->arguments[parss->j][parss->k] = '\0';
-	printf("command->arguments = %s\n", command->arguments[parss->j]);
 		parss->k = 0;
 	parss->j++;
 }
