@@ -14,25 +14,28 @@
 
 void	ft_exit(t_input *terminal, t_command *command)
 {
+	if (command->arguments[1] != NULL)
+	{
+		fprintf(stderr, "Minishell: exit: too many arguments\n");
+		exit(1);
+	}
 	if(command->arguments[0] != NULL)
 	{
-		if (command->arguments[1] != NULL)
+		if (ft_stris_numeric(command->arguments[0]) == 1)
 		{
-			fprintf(stderr, "Minishell: exit: too many arguments\n");
-			exit(1);
-		}
-		else if (ft_stris_numeric(command->arguments[0]) == 1)
-		{
-			if(ft_stris_alpha(command->arguments[0]) == 1)
-			{
-				fprintf(stderr, "Minishell: exit: %s: numeric argument required\n", command->arguments[0]);
-				exit(2);
-			}
+			// printf("here1");
 			fprintf(stderr, "Minishell: exit: %s: numeric argument required\n", command->arguments[0]);
-			exit(255);
+			exit(2);
 		}
+		// else if (ft_stris_alpha(command->arguments[0]) == 0)
+		// {
+		// 	// printf("here2");
+		// 	fprintf(stderr, "Minishell: exit: %s: numeric argument required\n", command->arguments[0]);
+		// 	exit(2);
+		// }
 		else
 		{
+			// printf("here3");
 			exit(ft_atoi(command->arguments[0]));
 		}
 	}
@@ -46,10 +49,11 @@ int ft_stris_alpha(char *str)
 	i = 0;
 	while (str[i])
 	{
-		if (ft_isalpha(str[i]) == 0)
+		if (ft_isalnum(str[i]) == 1)
 			return (1);
 		i++;
 	}
+	return (0);
 }
 
 int ft_stris_numeric(char *str)
@@ -59,11 +63,11 @@ int ft_stris_numeric(char *str)
 	i = 0;
 	while (str[i])
 	{
-		if (ft_isdigit(str[i]) == 1)
-			return (0);
+		if (ft_isalpha(str[i]) == 1)
+			return (1);
 		i++;
 	}
-	return (1);
+	return (0);
 }
 
 void	free_terminal(t_input *terminal)
@@ -92,7 +96,7 @@ void	free_terminal(t_input *terminal)
 	}
 }
 
-void	ft_cd(t_command *command) // ne pas oublier le status
+void	ft_cd(t_command *command) //CORR
 {
 	char	*path;
 
@@ -107,8 +111,6 @@ void	ft_cd(t_command *command) // ne pas oublier le status
 		path = getenv("HOME");
 		if (chdir(path) == -1)
 		{
-// 			fprintf(stderr, "Minishell: cd: %s:\
-//  No such file or directory\n", path);
 			g_signal = 0;
 			return ;
 		}
@@ -117,13 +119,21 @@ void	ft_cd(t_command *command) // ne pas oublier le status
 	{
 		if (chdir(command->arguments[0]) == -1)
 		{
-			fprintf(stderr, "Minishell: cd: %s: No such file or\
+			if (ft_stris_numeric(command->arguments[0]) == 0)
+			{
+				fprintf(stderr, "Minishell: cd: %s: No such file or\
  directory\n", command->arguments[0]);
-			g_signal = 0;
-			return ;
+				g_signal = 1;
+				return ;
+			}
+			else if (ft_stris_alpha(command->arguments[0]) == 0)
+			{
+				g_signal = 0;
+				return ;
+			}
 		}
 	}
-	g_signal = 1;
+	g_signal = 0;
 }
 
 void	ft_pwd(t_command *command) // ne pas oublier le status //CORR

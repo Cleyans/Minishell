@@ -119,6 +119,8 @@ typedef struct t_input
 
 //NEW//
 
+int 	ft_stris_alpha(char *str);
+int 	ft_stris_numeric(char *str);
 char		*get_env_value(t_input *terminal, char *var_name);
 int			print_env_var(t_input *terminal, t_command *command, char *arg);
 int		print_status(void);
