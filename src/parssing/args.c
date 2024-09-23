@@ -44,18 +44,15 @@ void	put_command(t_input *terminal, t_command *command, t_parss *parss)
 void	put_arg_cmd(t_input *terminal, t_command *command, t_parss *parss) //CORR
 {
 	int	len;
-	int	mem;
 
 	len = parss->i;
-	mem = 0;
 	while (terminal->input[len] != ' ' && terminal->input[len])
 	{
 		if (terminal->input[len] == '\'' || terminal->input[len] == '\"')
 			len = len + is_quote_len(terminal, parss, terminal->input[len]);
 		len++;
-		mem++;
 	}
-	command->arguments[parss->j] = malloc(sizeof(char) * (mem + 1)); //LEAK
+	command->arguments[parss->j] = malloc(sizeof(char) * (len + 1));
 	while (terminal->input[parss->i] != ' ' && terminal->input[parss->i])
 	{
 		if ((terminal->input[parss->i] == '\''

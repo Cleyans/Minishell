@@ -90,7 +90,7 @@ int	is_quote(t_input *terminal, t_command *command, t_parss *parss)
 
 	c = terminal->input[parss->i];
 	parss->i++;
-	while (terminal->input[parss->i] != c && terminal->input[parss->i] != '\0')
+	while (terminal->input[parss->i] && terminal->input[parss->i] != c)
 	{
 		command->arguments[parss->j][parss->k] = terminal->input[parss->i];
 		parss->i++;
@@ -103,6 +103,8 @@ int	is_quote(t_input *terminal, t_command *command, t_parss *parss)
 		parss->i++;
 		if (c == '\'')
 			command->s_quotes = 1;
+		else if (c == '\"')
+			command->s_quotes = 2;
 	}
 	return (0);
 }
