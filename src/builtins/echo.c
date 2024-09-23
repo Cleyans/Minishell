@@ -48,17 +48,14 @@ void	handle_echo_argument(t_input *terminal, t_command *command, char *arg)
 	}
 	while (arg[j])
 	{
-		if (arg[j] == '$' && arg[j + 1] == '?') // je gere le $ avant de mettre en variable si quote
+		if (arg[j] == '$' && arg[j + 1] == '?' && command->s_quotes != 1)
 			j += print_status();
-		else if (arg[j] == '$' && (command->s_quotes == 0 || command->s_quotes == 1))
-		{
+		else if (arg[j] == '$' && arg[j + 1] == ' ' && command->s_quotes != 1)
+			j = j + write(1, "$", 1);
+		else if (arg[j] == '$' && (command->s_quotes != 1))
 			j += print_env_var(terminal, command, arg + j);
-		}
 		else
-		{
-			write(1, &arg[j], 1); // Sinon, afficher les caractères normalement
-			j++;
-		}
+			j = j + write(1, &arg[j], 1);
 	}
 }
 
@@ -79,7 +76,6 @@ int	print_env_var(t_input *terminal, t_command *command, char *arg)
 	char	*var_value;
 
 	len = 1;
-	printf("arg = %s\n", arg);
 	while (arg[len] && arg[len] != ' ') // Trouver la fin de la variable
 	{
 		if (arg[len] == '$' || arg[len + 1] == '?')

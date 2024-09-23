@@ -23,21 +23,11 @@ void	ft_exit(t_input *terminal, t_command *command)
 	{
 		if (ft_stris_numeric(command->arguments[0]) == 1)
 		{
-			// printf("here1");
 			fprintf(stderr, "Minishell: exit: %s: numeric argument required\n", command->arguments[0]);
 			exit(2);
 		}
-		// else if (ft_stris_alpha(command->arguments[0]) == 0)
-		// {
-		// 	// printf("here2");
-		// 	fprintf(stderr, "Minishell: exit: %s: numeric argument required\n", command->arguments[0]);
-		// 	exit(2);
-		// }
 		else
-		{
-			// printf("here3");
 			exit(ft_atoi(command->arguments[0]));
-		}
 	}
 	exit(1);
 }

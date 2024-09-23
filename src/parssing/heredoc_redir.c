@@ -38,8 +38,6 @@ void	check_redir(t_input *terminal, t_command *command, t_parss *parss) //CORR
 		command->redir_out = 1;
 		call_outfile(terminal, command, parss);
 	}
-	// else if (terminal->input[parss->i] == '$')
-	// 	call_dollar(terminal, command, parss);
 }
 
 void	call_heredoc_in(t_input *terminal, t_command *command, t_parss *parss)
