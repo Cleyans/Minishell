@@ -39,7 +39,7 @@ int	check_if_sort_export(char *str, char **env)
 	return (1);
 }
 
-void	ft_export(t_input *terminal, t_command *command)
+int	ft_export(t_input *terminal, t_command *command)
 {
 	int	i;
 
@@ -60,6 +60,7 @@ void	ft_export(t_input *terminal, t_command *command)
 			i++;
 		}
 	}
+	return (g_signal);
 }
 
 int	check_alpha_export(char *str) //CORR

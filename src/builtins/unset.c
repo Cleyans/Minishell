@@ -33,7 +33,7 @@ static void	unset_env(t_input *terminal, char *arg)
 			}
 			terminal->env[j - 1] = NULL;
 			terminal->env_size--;
-			break ;
+			break;
 		}
 		j++;
 	}
@@ -66,7 +66,7 @@ void	remove_export_var(t_input *terminal, char *arg)
     }
 }
 
-void	ft_unset(t_input *terminal, t_command *command)
+int	ft_unset(t_input *terminal, t_command *command)
 {
     int		i;
     i = 0;
@@ -77,6 +77,7 @@ void	ft_unset(t_input *terminal, t_command *command)
 		g_signal = 0;
         i++;
     }
+	return (0);
 }
 
 char	*create_new_str(char *str, char *equal_pos)

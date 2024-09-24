@@ -86,24 +86,20 @@ void	free_terminal(t_input *terminal)
 	}
 }
 
-void	ft_cd(t_command *command) //CORR
+int	ft_cd(t_command *command) //CORR EXIT
 {
 	char	*path;
 
 	if (command->arguments[1] != NULL)
 	{
 		fprintf(stderr, "Minishell: cd: too many arguments\n");
-		g_signal = 1;
-		return ;
+		return (1);
 	}
 	if (command->arguments[0] == NULL)
 	{
 		path = getenv("HOME");
 		if (chdir(path) == -1)
-		{
-			g_signal = 0;
-			return ;
-		}
+			return (0);
 	}
 	else
 	{
@@ -113,20 +109,16 @@ void	ft_cd(t_command *command) //CORR
 			{
 				fprintf(stderr, "Minishell: cd: %s: No such file or\
  directory\n", command->arguments[0]);
-				g_signal = 1;
-				return ;
+				return (1);
 			}
 			else if (ft_stris_alpha(command->arguments[0]) == 0)
-			{
-				g_signal = 0;
-				return ;
-			}
+				return (0);
 		}
 	}
-	g_signal = 0;
+	return (0);
 }
 
-void	ft_pwd(t_command *command) // ne pas oublier le status //CORR
+int	ft_pwd(t_command *command) // ne pas oublier le status //CORR
 {
 	char	*buffer;
 	int		buffer_size;
@@ -136,16 +128,17 @@ void	ft_pwd(t_command *command) // ne pas oublier le status //CORR
 	if (buffer == NULL)
 	{
 		fprintf(stderr, "Error: malloc failed\n");
-		return ;
+		return (1);
 	}
 	if (getcwd(buffer, 1024) == NULL)
 	{
 		fprintf(stderr, "Error: getcwd failed\n");
 		free(buffer);
-		return ;
+		return (EXIT_FAILURE);
 	}
 	ft_printf("%s\n", buffer);
 	free(buffer);
+	return (EXIT_SUCCESS);
 }
 
 void	print_export(t_input *terminal)

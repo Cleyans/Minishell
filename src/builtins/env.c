@@ -29,7 +29,7 @@ void	init_env(t_input *terminal, char **env)
 	i = 0;
 	while (env[i] != NULL)
 	{
-		terminal->env[i] = env[i];
+		terminal->env[i] = ft_strdup(env[i]);
 		i++;
 	}
 	terminal->env[i] = NULL;
@@ -47,7 +47,8 @@ void	add_to_env(t_input *terminal, t_command *command, int arg_index)
     i = 0;
     while (i < terminal->env_size)
     {
-        new_env[i] = terminal->env[i];
+        new_env[i] = ft_strdup(terminal->env[i]);
+		free(terminal->env[i]);
         i++;
     }
     new_env[i] = ft_strdup(command->arguments[arg_index]);
@@ -57,7 +58,7 @@ void	add_to_env(t_input *terminal, t_command *command, int arg_index)
     terminal->env_size++;
 }
 
-void	env(t_input *terminal)
+int	env(t_input *terminal)
 {
 	int	i;
 
@@ -67,4 +68,5 @@ void	env(t_input *terminal)
 		printf("%s\n", terminal->env[i]);
 		i++;
 	}
+	return (0);
 }
