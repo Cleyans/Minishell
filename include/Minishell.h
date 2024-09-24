@@ -119,6 +119,8 @@ typedef struct t_input
 
 //NEW//
 
+void 	save_and_redir(int *save_in, int *save_out, t_command *command);
+void	restore_fds(int save_in, int save_out);
 int 	ft_stris_alpha(char *str);
 int 	ft_stris_numeric(char *str);
 char		*get_env_value(t_input *terminal, char *var_name);

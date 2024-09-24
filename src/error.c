@@ -16,11 +16,11 @@ void	exec_error(t_command *command, char *cmd_path, char **cmd_split)
 {
 	fprintf(stderr, "Minishell: %s: command not found\n", command->command);
 	free_exec_error(cmd_path, cmd_split);
-	exit(EXIT_FAILURE);
+	exit(1);
 }
 
 void	error_message(char *message)
 {
 	fprintf(stderr, "Minishell: %s\n", message);
-	exit(EXIT_FAILURE);
+	exit(1);
 }

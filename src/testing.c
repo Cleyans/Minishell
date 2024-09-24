@@ -20,11 +20,17 @@ void	advanced_print(t_command *command)
 	while (command->next != NULL)
 	{
 		printf("command = %s\n", command->command);
-		while (command->arguments[i] != NULL)
+		if (command->arguments)
 		{
-			printf("arguments[%d] = %s\n", i, command->arguments[i]);
-			i++;
+			while (command->arguments[i])
+			{
+				printf("arguments[%d] = %s\n", i, command->arguments[i]);
+				i++;
+			}
 		}
+		else
+			printf("arguments = NULL\n");
+		i = 0;
 		if (command->redir_out == 1)
 			printf("outfile = %s\n", command->outfile);
 		if (command->redir_in == 1)
@@ -35,6 +41,7 @@ void	advanced_print(t_command *command)
 			printf("infile = %s\n", command->infile);
 		if (command->pipe == 0)
 			printf("pipe = 0\n");
+		advanced_print_deux(command);
 		command = command->next;
 	}
 }

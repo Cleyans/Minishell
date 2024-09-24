@@ -45,21 +45,24 @@ void	put_arg_cmd(t_input *terminal, t_command *command, t_parss *parss) //CORR
 {
 	int	len;
 	int mem;
+	int quote_len;
 
 	len = parss->i;
 	mem = 0;
-	while (terminal->input[len] != ' ' && terminal->input[len])
+	quote_len = 0;
+	while (terminal->input[len] != ' ' && terminal->input[len] && terminal->input[len] != '|')
 	{
 		if (terminal->input[len] == '\'' || terminal->input[len] == '\"')
 		{
-			mem = mem + is_quote_len(terminal, parss, terminal->input[len], len); // moche a ameliorer
-			len = len + is_quote_len(terminal, parss, terminal->input[len], len);
+			quote_len =+ is_quote_len(terminal, parss, terminal->input[len], len); // moche a ameliorer
+			mem += quote_len;
+			len += quote_len;
 		}
 		else
 			mem++;
 		len++;
 	}
-	command->arguments[parss->j] = malloc(sizeof(char) * (len + 1));
+	command->arguments[parss->j] = malloc(sizeof(char) * (mem + 1));
 	while (terminal->input[parss->i] != ' ' && terminal->input[parss->i])
 	{
 		if ((terminal->input[parss->i] == '\''
@@ -77,7 +80,7 @@ void	put_arg_cmd(t_input *terminal, t_command *command, t_parss *parss) //CORR
 			break ;
 	}
 	command->arguments[parss->j][parss->k] = '\0';
-		parss->k = 0;
+	parss->k = 0;
 	parss->j++;
 }
 

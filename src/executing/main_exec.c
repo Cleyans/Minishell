@@ -62,7 +62,7 @@ void	waitingall(t_input *terminal, pid_t *pid)
 	i = 0;
 	while (i < terminal->count_cmd)
 	{
-		waitpid(pid[i], NULL, 0);
+		waitpid(pid[i], &g_signal, 0);
 		i++;
 	}
 }
@@ -89,17 +89,39 @@ void    child_process(t_input *terminal, t_command *command, int *p_fd, int i)
 
 void   	parent_process(t_input *terminal, t_command *command, int *p_fd, int i)
 {
+	int save_in;
+	int save_out;
 	// Attendre l'enfant
 	// Fermer les descripteurs de fichiers inutiles dans le parent
 	if (terminal->prev_fd != -1)
 		close(terminal->prev_fd);
 	if (i < terminal->count_cmd - 1)
+	{
 		terminal->prev_fd = p_fd[0];
-	if (i < terminal->count_cmd - 1)
 		close(p_fd[1]);
+	}
 	// Le descripteur de lecture du pipe devient le précédent pour la prochaine commande
 	if (builtins_check(command) == 1)
+	{
+		save_and_redir(&save_in, &save_out, command);
 		builtins_parent(terminal, command);
+		restore_fds(save_in, save_out);
+	}
+}
+
+void	save_and_redir(int *save_in, int *save_out, t_command *command)
+{
+	*save_in = dup(STDIN_FILENO);
+	*save_out = dup(STDOUT_FILENO);
+	check_redirs(command);
+}
+
+void	restore_fds(int save_in, int save_out)
+{
+	dup2(save_in, STDIN_FILENO);
+	dup2(save_out, STDOUT_FILENO);
+	close(save_in);
+	close(save_out);
 }
 
 void	check_redirs(t_command *command)

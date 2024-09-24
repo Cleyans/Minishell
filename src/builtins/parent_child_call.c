@@ -14,14 +14,15 @@
 
 int	builtins_parent(t_input *terminal, t_command *command)
 {
+	check_redirs(command);
 	if (ft_strcmp(command->command, "export") == 0)
 		return (g_signal = ft_export(terminal, command));
 	else if (ft_strcmp(command->command, "unset") == 0)
 		return (g_signal =ft_unset(terminal, command));
-	else if (ft_strcmp(command->command, "exit") == 0)
-		ft_exit(terminal, command);
 	else if (ft_strcmp(command->command, "cd") == 0)
 		return (g_signal = ft_cd(command));
+	else if (ft_strcmp(command->command, "exit") == 0)
+		ft_exit(terminal, command);
 	return (builtins_parent_s(terminal, command));
 }
 

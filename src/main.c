@@ -38,7 +38,7 @@ int	main(int ac, char **av, char **env) //CORR
 		if (verif_input(&terminal) == 0 && terminal.input != NULL)
 		{
 			cheking_input(&terminal, command);
-			// advanced_print(command);
+			// advanced_print(command);  
 			executing(&terminal, command);
 			free_nodes(command);
  		}
