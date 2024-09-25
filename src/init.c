@@ -15,14 +15,16 @@
 // arg_q not used !!!!!!!!! solve the problem
 // je sais plus pourquoi j'avais ecris ca anyways
 
-void	all_init_malloc(t_command *command, t_input *terminal)
+void	all_init_malloc(t_command *command, t_input *terminal, t_parss *parss)
 {
-	count_nb_args(terminal, command);
+	count_nb_args(terminal, command, parss);
 	if (command->arguments != NULL)
 		free(command->arguments);
-	command->arguments = malloc(sizeof(char *) * (command->args + 1)); //LEAK
+	command->arguments = malloc(sizeof(char *) * (command->args + 1));
 	if (command->arguments == NULL)
 		error_message("Error: malloc failed\n");
+	// for (int j = 0; j < command->args + 1; j++) //SUPP
+    // command->arguments[j] = NULL;
 }
 
 void	init_parss(t_parss *parss)

@@ -138,11 +138,11 @@ int			builtins_parent_s(t_input *terminal, t_command *command);
 void		check_redirs(t_command *command);
 void		child_process(t_input *terminal, t_command *command, int *p_fd, int i);
 void   		parent_process(t_input *terminal, t_command *command, int *p_fd, int i);
-void		count_nb_args(t_input *terminal, t_command *command);	
+void		count_nb_args(t_input *terminal, t_command *command, t_parss *parss);	
 int			is_quote_nb_args(t_input *terminal, char c, int i);
 int			is_quote(t_input *terminal, t_command *command, t_parss *parss);
 int			is_quote_len(t_input *terminal, t_parss *parss, char c, int len);
-void		all_init_malloc(t_command *command, t_input *terminal);
+void		all_init_malloc(t_command *command, t_input *terminal, t_parss *parss);
 
 /*
         Function List
@@ -244,7 +244,7 @@ void		put_command(t_input *terminal, t_command *command, t_parss *parss);
 void		error_message(char *message);
 void		advanced_print(t_command *command);
 void		advanced_print_deux(t_command *command);
-void		free_args(char **strtab);
+void		free_args(t_command *command);
 void		free_exec_error(char *cmd_path, char **cmd_split);
 
 #endif

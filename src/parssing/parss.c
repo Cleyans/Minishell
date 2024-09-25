@@ -21,7 +21,7 @@ void	cheking_input(t_input *terminal, t_command *command) //CORR
 	init_parss(&parss);
 	while (terminal->input[parss.i] && terminal->input[parss.i] != '\0')
 	{
-		all_init_malloc(command, terminal);
+		all_init_malloc(command, terminal, &parss);
 		while (terminal->input[parss.i] != '\0'
 			&& terminal->input[parss.i] != '|')
 		{

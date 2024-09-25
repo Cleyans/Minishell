@@ -14,9 +14,6 @@
 
 int	g_signal = 0;
 
-//LEAK
-// COMMANDE BONNE OU NON CREE UN LIKE DE 12, N'EST PAS VISIBLE SEULEMENT SI COMMAND FAUSSE CAR AUTRE LEAKS DETECTES
-
 int	main(int ac, char **av, char **env) //CORR
 {
 	t_input		terminal;

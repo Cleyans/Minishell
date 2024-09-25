@@ -50,34 +50,35 @@ void	put_arg_cmd(t_input *terminal, t_command *command, t_parss *parss) //CORR
 	len = parss->i;
 	mem = 0;
 	quote_len = 0;
-	while (terminal->input[len] != ' ' && terminal->input[len] && terminal->input[len] != '|')
+	while (terminal->input[len] != ' ' && terminal->input[len])
 	{
 		if (terminal->input[len] == '\'' || terminal->input[len] == '\"')
 		{
-			quote_len =+ is_quote_len(terminal, parss, terminal->input[len], len); // moche a ameliorer
+			quote_len += is_quote_len(terminal, parss, terminal->input[len], len); // moche a ameliorer
 			mem += quote_len;
 			len += quote_len;
 		}
 		else
+		{
 			mem++;
-		len++;
+			len++;
+		}
 	}
 	command->arguments[parss->j] = malloc(sizeof(char) * (mem + 1));
+	if (!command->arguments[parss->j])
+		error_message("Error: malloc failed\n");
 	while (terminal->input[parss->i] != ' ' && terminal->input[parss->i])
 	{
 		if ((terminal->input[parss->i] == '\''
 				|| terminal->input[parss->i] == '\"'))
 			if (is_quote(terminal, command, parss) == 42)
 				break ;
-		if (terminal->input[parss->i] != ' '
-			&& terminal->input[parss->i] != '\0')
+		if (parss->k < mem)
 		{
 			command->arguments[parss->j][parss->k] = terminal->input[parss->i];
 			parss->i++;
 			parss->k++;
 		}
-		if (terminal->input[parss->i] == '\0')
-			break ;
 	}
 	command->arguments[parss->j][parss->k] = '\0';
 	parss->k = 0;
@@ -86,29 +87,29 @@ void	put_arg_cmd(t_input *terminal, t_command *command, t_parss *parss) //CORR
 
 // doesn't word with pipe, because start at the begin of the input
 
-void	count_nb_args(t_input *terminal, t_command *command)
+void count_nb_args(t_input *terminal, t_command *command, t_parss *parss)
 {
-	int	i;
+    int i = parss->i;
 
-	i = 0;
-	command->args = 0;
-	command->mem_cmd = 0;
-	while (terminal->input[i] != ' ' && terminal->input[i])
+    command->args = 0;
+    command->mem_cmd = 0;
+
+while (terminal->input[i] && terminal->input[i] == ' ')
+	i++;
+while (terminal->input[i] && terminal->input[i] != ' ')
+{
+	command->mem_cmd++;
+	i++;
+}
+while (terminal->input[i] && terminal->input[i] != '|')
+{
+    while (terminal->input[i] == ' ')
+        i++;
+    if (terminal->input[i] != '\0' && terminal->input[i] != '|')
 	{
-		command->mem_cmd++;
-		i++;
-	}
-	while (terminal->input[i] != '\0' && terminal->input[i] != '|')
-	{
-		if (terminal->input[i] == ' ')
-		{
-			while (terminal->input[i] == ' ')
-				i++;
-			if (terminal->input[i] == '|')
-				break ;
-			command->args++;
-		}
-		if (terminal->input[i] != '\0')
-			i++;
-	}
+		while (terminal->input[i] != '\0' && terminal->input[i] != ' ')
+        	i++;
+        command->args++;
+    }
+}
 }

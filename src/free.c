@@ -12,19 +12,21 @@
 
 #include "../include/Minishell.h"
 
-void	free_args(char **argument)
+void	free_args(t_command *command)
 {
 	size_t	i;
 
 	i = 0;
-	if (!argument)
+	if (!command->arguments)
 		return ;
-	while (argument[i])
+	while (command->arguments[i])
 	{
-		free(argument[i]);
+		free(command->arguments[i]);
+		command->arguments[i] == NULL;
 		i++;
 	}
-	free(argument);
+	free(command->arguments);
+	command->arguments = NULL;
 }
 
 
@@ -53,13 +55,13 @@ void	free_nodes(t_command *command)
 	if (command != NULL)
 	{
 		free(command->command);
-		free_args(command->arguments);
+		free_args(command);
 		tmp = command->next;
 		while (tmp != NULL)
 		{
 			next_node = tmp->next;
 			free(tmp->command);
-			free_args(tmp->arguments);
+			free_args(tmp);
 			free(tmp);
 			tmp = next_node;
 		}
