@@ -18,7 +18,7 @@
 // dup2 / open / the output or input if needed
 // executing the command ?
 
-void executing(t_input *terminal, t_command *command)
+void executing(t_input *terminal, t_command *command)//CORR
 {
 	pid_t   *pid;
 	int     i;
@@ -45,7 +45,14 @@ void executing(t_input *terminal, t_command *command)
 		}
 		parent_process(terminal, command, p_fd, i); // fork tout le temps mais si builtins juste attendre l'enfant et rien exec??
 		if (command->next)
+		{
+			if (ft_strcmp(command->command, "export") == 0 && command->next->command) // MDR?? ca fonctionne mais bizarre de faire comme ca ig?
+			{
+				g_signal = 256;
+				return;
+			}
 			command = command->next;
+		}
 		i++;
 	}
 	if ((terminal->count_cmd - terminal->builtins) > 0)

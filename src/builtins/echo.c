@@ -62,8 +62,10 @@ void	handle_echo_argument(t_input *terminal, t_command *command, char *arg)
 int	print_status(void)
 {
 	char *status;
-
-	status = ft_itoa(g_signal);
+	if (g_signal != 256)
+		status = ft_itoa(g_signal);
+	else
+		status = "1";
 	write(1, status, ft_strlen(status));
 	free(status);
 	return (2);

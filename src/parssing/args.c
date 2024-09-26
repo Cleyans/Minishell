@@ -59,10 +59,8 @@ void	put_arg_cmd(t_input *terminal, t_command *command, t_parss *parss) //CORR
 			len += quote_len;
 		}
 		else
-		{
 			mem++;
-			len++;
-		}
+		len++;
 	}
 	command->arguments[parss->j] = malloc(sizeof(char) * (mem + 1));
 	if (!command->arguments[parss->j])
