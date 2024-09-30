@@ -27,7 +27,7 @@ void	put_command(t_input *terminal, t_command *command, t_parss *parss)
 	}
 	command->command = malloc(sizeof(char) * (mem + 1)); //LEAK
 	if (!command->command)
-		error_message("Malloc failed\n");
+		error_message(strerror(errno));
 	while (terminal->input[parss->i] != ' '
 		&& terminal->input[parss->i] != '\0')
 	{
@@ -64,7 +64,7 @@ void	put_arg_cmd(t_input *terminal, t_command *command, t_parss *parss) //CORR
 	}
 	command->arguments[parss->j] = malloc(sizeof(char) * (mem + 1));
 	if (!command->arguments[parss->j])
-		error_message("Error: malloc failed\n");
+		error_message(strerror(errno));
 	while (terminal->input[parss->i] != ' ' && terminal->input[parss->i])
 	{
 		if ((terminal->input[parss->i] == '\''

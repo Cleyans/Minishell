@@ -23,7 +23,7 @@ int	main(int ac, char **av, char **env) //CORR
 	(void)av;
 	command = malloc(sizeof(t_command));
 	if (command == NULL)
-		error_message("Error: malloc failed\n");
+		error_message(strerror(errno));
 	init_env(&terminal, env);
 	init_export(&terminal);
 	terminal.status = 0;
@@ -35,7 +35,7 @@ int	main(int ac, char **av, char **env) //CORR
 		if (verif_input(&terminal) == 0 && terminal.input != NULL)
 		{
 			cheking_input(&terminal, command);
-			// advanced_print(command);  
+			// advanced_print(command);
 			executing(&terminal, command);
 			free_nodes(command);
  		}

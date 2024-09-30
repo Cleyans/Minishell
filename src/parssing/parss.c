@@ -29,7 +29,11 @@ void	cheking_input(t_input *terminal, t_command *command) //CORR
 				parss.i++;
 			if (terminal->input[parss.i] == '<'
 				|| terminal->input[parss.i] == '>')
+			{
 				check_redir(terminal, command, &parss);
+				if (terminal->input[parss.i] == '|')
+					continue;
+			}
 			if (parss.cmd_c == 1 && terminal->input[parss.i])
 				put_arg_cmd(terminal, command, &parss);
 			if ((parss.cmd_c == 0) || parss.cmd_c == -1)

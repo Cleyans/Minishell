@@ -22,7 +22,7 @@ void	all_init_malloc(t_command *command, t_input *terminal, t_parss *parss)
 		free(command->arguments);
 	command->arguments = malloc(sizeof(char *) * (command->args + 1));
 	if (command->arguments == NULL)
-		error_message("Error: malloc failed\n");
+		error_message(strerror(errno));
 	// for (int j = 0; j < command->args + 1; j++) //SUPP
     // command->arguments[j] = NULL;
 }

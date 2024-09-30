@@ -24,8 +24,8 @@ void executing(t_input *terminal, t_command *command)//CORR
 	int     i;
 	int     p_fd[2];  // Pipe descripteur (0 = read, 1 = write)
 	// prev_fd = stocke la sortie du pipe précédent
-	if ((terminal->count_cmd - terminal->builtins) > 0)
-		pid = malloc(sizeof(pid_t) * (terminal->count_cmd - terminal->builtins));
+	if ((terminal->count_cmd > 1) || (terminal->count_cmd == 1 && builtins_check(command) == 0))
+		pid = malloc(sizeof(pid_t) * (terminal->count_cmd));
 	i = 0;
 	while (i < terminal->count_cmd)
 	{
@@ -33,13 +33,13 @@ void executing(t_input *terminal, t_command *command)//CORR
 		if (i < terminal->count_cmd - 1)
 		{
 			if (pipe(p_fd) == -1)
-				error_message("Pipe failed.\n");
+				error_message(strerror(errno));
 		}
-		if (builtins_check(command) == 0)
+		if ((terminal->count_cmd > 1) || (terminal->count_cmd == 1 && builtins_check(command) == 0))
 		{
 			pid[i] = fork();
 			if (pid[i] == -1)
-				error_message("Fork failed.\n");
+				error_message(strerror(errno));
 			if (pid[i] == 0)
 				child_process(terminal, command, p_fd, i);
 		}
@@ -55,7 +55,7 @@ void executing(t_input *terminal, t_command *command)//CORR
 		}
 		i++;
 	}
-	if ((terminal->count_cmd - terminal->builtins) > 0)
+	if ((terminal->count_cmd - terminal->builtins) > 0 && pid) //mieux gerer probeme parfois
 	{
 		waitingall(terminal, pid);
 		free(pid);
@@ -74,7 +74,7 @@ void	waitingall(t_input *terminal, pid_t *pid)
 	}
 }
 
-void    child_process(t_input *terminal, t_command *command, int *p_fd, int i)
+void    child_process(t_input *terminal, t_command *command, int *p_fd, int i) // un truc comme ca si pipe avec parent??
 {
 	if (i > 0) // Si ce n'est pas la première commande
 	{
@@ -90,11 +90,16 @@ void    child_process(t_input *terminal, t_command *command, int *p_fd, int i)
 		close(p_fd[1]);
 	}
 	check_redirs(command);
+	if (builtins_check(command) == 1)
+	{
+		builtins_parent(terminal, command);
+		exit (g_signal);
+	}
 	exec_cmd(command, terminal);
 	exit(EXIT_FAILURE);  // Si exec échoue
 }
 
-void   	parent_process(t_input *terminal, t_command *command, int *p_fd, int i)
+void   	parent_process(t_input *terminal, t_command *command, int *p_fd, int i) // "echo hi | echo bye" renvoies les deux hi et bye, mauvaise gestion des pipes avec le parent si plusieurs commandes
 {
 	int save_in;
 	int save_out;
@@ -108,7 +113,7 @@ void   	parent_process(t_input *terminal, t_command *command, int *p_fd, int i)
 		close(p_fd[1]);
 	}
 	// Le descripteur de lecture du pipe devient le précédent pour la prochaine commande
-	if (builtins_check(command) == 1)
+	if (builtins_check(command) == 1 && terminal->count_cmd == 1)
 	{
 		save_and_redir(&save_in, &save_out, command);
 		builtins_parent(terminal, command);
@@ -154,7 +159,7 @@ void	exec_cmd(t_command *command, t_input *terminal)
 	j = 0;
 	cmd_split = ft_calloc(command->args + 2, sizeof(char *));
 	if (cmd_split == NULL)
-		error_message("Error: malloc failed\n");
+		error_message(strerror(errno));
 	cmd_split[j++] = ft_strdup(command->command);
 	if (command->arguments && command->arguments[i])
 		args_dup(command, cmd_split);

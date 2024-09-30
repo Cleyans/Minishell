@@ -16,7 +16,7 @@ void	redir_in(t_command *command) //CORR
 {
 	command->fd = open(command->infile, O_RDONLY);
 	if (command->fd == -1)
-		error_message("Error: open failed\n");
+		error_message(strerror(errno));
 	dup2(command->fd, STDIN_FILENO);
 	close(command->fd);
 }
@@ -25,7 +25,7 @@ void	redir_out(t_command *command)
 {
 	command->fd = open(command->outfile, O_WRONLY | O_CREAT | O_TRUNC, 0777);
 	if (command->fd == -1)
-		error_message("Error: open failed\n");
+		error_message(strerror(errno));
 	dup2(command->fd, STDOUT_FILENO);
 	close(command->fd);
 }
@@ -99,7 +99,7 @@ void	here_out(t_command *command)
 {
 	command->fd = open(command->outfile, O_WRONLY | O_CREAT | O_APPEND, 0777);
 	if (command->fd == -1)
-		error_message("Error: open failed\n");
+		error_message(strerror(errno));
 	dup2(command->fd, STDOUT_FILENO);
 	close(command->fd);
 }

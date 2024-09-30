@@ -12,7 +12,7 @@
 
 #include "../../include/Minishell.h"
 
-void	check_redir(t_input *terminal, t_command *command, t_parss *parss) //CORR
+void	check_redir(t_input *terminal, t_command *command, t_parss *parss)
 {
 	if (terminal->input[parss->i] == '<'
 		&& terminal->input[parss->i + 1] == '<')
@@ -51,21 +51,21 @@ void	call_heredoc_in(t_input *terminal, t_command *command, t_parss *parss)
 	while (terminal->input[parss->i] == ' ')
 		parss->i++;
 	len = parss->i;
-	while (terminal->input[len] != ' ' && terminal->input[len] != '\0')
+	while (terminal->input[len] != '\0'
+		&& terminal->input[len] != ' '
+		&& terminal->input[len] != '|')
 	{
 		len++;
 		mem++;
 	}
 	command->word = malloc(sizeof(char) * (mem + 1));
-	while (terminal->input[parss->i] != ' '
-		&& terminal->input[parss->i] != '\0')
+	while (i < mem)
 	{
 		command->word[i] = terminal->input[parss->i];
 		parss->i++;
 		i++;
 	}
 	command->word[i] = '\0';
-	printf("word = %s\n", command->word);
 }
 
 void	call_heredoc_out(t_input *terminal, t_command *command, t_parss *parss)
@@ -80,14 +80,14 @@ void	call_heredoc_out(t_input *terminal, t_command *command, t_parss *parss)
 		parss->i++;
 	len = parss->i;
 	while (terminal->input[len] != ' '
-		&& terminal->input[len] != '\0')
+		&& terminal->input[len] != '\0'
+		&& terminal->input[len] != '|')
 	{
 		len++;
 		mem++;
 	}
 	command->outfile = malloc(sizeof(char) * (mem + 1));
-	while (terminal->input[parss->i] != ' '
-		&& terminal->input[parss->i] != '\0')
+	while (i < mem)
 	{
 		command->outfile[i] = terminal->input[parss->i];
 		parss->i++;
@@ -109,14 +109,14 @@ void	call_redir_infile(t_input *terminal, t_command *command, t_parss *parss)
 		parss->i++;
 	len = parss->i;
 	while (terminal->input[len] != ' '
-		&& terminal->input[len] != '\0')
+		&& terminal->input[len] != '\0'
+		&& terminal->input[len] != '|')
 	{
 		len++;
 		mem++;
 	}
 	command->infile = malloc(sizeof(char) * (mem + 1));
-	while (terminal->input[parss->i] != ' '
-		&& terminal->input[parss->i] != '\0')
+	while (i < mem)
 	{
 		command->infile[i] = terminal->input[parss->i];
 		parss->i++;
@@ -138,14 +138,14 @@ void	call_outfile(t_input *terminal, t_command *command, t_parss *parss)
 		parss->i++;
 	len = parss->i;
 	while (terminal->input[len] != ' '
-		&& terminal->input[len] != '\0')
+		&& terminal->input[len] != '\0'
+		&& terminal->input[len] != '|')
 	{
 		len++;
 		mem++;
 	}
 	command->outfile = malloc(sizeof(char) * (mem + 1));
-	while (terminal->input[parss->i] != ' '
-		&& terminal->input[parss->i] != '\0')
+	while (i < mem)
 	{
 		command->outfile[i] = terminal->input[parss->i];
 		parss->i++;
